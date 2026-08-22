@@ -705,6 +705,51 @@ main{
 }
 </style>
 <body>
+  <!-- ══ SPLASH SCREEN ══ -->
+<div id="splash">
+  <div class="sp-orbit"><i></i></div>
+  <div class="sp-title">OLYMPIAD TRAINING LOG</div>
+  <div class="sp-sub">IOAA · IPhO — calibrating instruments…</div>
+  <div class="sp-bar"><i></i></div>
+</div>
+
+<style>
+/* ---------- splash ---------- */
+#splash{position:fixed; inset:0; z-index:999; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:18px;
+  background:radial-gradient(900px 600px at 70% 20%, #101a33, #070b16 70%);
+  transition:opacity .9s ease, visibility .9s}
+#splash.done{opacity:0; visibility:hidden; pointer-events:none}
+.sp-orbit{width:88px; height:88px; border:1px solid rgba(245,185,66,.4); border-radius:50%;
+  position:relative; animation:spinslow 5s linear infinite}
+.sp-orbit::before{content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin:-10px;
+  border-radius:50%; background:radial-gradient(circle at 35% 35%, #ffd97a, #f5b942);
+  box-shadow:0 0 26px rgba(245,185,66,.85)}
+.sp-orbit i{position:absolute; top:-4px; left:50%; width:9px; height:9px; margin-left:-4px;
+  border-radius:50%; background:#7fd1c8; box-shadow:0 0 12px #7fd1c8}
+@keyframes spinslow{to{transform:rotate(360deg)}}
+.sp-title{letter-spacing:.35em; font-weight:800; font-size:.95rem; color:#e8ecf5}
+.sp-sub{color:#9aa3b5; font-size:.76rem; letter-spacing:.14em}
+.sp-bar{width:190px; height:3px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden}
+.sp-bar i{display:block; height:100%; width:0; background:linear-gradient(90deg,#f5b942,#7fd1c8);
+  animation:spload 1.5s ease forwards}
+@keyframes spload{to{width:100%}}
+
+/* ---------- 3D stage ---------- */
+#space3d{position:absolute; inset:0; z-index:0; overflow:hidden; cursor:grab}
+#space3d:active{cursor:grabbing}
+#space3d::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(to bottom, transparent 55%, #070b16 98%)}  /* seamless blend into page */
+#space3d ~ *{position:relative; z-index:1}   /* keeps your text above the canvas */
+.sp3d-hint{position:absolute; right:18px; bottom:14px; z-index:1; font-size:.68rem;
+  letter-spacing:.14em; text-transform:uppercase; color:rgba(232,236,245,.45)}
+
+/* ---------- scroll reveal ---------- */
+.rv{opacity:0; transform:translateY(28px);
+  transition:opacity .8s cubic-bezier(.2,.6,.2,1), transform .8s cubic-bezier(.2,.6,.2,1)}
+.rv.rv-in{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){ .rv{transition:none; opacity:1; transform:none} }
+</style>
 
 <div class="stars" aria-hidden="true"></div>
 
@@ -1485,6 +1530,110 @@ main{
   refreshTimerUI();
   renderProgress();
   renderTopics();
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- splash dismiss ---------- */
+window.addEventListener('load', ()=> setTimeout(()=>document.getElementById('splash').classList.add('done'), 1500));
+setTimeout(()=>{ const s=document.getElementById('splash'); if(s) s.classList.add('done'); }, 6000); // safety
+
+/* ---------- slow scroll-reveal ---------- */
+(function(){
+  const els = document.querySelectorAll('section, article, .card, .cardrow, h1, h2, footer, .traj');
+  els.forEach((el,i)=>{
+    el.classList.add('rv');
+    el.style.transitionDelay = (i % 4) * 90 + 'ms';
+  });
+  const io = new IntersectionObserver(es=>{
+    es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('rv-in'); io.unobserve(en.target); } });
+  }, { threshold:.12 });
+  els.forEach(el=>io.observe(el));
+})();
+
+/* ---------- interactive 3D orrery (blends behind hero) ---------- */
+(function(){
+  if(!window.THREE) return;
+  const holder = document.getElementById('space3d');
+  if(!holder) return;
+
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(55, holder.clientWidth/holder.clientHeight, .1, 2000);
+  cam.position.set(0, 5, 26);
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(holder.clientWidth, holder.clientHeight);
+  holder.appendChild(renderer.domElement);
+
+  /* starfield */
+  const N=1400, pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const r=300+Math.random()*500, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.cos(ph); pos[i*3+2]=r*Math.sin(ph)*Math.sin(th);
+  }
+  const starGeo=new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const stars=new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xbfd4ff,size:1.5,sizeAttenuation:false,transparent:true,opacity:.8}));
+  scene.add(stars);
+
+  const system=new THREE.Group(); scene.add(system);
+
+  /* sun + glow */
+  const sun=new THREE.Mesh(new THREE.SphereGeometry(2.2,32,32), new THREE.MeshBasicMaterial({color:0xf5b942}));
+  system.add(sun);
+  const c=document.createElement('canvas'); c.width=c.height=128;
+  const g2=c.getContext('2d'), gr=g2.createRadialGradient(64,64,0,64,64,64);
+  gr.addColorStop(0,'rgba(255,210,120,1)'); gr.addColorStop(.4,'rgba(255,180,80,.35)'); gr.addColorStop(1,'rgba(255,180,80,0)');
+  g2.fillStyle=gr; g2.fillRect(0,0,128,128);
+  const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c), transparent:true, blending:THREE.AdditiveBlending, depthWrite:false}));
+  glow.scale.set(15,15,1); system.add(glow);
+  system.add(new THREE.PointLight(0xffe0a3, 1.4, 400));
+  scene.add(new THREE.AmbientLight(0x334466, .8));
+
+  /* planets + orbit rings + one moon */
+  const planets=[];
+  [{r:5.5,s:.55,c:0x7fd1c8,sp:.9},{r:8.5,s:.8,c:0xb48cf2,sp:.55,moon:true},{r:12,s:.65,c:0xe0604f,sp:.35}]
+  .forEach(d=>{
+    const p=new THREE.Mesh(new THREE.SphereGeometry(d.s,24,24), new THREE.MeshStandardMaterial({color:d.c,roughness:.6,metalness:.1}));
+    const ring=new THREE.Mesh(new THREE.RingGeometry(d.r-.02,d.r+.02,128),
+      new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.13,side:THREE.DoubleSide}));
+    ring.rotation.x=Math.PI/2; system.add(ring);
+    const pivot=new THREE.Group(); pivot.add(p); p.position.x=d.r; system.add(pivot);
+    const rec={pivot,sp:d.sp};
+    if(d.moon){ const m=new THREE.Mesh(new THREE.SphereGeometry(.22,16,16), new THREE.MeshStandardMaterial({color:0xdfe6f2,roughness:.8}));
+      const mp=new THREE.Group(); mp.add(m); m.position.x=1.4; p.add(mp); rec.mp=mp; }
+    planets.push(rec);
+  });
+
+  /* interaction: drag to rotate, wheel to zoom */
+  let drag=false,px=0,py=0,rotY=0,rotX=.25,tY=0,tX=.25,zoom=26,tZ=26;
+  holder.addEventListener('pointerdown', e=>{drag=true; px=e.clientX; py=e.clientY;});
+  window.addEventListener('pointermove', e=>{ if(!drag)return;
+    tY+=(e.clientX-px)*.005; tX=Math.max(-.6,Math.min(.9,tX+(e.clientY-py)*.003)); px=e.clientX; py=e.clientY; });
+  window.addEventListener('pointerup', ()=>drag=false);
+  holder.addEventListener('wheel', e=>{ e.preventDefault(); tZ=Math.max(14,Math.min(60,tZ+e.deltaY*.02)); }, {passive:false});
+
+  /* pause rendering when hero scrolled away */
+  let visible=true;
+  new IntersectionObserver(en=>{visible=en[0].isIntersecting;}).observe(holder);
+
+  const clock=new THREE.Clock();
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!visible) return;
+    const t=clock.getElapsedTime();
+    if(!drag) tY+=.0006;                       /* idle drift */
+    rotY+=(tY-rotY)*.06; rotX+=(tX-rotX)*.06; zoom+=(tZ-zoom)*.08;
+    system.rotation.y=rotY; system.rotation.x=rotX; stars.rotation.y=t*.004;
+    cam.position.z=zoom; cam.lookAt(0,0,0);
+    planets.forEach(r=>{ r.pivot.rotation.y=t*r.sp; if(r.mp) r.mp.rotation.y=t*2.2; });
+    renderer.render(scene,cam);
+  })();
+
+  window.addEventListener('resize', ()=>{
+    renderer.setSize(holder.clientWidth, holder.clientHeight);
+    cam.aspect=holder.clientWidth/holder.clientHeight; cam.updateProjectionMatrix();
+  });
 })();
 </script>
 </body>

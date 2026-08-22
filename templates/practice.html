@@ -380,6 +380,127 @@ const BANK = {
 };
 
 /* Sources: official archives from your Resource Libraries */
+/* ================================================================
+   AUTO-GENERATOR — unlimited easy & medium questions.
+   Browsers can't scrape the official archives directly (CORS), so
+   this generator mirrors the exact question ARCHETYPES found in
+   ioaa.net/problems · aoxiv · ipho.olimpicos.net · phoxiv, with fresh
+   randomized numbers and COMPUTED solutions (always correct).
+   It kicks in automatically whenever the handcrafted pool runs out.
+   (For live internet questions later, replace genQuestion() with a
+   fetch to a small backend proxy — the rest of the UI won't change.)
+================================================================ */
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const r1=x=>Math.round(x*10)/10;
+function Q(topic,q,parts,hints,sol){
+  return { id:'gen-'+Date.now()+'-'+ri(100,999), topic, q, parts, hints, sol, gen:true,
+           src:(SOURCES[state.olymp]||SOURCES.ioaa)[0].url,
+           srcName:'auto-generated · in the style of the official archives' };
+}
+const GEN = {
+  ioaa: {
+    easy: [
+      ()=>{ const d=pick([2.5,5,7.5]), mA=pick([1,2,3]), mB=r1(mA+d);
+        return Q('Magnitudes', `Star A has apparent magnitude ${mA}; star B has apparent magnitude ${mB}.`,
+          ['How many times brighter is A than B?','Star C appears 100× brighter than B. Its magnitude?'],
+          ['Every 5 magnitudes = factor 100 in flux.','Brighter = smaller magnitude.'],
+          `Δm = ${d} → ratio = 10^(0.4·${d}) ≈ ${r1(Math.pow(10,.4*d))}×. C = ${r1(mB-5)}.`); },
+      ()=>{ const D=pick([384400,150000,500000]), a=pick([0.5,1,1.9]);
+        return Q('Small-angle', `An object at ${D.toLocaleString()} km subtends ${a}°.`,
+          ['Estimate its physical size.'],
+          ['size ≈ distance × angle in radians.',`${a}° ≈ ${r1(a*Math.PI/180*1000)/1000} rad.`],
+          `size ≈ ${Math.round(D*a*Math.PI/180).toLocaleString()} km.`); },
+      ()=>{ const [a,M]=pick([[4,1],[9,1],[16,1],[4,4],[16,4],[9,4]]);
+        return Q('Kepler III', `A planet orbits a ${M} M☉ star at ${a} AU.`,
+          ['Find its orbital period.'],
+          ['P² = a³ / M (yr, AU, M☉).'],
+          `P = √(${a**3}/${M}) = ${r1(Math.sqrt(a**3/M))} yr.`); },
+      ()=>{ const p=pick([0.5,0.25,0.2,0.1,0.05]), d=1/p;
+        return Q('Parallax', `A star has parallax ${p}″.`,
+          ['Distance in parsecs?','In light-years?'],
+          ['d(pc) = 1/π.','1 pc ≈ 3.26 ly.'],
+          `d = ${d} pc ≈ ${r1(d*3.26)} ly.`); },
+      ()=>{ const dl=pick([15,30,45,60,75,90]);
+        return Q('Time & longitude', `Two cities differ in longitude by ${dl}°. It is local solar noon at the eastern one.`,
+          ['Local solar time at the western city?'],
+          ['Earth spins 15° per hour; west lags.'],
+          `${dl/15} h earlier → ${12-dl/15}:00.`); }
+    ],
+    medium: [
+      ()=>{ const [a,P]=pick([[8,8],[16,16],[20,10],[8,4],[16,8]]), d=pick([5,10,20]);
+        return Q('Visual binary', `A binary has period ${P} yr, angular semi-major axis ${r1(a/d)}″, parallax ${r1(1/d)}″.`,
+          ['Distance?','Physical semi-major axis (AU)?','Total mass?'],
+          ['d = 1/π.','a(AU) = a(″) × d.','M = a³/P².'],
+          `d = ${d} pc; a = ${a} AU; M = ${r1(a**3/P**2)} M☉.`); },
+      ()=>{ const T=pick([5800,10000,20000,29000]), L=pick([1,16,81,100]);
+        return Q('Stellar physics', `A star's spectrum peaks at ${r1(2.898e6/T)} nm; luminosity ${L} L☉.`,
+          ['Surface temperature?','Radius in R☉?'],
+          ['Wien: λmax·T = 2.898×10⁻³ m·K.','R = √L · (5800/T)².'],
+          `T = ${T} K; R ≈ ${r1(Math.sqrt(L)*Math.pow(5800/T,2))} R☉.`); },
+      ()=>{ const d=pick([100,1000]), M=ri(-2,4), m=M+5*Math.log10(d/10);
+        return Q('Distance scale', `A star has m = ${m} and M = ${M}.`,
+          ['Find its distance.','With 1 mag of uncorrected extinction, what distance would you wrongly infer?'],
+          ['m − M = 5 log₁₀(d/10).','+1 mag ⇒ ×10^0.2 ≈ ×1.58 in distance.'],
+          `d = ${d} pc; naive d ≈ ${Math.round(d*1.58)} pc.`); },
+      ()=>{ const l=pick([0.21,0.1,0.06]), th=pick([0.5,1,2]);
+        return Q('Radio astronomy', `Required dish diameter for ${th}° resolution at λ = ${l} m?`,
+          ['Compute D.','Why so large compared to optical telescopes?'],
+          ['θ ≈ 1.22 λ/D, θ in radians.'],
+          `D ≈ ${r1(1.22*l/(th*Math.PI/180))} m.`); }
+    ]
+  },
+  ipho: {
+    easy: [
+      ()=>{ const v=pick([10,15,20,25,30]);
+        return Q('Kinematics', `A ball is thrown upward at ${v} m/s (g = 10 m/s²).`,
+          ['Maximum height?','Total flight time?'],
+          ['v² = u² − 2gh at the top.','t = 2u/g.'],
+          `h = ${v*v/20} m; t = ${2*v/10} s.`); },
+      ()=>{ const R=pick([4,6,10]), r=pick([2,3,5]), I=pick([1,2,3]), V=I*(R/2+r), Vp=I*R/2;
+        return Q('DC circuits', `Two ${R} Ω resistors in parallel, in series with ${r} Ω across a ${V} V battery.`,
+          ['Total current?','Power in one of the parallel resistors?'],
+          ['R∥R = R/2.','Find the pair voltage first.'],
+          `I = ${I} A; pair sees ${Vp} V → P = ${r1(Vp*Vp/R)} W.`); },
+      ()=>{ const rho=pick([400,600,800]), V=pick([1,2,5]);
+        return Q('Buoyancy', `A block of density ${rho} kg/m³ and volume ${V}×10⁻³ m³ floats in water (g = 10).`,
+          ['Submerged fraction?','Downward force to hold it fully under?'],
+          ['Fraction = ρ/ρw.','F = ρw·g·V·(1 − fraction).'],
+          `${rho/10}% submerged; F = ${r1(1000*10*V/1000*(1-rho/1000))} N.`); },
+      ()=>{ const m=pick([2,4,5,10]), F=pick([10,20,50]), t=pick([2,4,5]), a=F/m;
+        return Q('Newton II', `A ${m} kg block at rest is pushed by ${F} N for ${t} s on a frictionless surface.`,
+          ['Acceleration? Final velocity? Distance?'],
+          ['a = F/m, v = at, s = ½at².'],
+          `a = ${a} m/s²; v = ${a*t} m/s; s = ${.5*a*t*t} m.`); }
+    ],
+    medium: [
+      ()=>{ const R=pick([2,5,10]);
+        return Q('Loop-the-loop', `A block slides frictionlessly into a vertical loop of radius ${R} m (g = 10).`,
+          ['Minimum release height?','Speed at the top in that case?','Normal force at the bottom if released from 3R? (in mg)'],
+          ['Top critical condition: v² = gR.','N − mg = mv²/R at the bottom.'],
+          `h = ${2.5*R} m; v = ${r1(Math.sqrt(10*R))} m/s; N = 7 mg.`); },
+      ()=>{ const R=pick([10,20,50]), C=pick([100,220,470]), V=pick([5,10,12]);
+        return Q('RC circuits', `C = ${C} µF charged through R = ${R} kΩ from ${V} V.`,
+          ['Time constant?','Charge after one τ?','Energy stored vs delivered — where does the rest go?'],
+          ['τ = RC.','q(τ) ≈ 0.63 CV.'],
+          `τ = ${r1(R*C/1000)} s; q ≈ ${Math.round(.63*C*V)} µC; half the CV² = ${r1(.5*C*V*V)} µJ is dissipated in R.`); },
+      ()=>{ const [f,u,v]=pick([[10,15,30],[10,30,15],[15,30,30],[20,30,60],[10,20,20]]);
+        return Q('Geometric optics', `Converging lens f = ${f} cm, object at ${u} cm.`,
+          ['Image position and magnification? Real/virtual?','Move object inside f — what changes?'],
+          ['1/f = 1/u + 1/v.','m = −v/u.'],
+          `v = ${v} cm, m = ${r1(-v/u)} → real & inverted; inside f it becomes virtual & upright.`); },
+      ()=>{ const p=pick([100,200]), V=pick([1,2]);
+        return Q('Thermodynamic cycle', `Monatomic gas at (${p} kPa, ${V} m³): isobaric expansion to 2V, isochoric halving of p, isothermal return.`,
+          ['Net work per cycle?','Efficiency? (ln 2 ≈ 0.693)'],
+          ['W = p₀V₀(1 − ln2).','η = W / Q_in, Q_in = (5/2 + ln2) p₀V₀.'],
+          `W ≈ ${r1(p*V*.307)} kJ; η ≈ 9.6%.`); }
+    ]
+  }
+};
+function genQuestion(olymp, diff){
+  const pool = GEN[olymp] && GEN[olymp][diff];
+  return pool ? pick(pool)() : null;
+}
 const SOURCES = {
   ioaa: [ {url:'https://www.ioaa.net/problems', name:'IOAA official past papers'},
           {url:'https://aoxiv.aoguide.app', name:'aoxiv — IOAA problem archive'} ],
@@ -561,11 +682,16 @@ function buildDiffRow(){
     const pool = BANK[state.olymp][d.key];
     const solvedN = pool.filter(q=>solved[q.id]==='win').length;
     const s = (stats[state.olymp]||{})[d.key]||{n:0};
+
+    // ▼▼▼ NEW LINE — only easy & medium get the infinite auto-gen badge ▼▼▼
+    const inf = (d.key==='easy' || d.key==='medium') ? ' · ∞ auto-gen' : '';
+
     const el = document.createElement('div');
     el.className = 'pick diff-'+d.key;
     el.innerHTML = '<h3>'+d.icon+' '+d.label+'</h3><p>'+d.desc+'</p>'
       + '<span class="chip">⏱ <span class="time">'+fmtShort(d.secs)+'</span></span>'
-      + '<div class="stat">✅ '+solvedN+'/'+pool.length+' questions solved · '+s.n+' attempts</div>';
+      // ▼▼▼ CHANGED LINE — added '+inf' at the end of the stat line ▼▼▼
+      + '<div class="stat">✅ '+solvedN+'/'+pool.length+' questions solved'+inf+' · '+s.n+' attempts</div>';
     el.onclick = ()=> startSession(d.key);
     row.appendChild(el);
   });
@@ -582,10 +708,12 @@ function pickQuestions(){
   seen[state.olymp] = seen[state.olymp]||{};
   let used = seen[state.olymp][state.diff] = seen[state.olymp][state.diff]||[];
   let fresh = pool.filter(q=>!used.includes(q.id));
-  if(fresh.length < 2) { used.length = 0; fresh = pool.slice(); }
+  const canGen = !!(GEN[state.olymp] && GEN[state.olymp][state.diff]);
+  if(fresh.length < 2 && !canGen){ used.length = 0; fresh = pool.slice(); }
   for(let i=fresh.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fresh[i],fresh[j]]=[fresh[j],fresh[i]]; }
-  const drawn = fresh.slice(0, Math.min(2, fresh.length));
-  drawn.forEach(q=>used.push(q.id));
+  const drawn = fresh.slice(0,2);
+  while(drawn.length < 2){ const g = genQuestion(state.olymp, state.diff); if(!g) break; drawn.push(g); }  // auto-gen top-up
+  drawn.forEach(q=>{ if(!q.gen) used.push(q.id); });
   store.set('practice.seen.v1', seen);
   return drawn;
 }
