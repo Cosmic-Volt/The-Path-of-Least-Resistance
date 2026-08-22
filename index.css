@@ -303,9 +303,9 @@ main{
 }
 .streak-grid{
   display: grid;
-  /* grid-template-columns is set inline by JS to match the column count,
-     so the grid fills row by row, left to right, starting top-left.
-     Rows grow automatically as the log covers more days. */
+  /* grid-template-columns is set inline by JS to match the column count.
+     Fixed 30x12 rectangle: logging starts top-left and fills row by
+     row; cells beyond today sit empty, waiting to be reached. */
   grid-auto-flow: row;
   grid-auto-rows: 12px;
   gap: 3px;
@@ -324,6 +324,12 @@ main{
 
 /* pending: today, not yet logged — neutral, not a miss */
 .cell.level-pending{ background: rgba(255,255,255,0.06); }
+
+/* future: hasn't happened yet — quiet placeholder, keeps the grid whole */
+.cell.level-future{
+  background: transparent;
+  border-color: rgba(255,255,255,0.05);
+}
 
 /* missed / very little practice: dark-orange family */
 .cell.level-miss{
