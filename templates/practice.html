@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Range — IOAA · IPhO</title>
+<style>
+  :root{
+    --bg:#070b16; --panel:rgba(255,255,255,.04); --line:rgba(255,255,255,.12);
+    --gold:#f5b942; --gold-soft:#ffd97a; --teal:#7fd1c8; --red:#e0604f; --violet:#b48cf2;
+    --ink:#e8ecf5; --dim:#9aa3b5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:radial-gradient(1200px 800px at 80% -10%, #101a33 0%, var(--bg) 55%);
+       color:var(--ink); font-family:"Segoe UI", system-ui, sans-serif; min-height:100vh}
+  a{color:var(--gold-soft)}
+  .wrap{max-width:1000px; margin:0 auto; padding:0 20px}
+
+  /* ---------- top bar ---------- */
+  header.top{display:flex; justify-content:space-between; align-items:center;
+    padding:14px 20px; border-bottom:1px solid var(--line); background:rgba(7,11,22,.8)}
+  .brand{font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:.95rem}
+  .brand em{color:var(--gold); font-style:normal}
+  nav.mini{display:flex; gap:16px; font-size:.85rem; flex-wrap:wrap}
+  nav.mini a{color:var(--dim); text-decoration:none}
+  nav.mini a:hover{color:var(--ink)}
+
+  h1{font-size:1.7rem; letter-spacing:.1em; text-transform:uppercase; margin:34px 0 6px}
+  .sub{color:var(--dim); margin-bottom:26px}
+
+  /* ---------- selectors ---------- */
+  .cardrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-bottom:34px}
+  .pick{border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--panel);
+        cursor:pointer; transition:.18s; position:relative; user-select:none}
+  .pick:hover{transform:translateY(-2px); border-color:rgba(245,185,66,.5)}
+  .pick.sel{border-color:var(--gold); box-shadow:0 0 0 1px rgba(245,185,66,.5)}
+  .pick h3{font-size:1.05rem; margin-bottom:4px}
+  .pick p{font-size:.8rem; color:var(--dim); line-height:1.4}
+  .chip{display:inline-block; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+        padding:3px 9px; border-radius:999px; border:1px solid var(--line); color:var(--dim); margin-top:10px}
+  .pick.sel .chip{border-color:var(--gold); color:var(--gold-soft)}
+  .time{font-variant-numeric:tabular-nums; font-weight:700; color:var(--gold-soft)}
+  .stat{font-size:.72rem; color:var(--dim); margin-top:8px; font-variant-numeric:tabular-nums}
+
+  .diff-easy.sel{border-color:var(--teal);   box-shadow:0 0 0 1px rgba(127,209,200,.45)}
+  .diff-medium.sel{border-color:var(--gold); box-shadow:0 0 0 1px rgba(245,185,66,.45)}
+  .diff-hard.sel{border-color:var(--red);    box-shadow:0 0 0 1px rgba(224,96,79,.45)}
+  .diff-olympiad.sel{border-color:var(--violet); box-shadow:0 0 0 1px rgba(180,140,242,.45)}
+
+  /* ---------- arena ---------- */
+  .arena,.review{display:none; border:1px solid var(--line); border-radius:16px;
+    background:var(--panel); padding:26px; margin-bottom:34px}
+  .arena.open,.review.open{display:block}
+  .arena-head{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px}
+  .tag{font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; padding:4px 10px;
+       border-radius:999px; border:1px solid var(--line); color:var(--dim)}
+  .timerbox{display:flex; align-items:center; gap:14px}
+  .timer{font-size:2rem; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.04em}
+  .timer.warn{color:var(--red); animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.55}}
+  .tbar{height:8px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin-bottom:20px}
+  .tbar i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); transition:width 1s linear}
+  .tbar.low i{background:var(--red)}
+  .qtopic{color:var(--teal); font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px}
+  .qtext{line-height:1.65; margin-bottom:14px}
+  .parts{list-style:none; counter-reset:pt; margin:0 0 18px; display:flex; flex-direction:column; gap:10px}
+  .parts li{counter-increment:pt; line-height:1.6; padding-left:34px; position:relative}
+  .parts li::before{content:counter(pt, upper-alpha) "."; position:absolute; left:0; color:var(--gold); font-weight:700}
+  textarea{width:100%; min-height:110px; background:rgba(0,0,0,.28); color:var(--ink);
+    border:1px dashed var(--line); border-radius:10px; padding:12px; font-family:inherit; resize:vertical}
+  textarea:focus{outline:none; border-color:var(--gold)}
+  .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+  button{font-family:inherit; font-size:.85rem; padding:10px 18px; border-radius:10px; cursor:pointer;
+    border:1px solid var(--line); background:rgba(255,255,255,.06); color:var(--ink); transition:.15s}
+  button:hover{border-color:var(--gold); transform:translateY(-1px)}
+  button.gold{background:var(--gold); border-color:var(--gold); color:#171003; font-weight:700}
+  button.gold:hover{background:var(--gold-soft)}
+  .hintlog{margin-top:18px; display:flex; flex-direction:column; gap:8px}
+  .hint{border-left:3px solid var(--teal); background:rgba(127,209,200,.07); padding:10px 14px;
+        border-radius:0 10px 10px 0; font-size:.9rem; line-height:1.5}
+  .hint b{color:var(--teal)}
+
+  /* ---------- review ---------- */
+  .review h3{letter-spacing:.08em; text-transform:uppercase; font-size:.95rem; margin-bottom:10px}
+  .sol{background:rgba(245,185,66,.08); border:1px solid rgba(245,185,66,.35); border-radius:12px;
+       padding:16px; line-height:1.6; margin-bottom:20px}
+  .grade{display:flex; gap:10px; flex-wrap:wrap}
+
+  /* ---------- Vega companion ---------- */
+  #vegaBtn{position:fixed; right:22px; bottom:22px; width:58px; height:58px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--gold-soft), var(--gold) 60%, #8a6414);
+    border:none; font-size:26px; cursor:pointer; z-index:60; box-shadow:0 6px 24px rgba(245,185,66,.35);
+    transition:.2s}
+  #vegaBtn:hover{transform:scale(1.08)}
+  #vegaBubble{position:fixed; right:22px; bottom:92px; width:320px; max-width:calc(100vw - 44px);
+    background:#0e1526; border:1px solid rgba(245,185,66,.5); border-radius:16px 16px 4px 16px;
+    padding:16px; z-index:60; display:none; box-shadow:0 12px 40px rgba(0,0,0,.55)}
+  #vegaBubble.open{display:block; animation:vin .25s ease}
+  @keyframes vin{from{transform:translateY(10px); opacity:0}}
+  .vhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
+  .vname{font-weight:800; letter-spacing:.12em; font-size:.8rem; color:var(--gold-soft)}
+  .vactions button{font-size:.7rem; padding:5px 9px}
+  #vegaMsg{font-size:.88rem; line-height:1.55}
+  #vegaMsg.hintmsg{border-left:3px solid var(--teal); padding-left:10px}
+  .vquick{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+  .vquick button{font-size:.72rem; padding:6px 10px}
+  footer{padding:40px 20px 110px; color:var(--dim); font-size:.78rem; text-align:center}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">🎯 Practice <em>Range</em></div>
+  <nav class="mini">
+    <a href="index.html">🏠 Basecamp</a>
+    <a href="ioaa-study.html">📚 IOAA Study</a>
+    <a href="ipho-study.html">📚 IPhO Study</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <h1>The Practice Range</h1>
+  <p class="sub">Past-paper style problems under real exam pressure. Pick your olympiad, choose your difficulty, and let the clock do the talking. Vega — your companion — will drop hints when you need them. Never answers. That's her one rule.</p>
+
+  <!-- olympiad -->
+  <section id="secOlym">
+    <p class="sub" style="margin-bottom:10px">1 · Choose your arena</p>
+    <div class="cardrow">
+      <div class="pick" data-olymp="ioaa">
+        <h3>🌌 IOAA</h3>
+        <p>Astronomy &amp; Astrophysics — positional, stellar, galactic, data analysis.</p>
+        <span class="chip" id="chipIoaa">0 attempts</span>
+      </div>
+      <div class="pick" data-olymp="ipho">
+        <h3>⚛️ IPhO</h3>
+        <p>Physics — mechanics, E&amp;M, thermo, waves, modern. Theory round style.</p>
+        <span class="chip" id="chipIpho">0 attempts</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- difficulty -->
+  <section id="secDiff">
+    <p class="sub" style="margin-bottom:10px">2 · Select difficulty — the clock follows your choice</p>
+    <div class="cardrow" id="diffRow"></div>
+  </section>
+
+  <!-- arena -->
+  <section class="arena" id="arena">
+    <div class="arena-head">
+      <div>
+        <span class="tag" id="tagOlymp">IOAA</span>
+        <span class="tag" id="tagDiff">EASY · 30 MIN</span>
+      </div>
+      <div class="timerbox"><span class="timer" id="clock">00:30:00</span></div>
+    </div>
+    <div class="tbar" id="tbar"><i id="tfill" style="width:100%"></i></div>
+    <p class="qtopic" id="qTopic"></p>
+    <p class="qtext" id="qText"></p>
+    <ol class="parts" id="qParts"></ol>
+    <textarea id="scratch" placeholder="Scratch space for your working… (not saved)"></textarea>
+    <div class="hintlog" id="hintLog"></div>
+    <div class="btnrow">
+      <button class="gold" id="btnHint">💡 Ask Vega for a hint</button>
+      <button id="btnPause">⏸ Pause</button>
+      <button id="btnEnd">🏁 End session &amp; review</button>
+    </div>
+  </section>
+
+  <!-- review -->
+  <section class="review" id="review">
+    <h3>Session complete — solution sketch</h3>
+    <div class="sol" id="solText"></div>
+    <p class="sub" style="margin-bottom:10px">Be honest with yourself — how did it go?</p>
+    <div class="grade">
+      <button data-g="win">✓ Nailed it</button>
+      <button data-g="almost">◐ Almost there</button>
+      <button data-g="miss">✗ Missed it</button>
+    </div>
+    <div class="btnrow">
+      <button class="gold" id="btnNext">▶ Next problem</button>
+      <button id="btnBack">← Choose difficulty</button>
+    </div>
+  </section>
+</main>
+
+<!-- VEGA -->
+<button id="vegaBtn" title="Vega — your companion">✨</button>
+<div id="vegaBubble">
+  <div class="vhead">
+    <span class="vname">✨ VEGA</span>
+    <span class="vactions">
+      <button id="vegaMute" title="Mute ambient pop-ups">🔔</button>
+      <button id="vegaClose" title="Close">✕</button>
+    </span>
+  </div>
+  <div id="vegaMsg"></div>
+  <div class="vquick">
+    <button id="qvHint">💡 Hint me</button>
+    <button id="qvStuck">🧗 I'm stuck</button>
+    <button id="qvStrat">🧠 Strategy tip</button>
+    <button id="qvAnswer">🔓 Just give the answer</button>
+  </div>
+</div>
+
+<footer>Answers reveal only after you end the session — the honor system is the whole point. Add your own problems to the <code>BANK</code> in this file's source.</footer>
+
+<script>
+/* ================================================================
+   QUESTION BANK — add your own problems here.
+   Each problem: { id, topic, q, parts[], hints[], sol }
+================================================================ */
+const BANK = {
+  ioaa: {
+    easy: [
+      { id:'ia-e1', topic:'Magnitudes',
+        q:'Star A has apparent magnitude 1.0; star B has apparent magnitude 6.0.',
+        parts:['How many times brighter is A than B?','Star C appears 100× brighter than B. What is the magnitude of C?'],
+        hints:['Every 5 magnitudes is exactly a factor of 100 in flux.','Brighter means a smaller — even negative — magnitude number.'],
+        sol:'A is 100× brighter than B. C = 6 − 5 = 1.0.' },
+      { id:'ia-e2', topic:'Small-angle',
+        q:'The Moon lies about 384,400 km away and subtends an angle of 0.52°.',
+        parts:['Estimate the physical diameter of the Moon.'],
+        hints:['Small-angle formula: size ≈ distance × angle (in radians).','0.52° ≈ 0.0091 rad.'],
+        sol:'D ≈ 384,400 × 0.0091 ≈ 3,500 km (true value 3,475 km).' },
+      { id:'ia-e3', topic:'Kepler III',
+        q:'A planet orbits a Sun-like star (1 M☉) at a distance of 4 AU.',
+        parts:['What is its orbital period?','If the star were 4 M☉ instead, what would the period become?'],
+        hints:['P² = a³ / M when P is in years, a in AU, M in solar masses.'],
+        sol:'P = 8 yr. With 4 M☉: P² = 64/4 → P = 4 yr.' },
+      { id:'ia-e4', topic:'Time & longitude',
+        q:'Two cities differ in longitude by 30°. It is local solar noon at the eastern city.',
+        parts:['What is the local solar time at the western city?'],
+        hints:['Earth rotates 15° per hour. West lags behind east.'],
+        sol:'10:00 — two hours earlier.' }
+    ],
+    medium: [
+      { id:'ia-m1', topic:'Visual binary',
+        q:'A visual binary has orbital period 16 yr, angular semi-major axis 1.6″, and parallax 0.10″.',
+        parts:['How far away is the system?','What is the physical semi-major axis in AU?','Find the total mass of the system.'],
+        hints:['d (pc) = 1 / π (arcsec).','Convert angular to linear separation before touching Kepler.','M = a³ / P² with a in AU, P in years, M in M☉.'],
+        sol:'d = 10 pc; a = 16 AU; M = 16³/16² = 16 M☉ — two hefty stars.' },
+      { id:'ia-m2', topic:'Stellar physics',
+        q:'A star\u2019s blackbody spectrum peaks at 290 nm and its luminosity is 100 L☉.',
+        parts:['Find its surface temperature.','Find its radius in solar radii (T☉ ≈ 5,800 K).'],
+        hints:['Wien: λmax · T = 2.898×10⁻³ m·K.','L ∝ R²T⁴ — scale everything against the Sun.'],
+        sol:'T ≈ 10,000 K. R = √100 × (5800/10000)² ≈ 3.4 R☉.' },
+      { id:'ia-m3', topic:'Distance scale',
+        q:'A star has apparent magnitude m = 8.5 and absolute magnitude M = 3.5.',
+        parts:['Find its distance.','If dust adds 1 mag of uncorrected extinction, what distance would you wrongly infer?'],
+        hints:['m − M = 5 log₁₀(d/10 pc).','Extinction makes stars look dimmer — hence farther.'],
+        sol:'d = 100 pc. With 1 mag ignored: m−M = 6 → d ≈ 158 pc.' },
+      { id:'ia-m4', topic:'Radio astronomy',
+        q:'You want an angular resolution of 1° at the 21-cm hydrogen line.',
+        parts:['What dish diameter do you need?','Why are radio dishes so much larger than optical telescopes?'],
+        hints:['θ ≈ 1.22 λ / D, with θ in radians.','Resolution scales as λ/D — radio wavelengths are enormous.'],
+        sol:'D ≈ 1.22 × 0.21 / 0.01745 ≈ 15 m.' }
+    ],
+    hard: [
+      { id:'ia-h1', topic:'Galactic dynamics',
+        q:'The Sun orbits the Galactic centre at v = 220 km/s at R₀ = 8 kpc.',
+        parts:['Find the mass enclosed within R₀. (G = 4.30×10⁻³ pc (km/s)² / M☉)','If visible matter inside R₀ is ≈ 6×10¹⁰ M☉, what fraction of the mass is dark?'],
+        hints:['Circular orbit: v² = GM/R — solve for M.'],
+        sol:'M ≈ 9×10¹⁰ M☉; dark fraction ≈ (9−6)/9 ≈ 33%.' },
+      { id:'ia-h2', topic:'Cosmology',
+        q:'A galaxy is observed at redshift z = 0.015. Take H₀ = 70 km/s/Mpc.',
+        parts:['Recession velocity?','Distance?','Lookback time?'],
+        hints:['Small z: v ≈ z·c.','Lookback time ≈ d / c.'],
+        sol:'v = 4,500 km/s; d ≈ 64 Mpc; light left ≈ 210 million years ago.' },
+      { id:'ia-h3', topic:'Transits',
+        q:'A Sun-like star shows transits of depth 1% repeating every 3.5 days.',
+        parts:['Planet radius in R☉?','Semi-major axis?','Rough transit duration?'],
+        hints:['Depth = (Rp / R★)².','Kepler III gives a from P (M = 1 M☉).','Duration ≈ P · R★ / (π a) for a central transit.'],
+        sol:'Rp = 0.1 R☉ ≈ 1 R_Jupiter; a ≈ 0.045 AU; duration ≈ 2.8 h.' }
+    ],
+    olympiad: [
+      { id:'ia-o1', topic:'Exoplanet characterisation (multi-round)',
+        q:'A survey detects transits of a 1 M☉, 1 R☉, 5,800 K star. Period P = 4.0 days, transit depth 1%, edge-on orbit (i = 90°). Follow-up radial velocities show a semi-amplitude K = 140 m/s.',
+        parts:['Determine the planet\u2019s radius.','Estimate the planet\u2019s mass. (For circular orbits K ≈ 28.4 m/s · (Mp/M_J) · (P/1 yr)^−1/3 · (M★/M☉)^−2/3)','Find the semi-major axis.','Compute the equilibrium temperature assuming Bond albedo 0.3. (Teq = T★ √(R★/2a) (1−A)^¼)','Compute the planet\u2019s mean density and comment on its nature.'],
+        hints:['Start from the transit depth — it\u2019s a pure ratio.','P = 4 days ≈ 0.011 yr; handle the P^(−1/3) carefully.','Teq is just solar-heating geometry with a dilution factor.','Density = mass / volume. Compare with Jupiter (≈ 1.3 g/cm³).'],
+        sol:'Rp = 0.1 R☉ ≈ 1.0 R_J. Mp ≈ 1.1 M_J. a ≈ 0.049 AU. Teq ≈ 1,150 K → a hot Jupiter; ρ ≈ 1.3 g/cm³, consistent with a gas giant.' },
+      { id:'ia-o2', topic:'Standard candles & Hubble flow',
+        q:'A Type Ia supernova peaks at apparent magnitude m = +12.7 in a galaxy with measured redshift z = 0.008. Assume M = −19.3 for normal SNe Ia.',
+        parts:['Find the luminosity distance to the host galaxy.','Estimate H₀ from this single object.','This SN has a broad, slow light curve. Does that make it intrinsically brighter or fainter than average, and how would you correct the distance?','Explain why SNe Ia are called \u201cstandardizable\u201d rather than \u201cstandard\u201d candles.'],
+        hints:['Distance modulus first: m − M = 5 log₁₀(d/10 pc).','v ≈ zc, then H₀ = v/d — mind your units.','Think about nickel mass and diffusion time.'],
+        sol:'d ≈ 250 Mpc. v = 2,400 km/s → H₀ ≈ 96 km/s/Mpc (one object — noisy!). Broader light curve ⇒ brighter ⇒ true distance larger. Width–luminosity relation is what makes them standardizable.' }
+    ]
+  },
+  ipho: {
+    easy: [
+      { id:'ip-e1', topic:'Kinematics',
+        q:'A ball is thrown straight upward at 20 m/s. Take g = 10 m/s², ignore air resistance.',
+        parts:['Maximum height reached?','Total time until it returns to the launch point?'],
+        hints:['v² = u² − 2gh at the top, where v = 0.','Ascent time = descent time.'],
+        sol:'h = 400/20 = 20 m; t = 2 × (20/10) = 4 s.' },
+      { id:'ip-e2', topic:'DC circuits',
+        q:'Two 6 Ω resistors are connected in parallel, and this pair is placed in series with a 2 Ω resistor across a 10 V battery.',
+        parts:['Total current drawn from the battery?','Power dissipated in one of the 6 Ω resistors?'],
+        hints:['Parallel 6 Ω ∥ 6 Ω = 3 Ω.','Find the voltage across the parallel pair first.'],
+        sol:'R = 5 Ω, I = 2 A. Parallel pair sees 6 V → P = 36/6 = 6 W per resistor.' },
+      { id:'ip-e3', topic:'Buoyancy',
+        q:'A block of density 600 kg/m³ and volume 2×10⁻³ m³ floats in water (1000 kg/m³). Take g = 10 m/s².',
+        parts:['What fraction of the block is submerged?','What downward force is needed to hold it fully submerged?'],
+        hints:['Floating: weight = buoyancy. Compare densities.','Fully submerged: buoyancy exceeds weight by the missing fraction.'],
+        sol:'60% submerged. F = ρw·g·V·0.4 = 8 N.' },
+      { id:'ip-e4', topic:'Newton II',
+        q:'A 2 kg block at rest on a frictionless surface is pushed by a constant 10 N force for 4 s.',
+        parts:['Acceleration?','Final velocity?','Distance covered?'],
+        hints:['F = ma, then v = at, then s = ½at².'],
+        sol:'a = 5 m/s²; v = 20 m/s; s = 40 m.' }
+    ],
+    medium: [
+      { id:'ip-m1', topic:'Energy & circular motion',
+        q:'A block slides from height h down a frictionless track into a vertical loop of radius R.',
+        parts:['Minimum h for the block to complete the loop?','At that minimum height, what is its speed at the top?','If released from h = 3R instead, what normal force acts on the block at the bottom of the loop?'],
+        hints:['At the top of the loop, the critical condition is N = 0, so v² = gR.','Conserve energy between release point and the top.','At the bottom: N − mg = mv²/R.'],
+        sol:'h_min = 5R/2. v_top = √(gR). With h = 3R: v² = 6gR → N = 7mg.' },
+      { id:'ip-m2', topic:'RC circuits',
+        q:'An uncharged capacitor C is charged through a resistor R from a battery of voltage V.',
+        parts:['What is the time constant?','What charge is on the capacitor after one time constant?','Once fully charged, compare the energy stored in C with the total energy delivered by the battery. Where did the rest go?'],
+        hints:['q(t) = CV(1 − e^(−t/RC)).','e^(−1) ≈ 0.37.','Integrate power, or use a symmetry argument about the resistor.'],
+        sol:'τ = RC. q(τ) ≈ 0.63 CV. Battery delivers CV², capacitor keeps ½CV² — exactly half is dissipated in R, regardless of R.' },
+      { id:'ip-m3', topic:'Geometric optics',
+        q:'A converging lens of focal length 10 cm faces an object placed 15 cm away.',
+        parts:['Locate the image and give its magnification. Real or virtual? Upright or inverted?','The object is moved to 5 cm from the lens. What happens to the image?'],
+        hints:['1/f = 1/u + 1/v — pick a sign convention and stick to it.','Inside the focal length, a converging lens becomes a magnifier.'],
+        sol:'v = 30 cm, magnification −2: real, inverted, twice size. At 5 cm: virtual image at −10 cm, upright, magnified ×2.' },
+      { id:'ip-m4', topic:'Thermodynamic cycle',
+        q:'A monatomic ideal gas starts at (p₀, V₀). It expands isobarically to 2V₀, is cooled isochorically until the pressure halves, then returns to its start isothermally.',
+        parts:['What is the temperature at the end of the isobaric step, relative to the start?','Net work done per cycle?','Efficiency of the cycle? (ln 2 ≈ 0.693)'],
+        hints:['Note that state C (p₀/2, 2V₀) has the same pV as state A — hence the return really is isothermal.','Work is the enclosed area: rectangle minus the isotherm integral.','η = W_net / Q_absorbed. Heat enters during the isobaric expansion and the isothermal leg.'],
+        sol:'T_B = 2T_A. W = p₀V₀(1 − ln2) ≈ 0.31 p₀V₀. Q_in = (5/2 + ln2) p₀V₀ ≈ 3.19 p₀V₀ → η ≈ 9.6%.' }
+    ],
+    hard: [
+      { id:'ip-h1', topic:'Electromagnetic induction',
+        q:'A conducting rod of mass m and length L slides without friction down two vertical rails, connected at the bottom by a resistor R. A uniform field B points out of the page. The rod stays horizontal and rail resistance is negligible.',
+        parts:['Direction of the induced current through the rod?','Find the terminal velocity of the rod.','Verify your answer with an energy argument.'],
+        hints:['Flux through the loop is increasing — Lenz\u2019s law decides the direction.','Terminal speed means magnetic force balances weight: BIL = mg, with I = BLv/R.','Compare gravitational power mgv with Joule heating I²R.'],
+        sol:'Current opposes the flux increase. v_term = mgR / (B²L²). At that speed mgv = (BLv)²/R — power balances exactly.' },
+      { id:'ip-h2', topic:'Rolling motion',
+        q:'A solid cylinder (I = ½mr²) rolls without slipping down an incline of angle θ.',
+        parts:['Find its acceleration.','Minimum friction coefficient required?','How does the descent time compare with a frictionless sliding block from the same height?'],
+        hints:['Torque about the centre gives f·r = Iα, and rolling means a = αr.','Friction provides the torque — combine translation and rotation.','a_cylinder = (2/3) g sinθ vs g sinθ.'],
+        sol:'a = (2/3) g sinθ. f = (1/3) mg sinθ, N = mg cosθ → μ ≥ (1/3) tanθ. Rolling takes √(3/2) ≈ 1.22× longer.' },
+      { id:'ip-h3', topic:'Orbital mechanics',
+        q:'A satellite moves in a circular orbit of radius r and speed v₀. At one instant it fires a retro-rocket, instantly reducing its speed to 0.9 v₀.',
+        parts:['Is the burn point the apogee or the perigee of the new orbit? Why?','Find the semi-major axis of the new orbit.','Find the perigee distance.','Period of the new orbit relative to the original one?'],
+        hints:['Slower than circular ⇒ it starts falling inward ⇒ that point is the farthest one.','Energy: E = ½mv² − GMm/r with v₀² = GM/r, then E = −GMm/2a.','Use r_a = a(1+e) and r_p = a(1−e).','Kepler III: T ∝ a^(3/2).'],
+        sol:'Apogee. E = −0.595 mv₀² → a = r/1.19 ≈ 0.84r. e = 0.19 → r_p ≈ 0.68r. T_new ≈ 0.77 T₀.' }
+    ],
+    olympiad: [
+      { id:'ip-o1', topic:'Mechanics gauntlet (multi-part)',
+        q:'A block of mass m is released from rest at height h above the bottom of a frictionless quarter-circle ramp. At the bottom it enters a rough horizontal patch of length d with friction coefficient μ, then collides with and sticks to a stationary block of mass M attached to a spring (constant k) on a frictionless surface.',
+        parts:['Speed of m just before the rough patch?','Speed after crossing the patch (assume it makes it across)?','Speed of the combined mass immediately after the collision?','Maximum spring compression?','Condition on μ for the block to stop before ever reaching block M?'],
+        hints:['The ramp is pure energy conservation.','The rough patch is work–energy: friction does −μmgd.','The collision conserves momentum, not kinetic energy.','After sticking, it\u2019s pure ½Mv² ↔ ½kx².','Compare the patch\u2019s available friction work with the initial mgh.'],
+        sol:'v₁ = √(2gh). v₂ = √(2gh − 2μgd). v₃ = m v₂/(m+M). x = v₃ √((m+M)/k). Stops short when μgd ≥ gh, i.e. μ ≥ h/d.' },
+      { id:'ip-o2', topic:'Crossed fields (multi-part)',
+        q:'A particle of charge q and mass m is accelerated from rest through a potential difference V, then enters a velocity selector with perpendicular fields E and B, and finally enters a region with field B₀ only, moving in a semicircle to hit a detector.',
+        parts:['Speed after acceleration?','What relation between E, B and v lets the particle pass the selector undeflected?','Radius of the semicircle in the B₀ region, expressed using only E, B, B₀, q, m?','Time spent in the B₀ region?','If B in the selector is doubled while E stays fixed, which way does the particle deflect inside the selector?'],
+        hints:['Energy: qV = ½mv².','Selector balance: electric force equals magnetic force.','Chain your results: v from the selector, then r = mv/(qB₀).','A semicircle takes exactly half a cyclotron period.','Compare qE with qvB after the change.'],
+        sol:'v = √(2qV/m). Selector: v = E/B. r = mE/(q B B₀). t = π m/(qB₀) — independent of v. Doubling B makes qvB > qE: deflection toward the magnetic-force side of the selector.' }
+    ]
+  }
+};
+
+const DIFFS = [
+  { key:'easy',     label:'Easy',     icon:'🌱', secs:30*60,   desc:'Warm-up problems. Sharp fundamentals.' },
+  { key:'medium',   label:'Medium',   icon:'⚙️', secs:2*3600,  desc:'Solid multi-step problems. Exam tempo.' },
+  { key:'hard',     label:'Hard',     icon:'🔥', secs:3*3600,  desc:'Deep reasoning. Selection-camp level.' },
+  { key:'olympiad', label:'Olympiad', icon:'👑', secs:5*3600,  desc:'Full multi-part papers. The real thing.' }
+];
+const OLYM_LABEL = { ioaa:'IOAA', ipho:'IPhO' };
+
+/* ---------------- state & persistence ---------------- */
+let state = { olymp:null, diff:null, q:null, hintStage:0,
+              remaining:0, total:0, timer:null, running:false };
+const store = {
+  get(k,f){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):f; }catch(e){ return f; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let stats = store.get('practice.stats.v1', {});
+let seen  = store.get('practice.seen.v1', {});
+
+/* ---------------- Vega companion ---------------- */
+const VEGA = {
+  muted:false, ambientTimer:null,
+  greet:[ "Hey, it\u2019s Vega ✨ I hang around while you practice — hints only, never answers. That\u2019s the deal.",
+          "Vega here ✨ Pick something that scares you a little. That\u2019s where the growth is." ],
+  ambient:[ "Stuck isn\u2019t failing — it\u2019s where physics actually happens. What\u2019s the one quantity you\u2019re sure about?",
+            "Draw it. Seriously. One minute of sketching beats ten of staring 😄",
+            "Follow the units — they\u2019re breadcrumbs telling you what the answer must look like.",
+            "If the algebra feels brutal, a symmetry is probably hiding the shortcut.",
+            "Re-read the problem statement. Half the data hides in plain sight.",
+            "Write the governing principle first, plug numbers last. Always.",
+            "Hydrate, stretch, come back at the problem from a new angle 💧",
+            "Sanity-check with extremes: what should happen when a value goes to zero or infinity?" ],
+  strat:{ easy:"30 minutes flies. Read everything first, bank the gimme points, then hunt the tricky bit.",
+          medium:"Two hours: outline before you compute. A clean setup is half the marks.",
+          hard:"Three hours. If one part eats >20% of your time, park it and return later.",
+          olympiad:"Five-hour marathon: spend the first 10 minutes reading everything and ranking the parts by confidence.",
+          generic:"Plan before you compute. Marks live in clear setups, not in arithmetic." },
+  stuck:[ "Okay, breathe. Forget the answer for a second — what principle does this topic usually use?",
+          "Try working backwards: what would you need, just before the final step?",
+          "List every given quantity on paper. The bridge between two of them is usually the key." ],
+  refuse:[ "Answers? From me? My honor as a companion is at stake 😤 Here\u2019s a nudge instead:",
+           "Nice try 😄 I physically cannot. But I can hand you a better hint:",
+           "If I gave you the answer, the medal wouldn\u2019t be yours. Nudge incoming:" ],
+  milestone:{ half:"Halfway! Write up what you have neatly — partial credit loves clean work.",
+              ten:"Ten minutes left. Secure what\u2019s done, and set up whatever isn\u2019t — setups earn marks too.",
+              start:"Session live. I\u2019ll whisper if I see something useful ✨",
+              end:"Time! Pencils down — honor system 😉 Let\u2019s see how it went." }
+};
+const rnd = a => a[Math.floor(Math.random()*a.length)];
+const vegaEl = { btn:document.getElementById('vegaBtn'), bubble:document.getElementById('vegaBubble'),
+                 msg:document.getElementById('vegaMsg'), mute:document.getElementById('vegaMute') };
+
+function vegaSay(text, kind){
+  vegaEl.msg.textContent = text;
+  vegaEl.msg.className = (kind==='hint') ? 'hintmsg' : '';
+  vegaEl.bubble.classList.add('open');
+}
+function vegaPop(text, kind, auto){ // auto pops respect mute & self-dismiss
+  if (auto && VEGA.muted) return;
+  vegaSay(text, kind);
+  if (auto) setTimeout(()=>vegaEl.bubble.classList.remove('open'), 14000);
+}
+function vegaScheduleAmbient(){
+  clearTimeout(VEGA.ambientTimer);
+  if (!state.running) return;
+  VEGA.ambientTimer = setTimeout(()=>{
+    if (state.running && !VEGA.muted) vegaPop(rnd(VEGA.ambient), null, true);
+    vegaScheduleAmbient();
+  }, (4 + Math.random()*4) * 60000); // every 4–8 minutes
+}
+
+vegaEl.btn.onclick = ()=> vegaEl.bubble.classList.contains('open')
+  ? vegaEl.bubble.classList.remove('open') : vegaSay(rnd(VEGA.ambient));
+document.getElementById('vegaClose').onclick = ()=> vegaEl.bubble.classList.remove('open');
+vegaEl.mute.onclick = ()=>{
+  VEGA.muted = !VEGA.muted;
+  vegaEl.mute.textContent = VEGA.muted ? '🔕' : '🔔';
+  vegaSay(VEGA.muted ? 'Muted. I\u2019ll be here when you need me 🤫' : 'Back on duty ✨');
+};
+document.getElementById('qvStuck').onclick  = ()=> vegaSay(rnd(VEGA.stuck), 'hint');
+document.getElementById('qvStrat').onclick  = ()=> vegaSay(state.diff ? VEGA.strat[state.diff] : VEGA.strat.generic, 'hint');
+document.getElementById('qvAnswer').onclick = ()=> vegaSay(rnd(VEGA.refuse)+' '+(state.q && state.q.hints[Math.min(state.hintStage,state.q.hints.length-1)]||rnd(VEGA.ambient)), 'hint');
+document.getElementById('qvHint').onclick   = giveHint;
+
+/* ---------------- selection UI ---------------- */
+document.querySelectorAll('[data-olymp]').forEach(el=>{
+  el.onclick = ()=>{
+    document.querySelectorAll('[data-olymp]').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');
+    state.olymp = el.dataset.olymp;
+    buildDiffRow(); refreshStatsChips();
+  };
+});
+
+function buildDiffRow(){
+  const row = document.getElementById('diffRow'); row.innerHTML='';
+  if(!state.olymp) return;
+  DIFFS.forEach(d=>{
+    const s = (stats[state.olymp]||{})[d.key]||{n:0,w:0};
+    const el = document.createElement('div');
+    el.className = 'pick diff-'+d.key;
+    el.innerHTML = '<h3>'+d.icon+' '+d.label+'</h3><p>'+d.desc+'</p>'
+      + '<span class="chip">⏱ <span class="time">'+fmt(d.secs)+'</span></span>'
+      + '<div class="stat">'+s.n+' attempts · '+(s.n?Math.round(100*s.w/s.n):0)+'% nailed</div>';
+    el.onclick = ()=> startSession(d.key);
+    row.appendChild(el);
+  });
+}
+
+function refreshStatsChips(){
+  const sum = o => DIFFS.reduce((t,d)=> t + (((stats[o]||{})[d.key]||{}).n||0), 0);
+  document.getElementById('chipIoaa').textContent = sum('ioaa')+' attempts';
+  document.getElementById('chipIpho').textContent = sum('ipho')+' attempts';
+}
+
+/* ---------------- session ---------------- */
+function pickQuestion(){
+  const pool = BANK[state.olymp][state.diff];
+  const seenKey = seen[state.olymp] = seen[state.olymp]||{};
+  let used = seenKey[state.diff] = seenKey[state.diff]||[];
+  if (used.length >= pool.length) used = seenKey[state.diff] = [];
+  const fresh = pool.filter(q=>!used.includes(q.id));
+  const q = fresh[Math.floor(Math.random()*fresh.length)];
+  used.push(q.id); store.set('practice.seen.v1', seen);
+  return q;
+}
+
+function startSession(diffKey){
+  const d = DIFFS.find(x=>x.key===diffKey);
+  state.diff = diffKey; state.q = pickQuestion(); state.hintStage = 0;
+  state.total = state.remaining = d.secs; state.running = true;
+
+  document.getElementById('tagOlymp').textContent = OLYM_LABEL[state.olymp];
+  document.getElementById('tagDiff').textContent = d.label.toUpperCase()+' · '+fmtShort(d.secs);
+  document.getElementById('qTopic').textContent = state.q.topic;
+  document.getElementById('qText').textContent = state.q.q;
+  const parts = document.getElementById('qParts'); parts.innerHTML='';
+  state.q.parts.forEach(p=>{ const li=document.createElement('li'); li.textContent=p; parts.appendChild(li); });
+  document.getElementById('scratch').value='';
+  document.getElementById('hintLog').innerHTML='';
+  document.getElementById('btnPause').textContent='⏸ Pause';
+  document.getElementById('review').classList.remove('open');
+  document.getElementById('arena').classList.add('open');
+  document.getElementById('arena').scrollIntoView({behavior:'smooth'});
+
+  tick(); state.timer = setInterval(tick, 1000);
+  vegaPop(VEGA.milestone.start, null, true);
+  vegaScheduleAmbient();
+}
+
+function fmt(s){ const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'); }
+function fmtShort(s){ const h=Math.floor(s/3600), m=Math.round(s%3600/60);
+  return h? h+' h'+(m?' '+m+' min':'') : m+' min'; }
+
+let firedHalf=false, firedTen=false;
+function tick(){
+  state.remaining--;
+  const r = state.remaining;
+  document.getElementById('clock').textContent = fmt(Math.max(0,r));
+  const pct = 100*r/state.total;
+  document.getElementById('tfill').style.width = Math.max(0,pct)+'%';
+  document.getElementById('tbar').classList.toggle('low', pct<12);
+  document.getElementById('clock').classList.toggle('warn', r<=300);
+
+  if (!firedHalf && r <= state.total/2){ firedHalf=true; vegaPop(VEGA.milestone.half, null, true); }
+  if (!firedTen && r <= 600){ firedTen=true; vegaPop(VEGA.milestone.ten, null, true); }
+  if (r<=0) endSession(true);
+}
+
+function endSession(timeUp){
+  if (!state.running) return;
+  state.running=false; clearInterval(state.timer); clearTimeout(VEGA.ambientTimer);
+  firedHalf=firedTen=false;
+  if (timeUp) vegaPop(VEGA.milestone.end, null, true);
+
+  const s = stats[state.olymp] = stats[state.olymp]||{};
+  const rec = s[state.diff] = s[state.diff]||{n:0,w:0,a:0,m:0};
+  rec.n++; store.set('practice.stats.v1', stats);
+
+  document.getElementById('solText').textContent = state.q.sol;
+  document.getElementById('arena').classList.remove('open');
+  document.getElementById('review').classList.add('open');
+  document.getElementById('review').scrollIntoView({behavior:'smooth'});
+  refreshStatsChips(); buildDiffRow();
+}
+
+function giveHint(){
+  if (!state.q) { vegaPop('Start a session first — then I\u2019ll have something to hint about ✨'); return; }
+  if (state.hintStage >= state.q.hints.length){
+    vegaPop('That\u2019s every nudge I\u2019m allowed to give 😅 Trust your setup — you\u2019re closer than you think.');
+    return;
+  }
+  const h = state.q.hints[state.hintStage++];
+  const div = document.createElement('div');
+  div.className='hint'; div.innerHTML='<b>Vega · hint '+state.hintStage+'/'+state.q.hints.length+'</b><br>'+h;
+  document.getElementById('hintLog').appendChild(div);
+  vegaSay(h, 'hint');
+}
+
+/* ---------------- controls ---------------- */
+document.getElementById('btnHint').onclick = giveHint;
+document.getElementById('btnEnd').onclick  = ()=> endSession(false);
+document.getElementById('btnPause').onclick = function(){
+  if (!state.q) return;
+  if (state.running){ state.running=false; clearInterval(state.timer); clearTimeout(VEGA.ambientTimer); this.textContent='▶ Resume'; }
+  else { state.running=true; state.timer=setInterval(tick,1000); this.textContent='⏸ Pause'; vegaScheduleAmbient(); }
+};
+document.getElementById('btnNext').onclick = ()=> startSession(state.diff);
+document.getElementById('btnBack').onclick = ()=>{
+  document.getElementById('review').classList.remove('open');
+  document.getElementById('secDiff').scrollIntoView({behavior:'smooth'});
+};
+document.querySelectorAll('.grade button').forEach(b=>{
+  b.onclick = ()=>{
+    const rec = stats[state.olymp][state.diff];
+    if (b.dataset.g==='win'){ rec.w++; } else if (b.dataset.g==='almost'){ rec.a=(rec.a||0)+1; } else { rec.m=(rec.m||0)+1; }
+    store.set('practice.stats.v1', stats);
+    document.querySelectorAll('.grade button').forEach(x=>x.style.opacity=.4);
+    b.style.opacity=1;
+    vegaPop(b.dataset.g==='win' ? 'Clean work 👏 Next one, slightly scarier?'
+      : b.dataset.g==='almost' ? 'Almost counts — note exactly which step broke. That\u2019s your next rep.'
+      : 'Good. Now you know the gap. Read the sketch, then hit a fresh problem — repetition is how this is learned 💪', null, true);
+    buildDiffRow(); refreshStatsChips();
+  };
+});
+
+/* ---------------- init: deep-link support ---------------- */
+(function init(){
+  const h = (location.hash||'').toLowerCase();
+  if (h.includes('ipho')) document.querySelector('[data-olymp="ipho"]').click();
+  else if (h.includes('ioaa')) document.querySelector('[data-olymp="ioaa"]').click();
+  refreshStatsChips();
+  setTimeout(()=>{ if(!VEGA.muted) vegaPop(rnd(VEGA.greet), null, true); }, 3500);
+})();
+</script>
+</body>
+</html>
