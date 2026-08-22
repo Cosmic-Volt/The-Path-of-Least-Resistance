@@ -43,16 +43,19 @@
 
   /* =========================================================
      Streak grid (night-sky themed)
-     Fills row by row, left to right, starting at the top-left
-     cell. The very first day you ever log time lands top-left;
-     each following day sits to its right, wrapping to the start
-     of the next row once a row fills up.
+     Always renders as a full, fixed rectangle. Logging starts
+     in the top-left cell (your first-ever logged day) and fills
+     left to right, wrapping to the next row once a row is full.
+     Cells beyond today are just empty, waiting boxes.
   ========================================================= */
   const GRID_COLUMNS = 30;
+  const GRID_ROWS = 12;
+  const TOTAL_CELLS = GRID_COLUMNS * GRID_ROWS;
 
   // hours -> level. 0 hours (a past day) and "very little" practice
   // both read as orange; real practice reads as green, brighter with more time.
-  function levelForDay(hours, isToday) {
+  function levelForDay(hours, isToday, isFuture) {
+    if (isFuture) return 'future';
     if (!hours || hours <= 0) return isToday ? 'pending' : 'miss';
     if (hours < 1) return 'low';
     if (hours < 2) return 'g1';
@@ -71,7 +74,7 @@
 
     const days = [];
     const cursor = new Date(start);
-    while (cursor <= today) {
+    for (let i = 0; i < TOTAL_CELLS; i++) {
       days.push(new Date(cursor));
       cursor.setDate(cursor.getDate() + 1);
     }
@@ -90,22 +93,23 @@
 
     const data = loadStreakData();
     const days = buildDayList(data);
-    const todayKey = toDateKey(new Date());
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayKey = toDateKey(today);
 
     grid.innerHTML = '';
     grid.style.gridTemplateColumns = `repeat(${GRID_COLUMNS}, 12px)`;
 
     if (rangeLabel) {
-      rangeLabel.textContent = days.length > 1
-        ? `${formatShortDate(days[0])} \u2192 ${formatShortDate(days[days.length - 1])} (today)`
-        : `Log your first session to start the map at ${formatShortDate(days[0])}`;
+      rangeLabel.textContent = `Started ${formatShortDate(days[0])} \u2192 grid runs through ${formatShortDate(days[days.length - 1])}`;
     }
 
     days.forEach((day) => {
       const key = toDateKey(day);
       const hours = data[key] || 0;
       const isToday = key === todayKey;
-      const level = levelForDay(hours, isToday);
+      const isFuture = day > today;
+      const level = levelForDay(hours, isToday, isFuture);
 
       const cell = document.createElement('div');
       cell.className = `cell level-${level}`;
@@ -118,7 +122,8 @@
         const d = new Date(key + 'T00:00:00');
         const label = `${DAY_NAMES[d.getDay()]}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
         let hrsLabel;
-        if (hours > 0) hrsLabel = `${formatHoursLabel(hours)} logged`;
+        if (isFuture) hrsLabel = 'Not here yet';
+        else if (hours > 0) hrsLabel = `${formatHoursLabel(hours)} logged`;
         else if (isToday) hrsLabel = 'Nothing logged yet';
         else hrsLabel = 'Missed';
         tooltip.innerHTML = `<span class="t-date">${label}</span><span class="t-hours">${hrsLabel}</span>`;
