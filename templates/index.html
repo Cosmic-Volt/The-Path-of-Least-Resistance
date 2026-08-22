@@ -831,74 +831,174 @@ main{
     </div>
   </section>
 
-  <!-- ============ TRAJECTORY (PROGRESS) ============ -->
-  <section class="panel progress-section" aria-label="Subject progress">
-    <div class="panel-head">
-      <p class="eyebrow">Trajectory</p>
-      <h2 class="panel-title">Subject progress</h2>
+  <!-- ============ TRAJECTORY — auto-synced from study pages ============ -->
+<section id="trajectory" class="traj">
+  <h2>Trajectory</h2>
+  <p class="traj-sub">
+    Subject progress — synced automatically from your study manuals.
+    Log sessions in <a href="ioaa-study.html">IOAA</a> or
+    <a href="ipho-study.html">IPhO</a> and these bars update on their own.
+  </p>
+
+  <div class="traj-overall">
+    <div class="traj-row">
+      <span class="traj-label">Overall journey</span>
+      <span class="traj-pct" id="trajOverallPct">0%</span>
     </div>
+    <div class="traj-track"><div class="traj-fill" id="trajOverallFill"></div></div>
+    <p class="traj-note" id="trajOverallNote">No progress recorded yet — open a study manual to begin.</p>
+  </div>
 
-    <div class="progress-rows" id="progressRows">
+  <div class="traj-grid">
+    <article class="traj-card traj-card--ioaa" id="ioaaCard">
+      <header class="traj-card-head">
+        <h3>IOAA — topic breakdown<span class="traj-active-tag">● active</span></h3>
+        <span class="traj-badge" id="ioaaBadge">0%</span>
+      </header>
+      <ul class="traj-topics" id="ioaaTopics"></ul>
+      <p class="traj-meta" id="ioaaMeta">Not started yet</p>
+    </article>
 
-      <div class="progress-row progress-row--overall" data-key="overall">
-        <div class="progress-row-head">
-          <span class="progress-row-label">Overall journey</span>
-          <button class="progress-edit" type="button" data-key="overall" aria-label="Edit overall progress">
-            <span class="progress-value" data-value-for="overall">0%</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill--overall" data-fill-for="overall" style="width:0%"></div>
-        </div>
-      </div>
+    <article class="traj-card traj-card--ipho" id="iphoCard">
+      <header class="traj-card-head">
+        <h3>IPhO — topic breakdown<span class="traj-active-tag">● active</span></h3>
+        <span class="traj-badge" id="iphoBadge">0%</span>
+      </header>
+      <ul class="traj-topics" id="iphoTopics"></ul>
+      <p class="traj-meta" id="iphoMeta">Not started yet</p>
+    </article>
+  </div>
+</section>
 
-      <div class="progress-row" data-key="ioaa">
-        <div class="progress-row-head">
-          <span class="progress-row-label-wrap">
-            <span class="progress-row-label">IOAA</span>
-            <span class="topic-trigger" tabindex="0">
-              topics
-              <div class="topic-popover">
-                <p class="topic-popover-title">IOAA &mdash; topic breakdown</p>
-                <div class="topic-list" id="topicList-ioaa"></div>
-              </div>
-            </span>
-          </span>
-          <button class="progress-edit" type="button" data-key="ioaa" aria-label="Edit IOAA progress">
-            <span class="progress-value" data-value-for="ioaa">0%</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill--gold" data-fill-for="ioaa" style="width:0%"></div>
-        </div>
-      </div>
+<style>
+.traj{max-width:1000px;margin:0 auto;padding:48px 20px}
+.traj h2{font-size:1.6rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 6px}
+.traj-sub{opacity:.7;margin:0 0 28px;font-size:.95rem}
+.traj-sub a{color:inherit}
+.traj-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.traj-label{font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem}
+.traj-pct{font-variant-numeric:tabular-nums;font-weight:700}
+.traj-track{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.traj-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#f5b942,#ffd97a);transition:width .6s ease}
+.traj-note{font-size:.8rem;opacity:.6;margin-top:8px}
+.traj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:32px}
+.traj-card{border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px;background:rgba(255,255,255,.03)}
+.traj-card.is-active{border-color:rgba(245,185,66,.65);box-shadow:0 0 0 1px rgba(245,185,66,.35)}
+.traj-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.traj-card h3{margin:0;font-size:1rem;letter-spacing:.04em}
+.traj-active-tag{display:none;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#ffd97a;margin-left:8px;vertical-align:middle}
+.traj-card.is-active .traj-active-tag{display:inline}
+.traj-badge{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(245,185,66,.15);color:#ffd97a;font-variant-numeric:tabular-nums}
+.traj-topics{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.traj-topic{display:grid;grid-template-columns:1fr 90px 46px;gap:10px;align-items:center;font-size:.85rem}
+.traj-topic-name{opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.traj-mini{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.traj-mini-fill{display:block;height:100%;width:0;transition:width .5s ease}
+.traj-card--ioaa .traj-mini-fill{background:#7fd1c8}
+.traj-card--ipho .traj-mini-fill{background:#f5b942}
+.traj-topic-pct{text-align:right;font-variant-numeric:tabular-nums;opacity:.8}
+.traj-empty{font-size:.85rem;opacity:.55}
+.traj-meta{margin:14px 0 0;font-size:.75rem;opacity:.55}
+</style>
 
-      <div class="progress-row" data-key="ipho">
-        <div class="progress-row-head">
-          <span class="progress-row-label-wrap">
-            <span class="progress-row-label">IPhO</span>
-            <span class="topic-trigger" tabindex="0">
-              topics
-              <div class="topic-popover">
-                <p class="topic-popover-title">IPhO &mdash; topic breakdown</p>
-                <div class="topic-list" id="topicList-ipho"></div>
-              </div>
-            </span>
-          </span>
-          <button class="progress-edit" type="button" data-key="ipho" aria-label="Edit IPhO progress">
-            <span class="progress-value" data-value-for="ipho">0%</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill progress-fill--cyan" data-fill-for="ipho" style="width:0%"></div>
-        </div>
-      </div>
+<script>
+/* ============ Dashboard sync — READER (index.html) ============ */
+(function () {
+  var SUBJECTS = {
+    ioaa: { key: 'olympiad.progress.ioaa', card: 'ioaaCard', badge: 'ioaaBadge', topics: 'ioaaTopics', meta: 'ioaaMeta' },
+    ipho: { key: 'olympiad.progress.ipho', card: 'iphoCard', badge: 'iphoBadge', topics: 'iphoTopics', meta: 'iphoMeta' }
+  };
 
-    </div>
-  </section>
+  function load(key) {
+    try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
+  }
+
+  function fmt(p) { return (Math.round(p * 10) / 10).toString().replace(/\.0$/, '') + '%'; }
+
+  function renderTopics(listEl, topics) {
+    listEl.innerHTML = '';
+    (topics || []).forEach(function (t) {
+      var li = document.createElement('li');
+      li.className = 'traj-topic';
+
+      var name = document.createElement('span');
+      name.className = 'traj-topic-name';
+      name.textContent = t.name;
+
+      var mini = document.createElement('span');
+      mini.className = 'traj-mini';
+      var fill = document.createElement('span');
+      fill.className = 'traj-mini-fill';
+      fill.style.width = (t.pct || 0) + '%';
+      mini.appendChild(fill);
+
+      var pct = document.createElement('span');
+      pct.className = 'traj-topic-pct';
+      pct.textContent = fmt(t.pct || 0);
+
+      li.appendChild(name); li.appendChild(mini); li.appendChild(pct);
+      listEl.appendChild(li);
+    });
+  }
+
+  function renderSubject(data, cfg, label) {
+    var badge = document.getElementById(cfg.badge);
+    var list  = document.getElementById(cfg.topics);
+    var meta  = document.getElementById(cfg.meta);
+
+    if (!data) {
+      badge.textContent = '0%';
+      list.innerHTML = '<li class="traj-empty">No data yet — open the study manual to begin.</li>';
+      meta.textContent = 'Not started yet';
+      return;
+    }
+    badge.textContent = fmt(data.overall || 0);
+    renderTopics(list, data.topics);
+    var d = new Date(data.updatedAt);
+    meta.textContent = label + ' · ' + fmt(data.overall || 0) + ' complete · last sync ' +
+      d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function render() {
+    var ioaa = load(SUBJECTS.ioaa.key);
+    var ipho = load(SUBJECTS.ipho.key);
+
+    var o1 = ioaa ? (ioaa.overall || 0) : 0;
+    var o2 = ipho ? (ipho.overall || 0) : 0;
+    var overall = (o1 + o2) / 2; /* both tracks combined */
+
+    document.getElementById('trajOverallFill').style.width = overall + '%';
+    document.getElementById('trajOverallPct').textContent = fmt(overall);
+
+    var note = document.getElementById('trajOverallNote');
+    if (!ioaa && !ipho) {
+      note.textContent = 'No progress recorded yet — open a study manual to begin.';
+    } else {
+      var active = (ioaa && ipho)
+        ? (ioaa.updatedAt >= ipho.updatedAt ? 'IOAA' : 'IPhO')
+        : (ioaa ? 'IOAA' : 'IPhO');
+      note.textContent = 'Active track: ' + active + ' · overall = mean of both olympiad tracks.';
+    }
+
+    document.getElementById('ioaaCard').classList.toggle('is-active',
+      !!ioaa && (!ipho || ioaa.updatedAt >= ipho.updatedAt));
+    document.getElementById('iphoCard').classList.toggle('is-active',
+      !!ipho && (!ioaa || ipho.updatedAt > ioaa.updatedAt));
+
+    renderSubject(ioaa, SUBJECTS.ioaa, 'IOAA');
+    renderSubject(ipho, SUBJECTS.ipho, 'IPhO');
+  }
+
+  render();
+  window.addEventListener('storage', function (e) {          /* fires when a study tab writes */
+    if (!e.key || e.key.indexOf('olympiad.progress.') === 0) render();
+  });
+  window.addEventListener('pageshow', render);               /* back/forward cache */
+  window.addEventListener('focus', render);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+})();
+</script>
 
   <footer class="site-footer">
     <p>Olympiad medals are forged long before exam day. Whether proving a theorem, tracing a celestial orbit, or unspooling chemical pathways, true expertise demands deep, unyielding practice. Measure your effort, embrace the friction of difficult problems, and train yourself to think at the absolute peak of human problem-solving.</p>

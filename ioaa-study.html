@@ -1254,5 +1254,106 @@ render();
 // Re-check missed days once per minute (in case user leaves app open overnight)
 setInterval(()=>{fillMissedDays();render();},60000);
 </script>
+<script>
+/* ============ Dashboard sync — PUBLISHER (IOAA) ============ */
+(function () {
+  var STORAGE_KEY = 'olympiad.progress.ioaa';
+  var SUBJECT = 'IOAA';
+  var TOPICS = [
+    'Positional Astro', 'Photometry', 'Celestial Mech',
+    'Stellar Astro', 'Galactic + Cosmo', 'Past Papers'
+  ];
+
+  /* Optional: if auto-detect below misses a bar, give it an id in your
+     HTML and map it here, e.g. { 'Photometry': '#bar-photometry' } */
+  var MANUAL_IDS = {};
+
+  function norm(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+
+  function fillPct(root) {
+    var p = root.querySelector('progress');
+    if (p) { return p.max > 0 ? (p.value / p.max) * 100 : 0; }
+
+    var fill = root.querySelector('[class*="fill"], [role="progressbar"]');
+    if (!fill) return null;
+
+    if (fill.hasAttribute('aria-valuenow')) {
+      var v = parseFloat(fill.getAttribute('aria-valuenow')) || 0;
+      var mx = parseFloat(fill.getAttribute('aria-valuemax')) || 100;
+      return (v / mx) * 100;
+    }
+    var trackW = fill.parentElement.getBoundingClientRect().width;
+    var fillW  = fill.getBoundingClientRect().width;
+    return trackW > 0 ? Math.max(0, Math.min(100, (fillW / trackW) * 100)) : 0;
+  }
+
+  function containerFor(label) {
+    if (MANUAL_IDS[label]) {
+      var m = document.querySelector(MANUAL_IDS[label]);
+      if (m) return m;
+    }
+    var target = norm(label);
+    var els = document.body.querySelectorAll('*');
+    var matches = [];
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i], text = '';
+      if (el.children.length === 0) {
+        text = norm(el.textContent);
+      } else {
+        for (var j = 0; j < el.childNodes.length; j++) {
+          if (el.childNodes[j].nodeType === 3) text += el.childNodes[j].textContent;
+        }
+        text = norm(text);
+      }
+      if (text === target) matches.push(el);
+    }
+    var best = null;
+    matches.forEach(function (mm) { if (!best || best.contains(mm)) best = mm; });
+    if (!best) return null;
+
+    var node = best, depth = 0;
+    while (node && depth < 12) {
+      if (fillPct(node) !== null) return node;
+      node = node.parentElement; depth++;
+    }
+    return null;
+  }
+
+  function readPct(label) {
+    var c = containerFor(label);
+    if (!c) return 0;
+    var v = fillPct(c);
+    return v === null ? 0 : Math.round(v * 10) / 10;
+  }
+
+  function publish() {
+    var payload = {
+      subject: SUBJECT,
+      overall: readPct('Overall journey'),
+      topics: TOPICS.map(function (t) { return { name: t, pct: readPct(t) }; }),
+      updatedAt: new Date().toISOString()
+    };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
+  }
+
+  var timer = null;
+  function schedulePublish() { clearTimeout(timer); timer = setTimeout(publish, 250); }
+
+  function init() {
+    publish();
+    new MutationObserver(schedulePublish).observe(document.body, {
+      subtree: true, childList: true,
+      attributes: true, attributeFilter: ['style', 'class', 'value']
+    });
+    window.addEventListener('pagehide', publish);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') publish();
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </body>
 </html>
