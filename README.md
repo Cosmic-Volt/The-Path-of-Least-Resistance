@@ -92,14 +92,14 @@ Add screenshots or GIFs of your platform here.
 ### 🧩 Practice
 
 <img width="1651" height="957" alt="image" src="https://github.com/user-attachments/assets/8f7f9b6d-b7db-40ce-9145-b3deceb5fd34" />
-" />
+
 
 
 
  
 ### 📈 Progress Tracking
 
-<img width="963" height="496" alt="image" src="https://github.com/user-attachments/assets/8a2e1515-99e0-4b00-b078-b029e470a5da" />
+<img width="1891" height="976" alt="image" src="https://github.com/user-attachments/assets/7c27f7b0-7865-4f31-9622-b483ed8725fb" />
 
 
 
