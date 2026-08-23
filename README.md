@@ -164,13 +164,13 @@ Additional AI-powered study features
 Member	   |  Contribution
 
          
-Bihan      |  AI- Implementation and formulation
+Bihan      |  AI-Implementation and formulation
 
          
 Basistha   |  Domain setup
          
          
-Sweekar	   |  Frontend(Home-Page)
+Sweekar	   |  Home-Page
 
 
 ## 🌟 Why We Built This
