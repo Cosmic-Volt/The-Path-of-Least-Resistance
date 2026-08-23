@@ -83,7 +83,8 @@ Add screenshots or GIFs of your platform here.
 
 ### 🏠 Dashboard
 
-<img width="1348" height="580" alt="image" src="https://github.com/user-attachments/assets/96f8b47e-2d43-49a3-9a14-c2f14293c79c" />
+<img width="1348" height="580" alt="image" src="<img width="1647" height="954" alt="image" src="https://github.com/user-attachments/assets/6980e6cf-14a6-4a26-9ed6-6aa216dba8b5" />
+
 
 
 
