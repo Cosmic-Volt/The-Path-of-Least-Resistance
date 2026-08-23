@@ -143,7 +143,7 @@ Clone the repository:
 
 git clone (https://github.com/Cosmic-Volt/The-Path-of-Least-Resistance.git)
 
-cd The-Path-of-Lease-Resistance
+cd The-Path-of-Least-Resistance
 
 ## 🗺️ Roadmap
 IOAA resources
