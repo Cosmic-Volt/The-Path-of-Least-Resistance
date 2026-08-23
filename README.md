@@ -161,16 +161,16 @@ Additional AI-powered study features
 
 # 👥THE PATH OF LEAST RESISTANCE
 
-Member	 |  Contribution
+Member	   |  Contribution
 
-         |
-Bihan    |  AI- Implementation and formulation
-         |
          
-Basistha |  Domain setup
-         |
+Bihan      |  AI- Implementation and formulation
+
          
-Sweekar	 |  Frontend(Home-Page)
+Basistha   |  Domain setup
+         
+         
+Sweekar	   |  Frontend(Home-Page)
 
 
 ## 🌟 Why We Built This
