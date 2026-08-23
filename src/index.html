@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="t-neutral">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olympiad Training — IOAA · IPhO</title>
+<meta name="description" content="A training log for the international astronomy and physics olympiads: two 450-day study systems, a session clock, a combined activity map and synced subject progress.">
+<meta name="theme-color" content="#0C0C10">
+<!--@FONTS-->
+<style>
+<!--@CSS-->
+</style>
+</head>
+<body>
+<div class="bg-field" aria-hidden="true"><i></i></div>
+<!--@ICONS-->
+
+<header class="top-app-bar">
+  <div class="tab-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span>
+      <span class="brand-name">Olympiad Training</span>
+    </a>
+    <nav class="top-links">
+      <a href="ioaa-study.html"><svg viewBox="0 0 24 24"><use href="#i-orbit"/></svg><span>IOAA</span></a>
+      <a href="ipho-study.html"><svg viewBox="0 0 24 24"><use href="#i-atom"/></svg><span>IPhO</span></a>
+      <a href="practice.html"><svg viewBox="0 0 24 24"><use href="#i-target"/></svg><span>Practice</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <p class="overline">Basecamp — IOAA · IPhO</p>
+    <h1 class="display-l">Train like it's <em>measured.</em></h1>
+    <p class="hero-sub">Two 450-day systems, a clock that records what you actually did, and every resource worth having — for the astronomy and physics olympiads.</p>
+    <div class="hero-actions">
+      <a class="btn btn-filled btn-l" href="#tracks">Open a track<svg viewBox="0 0 24 24"><use href="#i-arrow-r"/></svg></a>
+      <a class="btn btn-outlined btn-l" href="practice.html"><svg viewBox="0 0 24 24"><use href="#i-target"/></svg>Practice range</a>
+    </div>
+  </section>
+
+  <!-- ══ TRACKS ══ -->
+  <section class="tracks" id="tracks" aria-label="Your tracks">
+
+    <article class="track t-ioaa" id="card-ioaa">
+      <div class="track-head">
+        <span class="track-mark"><svg viewBox="0 0 24 24"><use href="#i-orbit"/></svg></span>
+        <div>
+          <p class="track-tag">IOAA</p>
+          <h2>Astronomy &amp; Astrophysics</h2>
+        </div>
+      </div>
+      <p class="track-desc">Celestial mechanics, stellar physics, and the data &amp; observation rounds.</p>
+
+      <div id="ioaa-live" hidden>
+        <div class="track-rank">
+          <span class="r-orb" id="ioaa-rank">E</span>
+          <div>
+            <div class="r-name" id="ioaa-rankname">Initiate</div>
+            <div class="r-sub"><span id="ioaa-xp">0</span> XP earned</div>
+          </div>
+        </div>
+        <div class="track-stats">
+          <div class="tstat"><b class="num" id="ioaa-day">1</b><span>Current day</span></div>
+          <div class="tstat"><b class="num" id="ioaa-hrs">0h</b><span>Logged</span></div>
+          <div class="tstat"><b class="num" id="ioaa-streak">0</b><span>Day streak</span></div>
+        </div>
+        <div class="track-bar">
+          <div class="spread"><span class="on-var">Journey</span><span class="num pri" id="ioaa-pct">0%</span></div>
+          <div class="bar bar-s"><i id="ioaa-fill"></i></div>
+        </div>
+      </div>
+      <div class="track-empty" id="ioaa-empty">Not started yet — open the system to begin day 1.</div>
+
+      <div class="track-actions">
+        <a class="btn btn-filled" href="ioaa-study.html">Open system</a>
+        <a class="btn btn-outlined" href="practice.html#ioaa">Practice</a>
+      </div>
+    </article>
+
+    <article class="track t-ipho" id="card-ipho">
+      <div class="track-head">
+        <span class="track-mark"><svg viewBox="0 0 24 24"><use href="#i-atom"/></svg></span>
+        <div>
+          <p class="track-tag">IPhO</p>
+          <h2>International Physics Olympiad</h2>
+        </div>
+      </div>
+      <p class="track-desc">Mechanics, electromagnetism, and the theory &amp; experiment rounds.</p>
+
+      <div id="ipho-live" hidden>
+        <div class="track-rank">
+          <span class="r-orb" id="ipho-rank">E</span>
+          <div>
+            <div class="r-name" id="ipho-rankname">Initiate</div>
+            <div class="r-sub"><span id="ipho-xp">0</span> XP earned</div>
+          </div>
+        </div>
+        <div class="track-stats">
+          <div class="tstat"><b class="num" id="ipho-day">1</b><span>Current day</span></div>
+          <div class="tstat"><b class="num" id="ipho-hrs">0h</b><span>Logged</span></div>
+          <div class="tstat"><b class="num" id="ipho-streak">0</b><span>Day streak</span></div>
+        </div>
+        <div class="track-bar">
+          <div class="spread"><span class="on-var">Journey</span><span class="num pri" id="ipho-pct">0%</span></div>
+          <div class="bar bar-s"><i id="ipho-fill"></i></div>
+        </div>
+      </div>
+      <div class="track-empty" id="ipho-empty">Not started yet — open the system to begin day 1.</div>
+
+      <div class="track-actions">
+        <a class="btn btn-filled" href="ipho-study.html">Open system</a>
+        <a class="btn btn-outlined" href="practice.html#ipho">Practice</a>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ══ ACTIVITY ══ -->
+  <section class="section" aria-label="Activity">
+    <div class="section-head">
+      <p class="overline">Activity</p>
+      <h2>Every hour you've put in</h2>
+      <p>One map across both tracks and anything you log here. Hover a day to see the split.</p>
+    </div>
+
+    <div class="act-grid">
+      <div class="act-tile"><div class="a-val num" id="statHours">0m</div><div class="a-lab">Logged all time</div></div>
+      <div class="act-tile"><div class="a-val num" id="statDays">0</div><div class="a-lab">Active days</div></div>
+      <div class="act-tile"><div class="a-val num" id="statStreak">0</div><div class="a-lab">Current streak</div></div>
+      <div class="act-tile"><div class="a-val num" id="statBest">0</div><div class="a-lab">Best streak</div></div>
+    </div>
+
+    <div class="card">
+      <div class="cal-wrap">
+        <div class="cal-scroll">
+          <div class="cal-months" id="calMonths" aria-hidden="true"></div>
+          <div class="cal-body">
+            <div class="cal-days" aria-hidden="true">
+              <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+            </div>
+            <div class="cal" id="cal" role="img" aria-label="Daily study activity over the last year"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cal-foot">
+        <span class="cal-range" id="calRange"></span>
+        <div class="legend">
+          <span>Less</span>
+          <span class="sw" style="background:var(--sc-high)"></span>
+          <span class="sw cell lv-1"></span>
+          <span class="sw cell lv-2"></span>
+          <span class="sw cell lv-3"></span>
+          <span class="sw cell lv-4"></span>
+          <span>More</span>
+          <span class="gap"></span>
+          <span class="sw" style="background:var(--error-container)"></span><span>Missed</span>
+        </div>
+      </div>
+    </div>
+    <div class="tooltip" id="tooltip" role="tooltip"></div>
+  </section>
+
+  <!-- ══ QUICK LOG ══ -->
+  <section class="section" aria-label="Quick log">
+    <div class="section-head">
+      <p class="overline">Quick log</p>
+      <h2>Time a session</h2>
+      <p>For reading, problem sets, or anything that doesn't belong to one track. Track-specific sessions are better logged inside their own system.</p>
+    </div>
+
+    <div class="log-grid">
+      <div class="clock-card" id="clockCard">
+        <p class="overline" style="opacity:.7">Session clock</p>
+        <div class="clock-read num" id="clock" style="margin-top:12px">00:00:00</div>
+        <div class="clock-actions">
+          <button class="btn btn-filled btn-l" id="btnStart" type="button"><svg viewBox="0 0 24 24"><use href="#i-play"/></svg>Start</button>
+          <button class="btn btn-outlined btn-l" id="btnLog" type="button" disabled><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Log it</button>
+          <button class="btn btn-outlined btn-l" id="btnReset" type="button" aria-label="Reset clock"><svg viewBox="0 0 24 24"><use href="#i-reset"/></svg></button>
+        </div>
+        <p class="clock-note" id="clockNote">Start the clock, then log the session. Everything logged today adds to one running total.</p>
+      </div>
+
+      <form class="manual-card" id="manualForm">
+        <h3>Log time manually</h3>
+        <p>For sessions you tracked off the clock.</p>
+        <div class="field">
+          <label for="mDate">Date</label>
+          <input id="mDate" type="date" required>
+        </div>
+        <div class="split2">
+          <div class="field">
+            <label for="mHours">Hours</label>
+            <input id="mHours" type="number" min="0" max="24" step="1" placeholder="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="mMins">Minutes</label>
+            <input id="mMins" type="number" min="0" max="59" step="5" placeholder="0" inputmode="numeric">
+          </div>
+        </div>
+        <button class="btn btn-filled btn-block" type="submit" style="margin-top:22px"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg>Add to log</button>
+        <p class="manual-status" id="manualStatus" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ══ BREAKDOWN ══ -->
+  <section class="section" aria-label="Subject breakdown">
+    <div class="section-head">
+      <p class="overline">Trajectory</p>
+      <h2>Subject breakdown</h2>
+      <p>Synced automatically from your study systems — log a session in either and these update on their own.</p>
+    </div>
+
+    <div class="break-grid">
+      <article class="break-card t-ioaa" id="breakIoaa">
+        <div class="break-head">
+          <h3><svg viewBox="0 0 24 24"><use href="#i-orbit"/></svg>IOAA</h3>
+          <span class="chip chip-pri num" id="ioaaBadge">0%</span>
+        </div>
+        <ul class="break-topics" id="ioaaTopics"></ul>
+        <p class="break-meta" id="ioaaMeta">Not started yet</p>
+      </article>
+
+      <article class="break-card t-ipho" id="breakIpho">
+        <div class="break-head">
+          <h3><svg viewBox="0 0 24 24"><use href="#i-atom"/></svg>IPhO</h3>
+          <span class="chip chip-pri num" id="iphoBadge">0%</span>
+        </div>
+        <ul class="break-topics" id="iphoTopics"></ul>
+        <p class="break-meta" id="iphoMeta">Not started yet</p>
+      </article>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>Olympiad medals are forged long before exam day. Whether proving a theorem or tracing a celestial orbit, expertise demands deep, unyielding practice. Measure your effort, embrace the friction of difficult problems, and train yourself to think at the peak of human problem-solving.</p>
+    <nav>
+      <a href="ioaa-study.html">IOAA system</a>
+      <a href="ipho-study.html">IPhO system</a>
+      <a href="practice.html">Practice range</a>
+    </nav>
+  </footer>
+
+</main>
+
+<!--@SCRIPTS-->
+</body>
+</html>

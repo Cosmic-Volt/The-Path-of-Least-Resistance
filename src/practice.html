@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="t-practice">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Range — Olympiad Training</title>
+<meta name="description" content="Timed past-paper-style practice for IOAA and IPhO, with Vega — a study partner that gives hints, never answers.">
+<meta name="theme-color" content="#0C0C10">
+<!--@FONTS-->
+<style>
+<!--@CSS-->
+</style>
+</head>
+<body>
+<div class="bg-field" aria-hidden="true"><i></i></div>
+<!--@ICONS-->
+
+<header class="top-app-bar">
+  <div class="tab-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24"><use href="#i-target"/></svg></span>
+      <span class="brand-name">Practice Range</span>
+    </a>
+    <nav class="top-links">
+      <a href="index.html"><svg viewBox="0 0 24 24"><use href="#i-home"/></svg><span>Basecamp</span></a>
+      <a href="ioaa-study.html"><svg viewBox="0 0 24 24"><use href="#i-orbit"/></svg><span>IOAA</span></a>
+      <a href="ipho-study.html"><svg viewBox="0 0 24 24"><use href="#i-atom"/></svg><span>IPhO</span></a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="overline">Timed practice</p>
+    <h1 class="display-m">Two questions.<br>One real exam clock.</h1>
+    <p class="hero-sub">Past-paper-style problems under genuine time pressure. Vega — your study partner — plans them with you, never above you.</p>
+    <div class="mission-note">
+      <svg viewBox="0 0 24 24"><use href="#i-users"/></svg>
+      <span>Built for students without a training camp nearby. Two people grinding together is a camp of two — Vega gives hints and thinking paths, never answers.</span>
+    </div>
+  </section>
+
+  <section class="step">
+    <p class="step-label"><b>1</b><span>Choose your arena</span></p>
+    <div class="cardrow">
+      <div class="pick" data-olymp="ioaa">
+        <h3><svg viewBox="0 0 24 24"><use href="#i-orbit"/></svg>IOAA</h3>
+        <p>Astronomy &amp; astrophysics — positional, stellar, galactic, data analysis.</p>
+        <span class="chip chip-xs" id="chipIoaa">0 attempts</span>
+      </div>
+      <div class="pick" data-olymp="ipho">
+        <h3><svg viewBox="0 0 24 24"><use href="#i-atom"/></svg>IPhO</h3>
+        <p>Physics — mechanics, E&amp;M, thermo, waves, modern. Theory round style.</p>
+        <span class="chip chip-xs" id="chipIpho">0 attempts</span>
+      </div>
+      <div class="pick" data-olymp="ipho-pyq">
+        <h3><svg viewBox="0 0 24 24"><use href="#i-doc"/></svg>Past papers</h3>
+        <p>Every indexed IOAA and IPhO problem since 2010, filterable. 90-minute focus sessions against the real thing.</p>
+        <span class="chip chip-xs" id="chipPyq">0 solved</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <p class="step-label"><b>2</b><span>Set the difficulty</span><em>the clock follows your choice</em></p>
+    <div class="cardrow" id="diffRow"></div>
+  </section>
+
+  <section id="archiveBrowser" style="display:none">
+    <div class="arch-head">
+      <div>
+        <h3 class="title-l">Past-paper archive</h3>
+        <p class="body-s dim" style="margin-top:4px">Official problems and solutions, linked at source. <span id="pyqCount">—</span></p>
+      </div>
+      <div class="filters">
+        <input class="input-pill" type="search" id="pyqSearch" placeholder="Search…" aria-label="Search papers">
+        <select class="input-pill" id="pyqSubject" aria-label="Olympiad">
+          <option value="">Both</option>
+          <option value="ioaa">IOAA</option>
+          <option value="ipho">IPhO</option>
+        </select>
+        <select class="input-pill" id="pyqYear" aria-label="Year"><option value="">All years</option></select>
+        <select class="input-pill" id="pyqType" aria-label="Round">
+          <option value="">All rounds</option>
+          <option value="theory">Theory</option>
+          <option value="data-analysis">Data analysis</option>
+          <option value="experimental">Experimental</option>
+        </select>
+        <select class="input-pill" id="pyqTopic" aria-label="Topic"><option value="">All topics</option></select>
+      </div>
+    </div>
+    <div id="pyqList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <!-- ARENA -->
+  <section class="arena" id="arena">
+    <div class="exam-bar">
+      <div class="exam-tags">
+        <span class="tag key" id="tagOlymp">IOAA</span>
+        <span class="tag" id="tagDiff">Easy · 20 min</span>
+        <span class="tag">2 questions</span>
+      </div>
+      <span class="timer num" id="clock">00:20:00</span>
+    </div>
+    <div class="tbar" id="tbar"><i id="tfill" style="width:100%"></i></div>
+
+    <div class="arena-body">
+      <div id="qList"></div>
+      <textarea id="scratch" placeholder="Scratch space for both questions — not saved"></textarea>
+      <div class="hintlog" id="hintLog"></div>
+      <div class="btnrow">
+        <button id="btnPause">Pause</button>
+        <button class="gold" id="btnEnd">End session &amp; review</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="review" id="review">
+    <div class="review-body">
+      <h3>Session complete — solution sketches</h3>
+      <div id="reviewBody"></div>
+      <div class="btnrow">
+        <button class="gold" id="btnNext">Fresh pair of questions</button>
+        <button id="btnBack">Choose difficulty</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">Question statements are adapted in the style of the linked official archives. Solutions reveal only after you end the session. Honour system.</footer>
+</main>
+
+<!-- VEGA -->
+<button id="vegaBtn" title="Vega — your study partner">
+  <svg viewBox="0 0 24 24"><use href="#i-spark"/></svg><span>Vega</span>
+</button>
+
+<div id="vegaBubble">
+  <div class="vhead">
+    <span class="vava"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span>
+    <span class="vname">Vega<small>Study partner</small></span>
+    <button class="icon-btn icon-btn-s" id="vegaGear" title="Gemini settings"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
+    <label class="switch" title="Enable or disable Vega">
+      <input type="checkbox" id="vegaSwitch" checked><span class="track"></span>
+    </label>
+    <button class="icon-btn icon-btn-s" id="vegaClose" title="Close"><svg viewBox="0 0 24 24"><use href="#i-close"/></svg></button>
+  </div>
+
+  <div id="vegaSettings" style="display:none">
+    <div class="lbl">Gemini API key — stored only in this browser</div>
+    <input class="input-pill" id="vegaApiKey" type="password" placeholder="AIza…" autocomplete="off">
+    <div class="lbl">Model</div>
+    <input class="input-pill" id="vegaApiModel" type="text" value="gemini-3.7-flash">
+    <div style="display:flex;gap:8px">
+      <button id="vegaSaveKey" class="gold" style="flex:1">Save</button>
+      <button id="vegaClearKey" style="flex:1">Clear</button>
+    </div>
+    <div id="vegaKeyStatus"></div>
+    <p class="keynote">Your key is saved only in this browser's local storage and goes directly from your browser to Google, never through a server. Anyone with access to this device could read it via dev tools, so don't paste a key here on a shared computer. Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.</p>
+  </div>
+
+  <div id="vegaChat"></div>
+  <div class="vquick" id="vquick">
+    <button id="qvPlan">Plan it</button>
+    <button id="qvHint">Hint</button>
+    <button id="qvSplit">Split it</button>
+    <button id="qvAnswer">Answer?</button>
+  </div>
+  <div class="vinput" id="vinput">
+    <input id="vegaText" placeholder="Talk to your partner…" maxlength="220">
+    <button id="vegaSend" aria-label="Send"><svg viewBox="0 0 24 24"><use href="#i-send"/></svg></button>
+  </div>
+</div>
+
+<!--@SCRIPTS-->
+</body>
+</html>

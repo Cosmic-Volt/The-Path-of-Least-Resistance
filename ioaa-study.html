@@ -1,614 +1,1510 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="t-ioaa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IOAA GOLD — 450 Day System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IOAA — Olympiad Training</title>
+<meta name="description" content="A 450-day training system for the International Olympiad on Astronomy and Astrophysics.">
+<meta name="theme-color" content="#0C0C10">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-    
-:root {
-  --bg: #080C10;
-  --bg2: #0D1117;
-  --bg3: #141C24;
-  --border: rgba(99,179,237,0.12);
-  --border2: rgba(99,179,237,0.25);
-  --blue: #63B3ED;
-  --blue-dim: #2D6A9F;
-  --cyan: #76E4F7;
-  --gold: #F6C90E;
-  --green: #68D391;
-  --red: #FC8181;
-  --purple: #B794F4;
-  --text: #E2E8F0;
-  --text2: #718096;
-  --text3: #4A5568;
+/* ============================================================================
+   Olympiad Training — design system
+   Built on Material 3 Expressive: tonal surface layers instead of borders,
+   large and varied corner radii, pill-shaped actions, emphasized motion.
+   ========================================================================== */
+
+:root{
+  /* ---- neutral surface layers (M3 tonal elevation) ---- */
+  --surface-dim:        #0C0C10;
+  --surface:            #121116;
+  --surface-bright:     #38373F;
+  --sc-lowest:          #070709;
+  --sc-low:             #1A191F;
+  --sc:                 #1E1D24;
+  --sc-high:            #29282F;
+  --sc-highest:         #34333B;
+
+  --on-surface:         #E7E3EC;
+  --on-surface-var:     #C9C4D2;
+  --outline:            #948FA0;
+  --outline-var:        #47454F;
+
+  --scrim:              rgba(6,6,9,.72);
+
+  /* ---- default key colour (overridden per track) ---- */
+  --primary:            #E8C24A;
+  --on-primary:         #3B2E00;
+  --primary-container:  #554300;
+  --on-primary-container:#FFE08A;
+  --primary-fixed-dim:  #C9A227;
+
+  --secondary:          #D6C9A0;
+  --secondary-container:#3A3524;
+  --on-secondary-container:#EFE2B8;
+
+  --tertiary:           #9ED3C4;
+  --tertiary-container: #24504A;
+  --on-tertiary-container:#BFF0E2;
+
+  --error:              #F2B8B5;
+  --error-container:    #5A2A28;
+  --on-error-container:  #FFDAD6;
+
+  --success:            #86D9A8;
+  --success-container:  #1D4A33;
+  --on-success-container:#B6F0CD;
+
+  /* ---- shape scale ---- */
+  --r-xs:   6px;
+  --r-s:    10px;
+  --r-m:    16px;
+  --r-l:    22px;
+  --r-xl:   30px;
+  --r-xxl:  40px;
+  --r-full: 999px;
+
+  /* ---- motion ---- */
+  --m-standard:   cubic-bezier(.2,0,0,1);
+  --m-decel:      cubic-bezier(.05,.7,.1,1);
+  --m-accel:      cubic-bezier(.3,0,.8,.15);
+  --m-spring:     cubic-bezier(.32,1.5,.62,1);
+  --d-short:  .18s;
+  --d-med:    .32s;
+  --d-long:   .5s;
+
+  /* ---- type ---- */
+  --font-display: 'Outfit', 'Google Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-body:    'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ---- elevation (for floating elements only) ---- */
+  --e1: 0 1px 3px rgba(0,0,0,.4);
+  --e2: 0 3px 10px -2px rgba(0,0,0,.5);
+  --e3: 0 10px 28px -8px rgba(0,0,0,.62);
+  --e4: 0 24px 60px -16px rgba(0,0,0,.7);
+
+  --rail-w: 232px;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+/* ---- track key colours ------------------------------------------------- */
+.t-ioaa{
+  --primary:#F5CB5C; --on-primary:#3A2D00; --primary-container:#4B3B0A;
+  --on-primary-container:#FFE39B; --primary-fixed-dim:#D4AB2E;
+  --secondary:#E0CFA0; --secondary-container:#332E1D; --on-secondary-container:#F0E2BA;
+  --tertiary:#9DD5D0; --tertiary-container:#1F4F4C; --on-tertiary-container:#BEF0EB;
+}
+.t-ipho{
+  --primary:#C6B4FF; --on-primary:#2A1A62; --primary-container:#3A2C6B;
+  --on-primary-container:#E6DBFF; --primary-fixed-dim:#A48CF0;
+  --secondary:#CFC4E4; --secondary-container:#372E4A; --on-secondary-container:#E9DEFA;
+  --tertiary:#F2B8D0; --tertiary-container:#5A2843; --on-tertiary-container:#FFD8E8;
+}
+.t-practice{
+  --primary:#7BE0C4; --on-primary:#00382C; --primary-container:#00463A;
+  --on-primary-container:#9DFCDF; --primary-fixed-dim:#4FC3A5;
+  --secondary:#B4CCC2; --secondary-container:#28382F; --on-secondary-container:#CFE9DD;
+  --tertiary:#B5C9E8; --tertiary-container:#2C4463; --on-tertiary-container:#D5E4FF;
+}
+.t-neutral{
+  --primary:#CFC6E8; --on-primary:#1F1B2E; --primary-container:#37324A;
+  --on-primary-container:#E9E1FF; --primary-fixed-dim:#B0A6CC;
+}
 
-body {
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Space Grotesk',system-ui,sans-serif;
+/* ========================================================================== */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ color-scheme:dark; -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--surface-dim);
+  color:var(--on-surface);
+  font-family:var(--font-body);
+  font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
   min-height:100vh;
   overflow-x:hidden;
 }
 
-#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;border-radius:50%;animation:rise linear infinite}
-@keyframes rise{
-  0%{transform:translateY(100vh) scale(0);opacity:0}
-  10%{opacity:.8}
-  90%{opacity:.2}
-  100%{transform:translateY(-5vh) scale(1);opacity:0}
+/* ---- expressive background: soft tonal fields, fixed behind everything ---- */
+.bg-field{
+  position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;
+  background:var(--surface-dim);
+}
+.bg-field::before,
+.bg-field::after{
+  content:''; position:absolute; border-radius:50%;
+  filter:blur(100px); opacity:.34;
+}
+.bg-field::before{
+  width:70vw; height:70vw; max-width:900px; max-height:900px;
+  top:-28vw; right:-18vw;
+  background:radial-gradient(circle, color-mix(in srgb, var(--primary) 17%, transparent), transparent 70%);
+}
+.bg-field::after{
+  width:60vw; height:60vw; max-width:760px; max-height:760px;
+  bottom:-24vw; left:-16vw;
+  background:radial-gradient(circle, color-mix(in srgb, var(--tertiary) 15%, transparent), transparent 70%);
+}
+.bg-field i{
+  position:absolute; display:block; border-radius:50%;
+  width:44vw; height:44vw; max-width:560px; max-height:560px;
+  top:38%; left:44%;
+  background:radial-gradient(circle, color-mix(in srgb, var(--secondary) 14%, transparent), transparent 70%);
+  filter:blur(120px); opacity:.3;
 }
 
-.shell{position:relative;z-index:1;display:flex;min-height:100vh}
-
-/* SIDEBAR */
-.sidebar{
-  width:220px;flex-shrink:0;background:var(--bg2);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;height:100vh;
-  overflow-y:auto;z-index:10
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.001ms!important; transition-duration:.001ms!important; }
+  html{ scroll-behavior:auto; }
 }
-.sb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--border);text-align:center}
-.sb-logo-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
-.sb-logo-sub{font-size:11px;color:var(--text3);margin-top:2px}
 
-.rank-display{margin:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
-.rank-badge{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
-.rank-label{font-size:10px;letter-spacing:.15em;color:var(--text2);text-transform:uppercase}
-.rank-xp-txt{font-size:11px;color:var(--text2);margin-top:8px}
-.xp-bar{height:4px;background:var(--bg);border-radius:2px;margin-top:6px;overflow:hidden}
-.xp-fill{height:100%;border-radius:2px;transition:width .6s ease}
+::selection{ background:var(--primary-container); color:var(--on-primary-container); }
+a{ color:inherit; }
+button,input,textarea,select{ font:inherit; color:inherit; }
+:focus-visible{ outline:3px solid var(--primary); outline-offset:2px; }
+::-webkit-scrollbar{ width:12px; height:12px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background:var(--sc-highest); border-radius:99px; border:4px solid transparent; background-clip:content-box; }
+::-webkit-scrollbar-thumb:hover{ background:var(--outline-var); background-clip:content-box; }
 
-/* LIVE TIMER in sidebar */
-.live-timer{
-  margin:0 14px 8px;
-  background:rgba(99,179,237,.05);
-  border:1px solid rgba(99,179,237,.2);
-  border-radius:10px;
-  padding:10px 12px;
-  text-align:center
+/* ---- type scale (M3) --------------------------------------------------- */
+h1,h2,h3,h4,h5{ margin:0; font-family:var(--font-display); font-weight:600; line-height:1.15; }
+p{ margin:0; }
+
+.display-l{ font-family:var(--font-display); font-size:clamp(2.9rem,7vw,4.1rem); font-weight:600; letter-spacing:-.03em; line-height:1.02; }
+.display-m{ font-family:var(--font-display); font-size:clamp(2.3rem,5vw,3rem);  font-weight:600; letter-spacing:-.025em; line-height:1.06; }
+.display-s{ font-family:var(--font-display); font-size:clamp(1.9rem,4vw,2.3rem);font-weight:600; letter-spacing:-.02em; line-height:1.1; }
+.headline{  font-family:var(--font-display); font-size:1.6rem;  font-weight:600; letter-spacing:-.015em; }
+.title-l{   font-family:var(--font-display); font-size:1.28rem; font-weight:600; letter-spacing:-.01em; }
+.title-m{   font-family:var(--font-display); font-size:1.05rem; font-weight:600; letter-spacing:-.005em; }
+.title-s{   font-family:var(--font-display); font-size:.92rem;  font-weight:600; }
+.body-l{ font-size:1rem;   line-height:1.6; }
+.body-m{ font-size:.885rem; line-height:1.6; }
+.body-s{ font-size:.8rem;  line-height:1.55; }
+.label-l{ font-size:.85rem; font-weight:500; }
+.label-m{ font-size:.775rem; font-weight:500; }
+.label-s{ font-size:.7rem;  font-weight:500; }
+
+.overline{
+  font-family:var(--font-mono); font-size:.68rem; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase;
 }
-.lt-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:4px}
-.lt-time{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--blue);letter-spacing:.05em}
-.lt-session{font-size:10px;color:var(--text2);margin-top:3px}
+.num{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; letter-spacing:-.03em; }
+.on-var{ color:var(--on-surface-var); }
+.dim{ color:var(--outline); }
+.pri{ color:var(--primary); }
 
-.sb-nav{padding:8px;flex:1}
-.sb-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:8px;
-  font-size:13px;color:var(--text2);cursor:pointer;
-  transition:all .15s;margin-bottom:2px;
-  border:1px solid transparent;text-decoration:none
-}
-.sb-item:hover{color:var(--text);background:var(--bg3);border-color:var(--border)}
-.sb-item.on{color:var(--blue);background:rgba(99,179,237,.08);border-color:rgba(99,179,237,.2)}
-.sb-icon{font-size:15px;width:20px;text-align:center}
-
-.sb-streak{
-  margin:4px 14px 14px;
-  background:rgba(246,201,14,.06);
-  border:1px solid rgba(246,201,14,.2);
-  border-radius:10px;padding:10px 12px;
-  display:flex;align-items:center;gap:10px
-}
-.sb-streak-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--gold);line-height:1}
-.sb-streak-label{font-size:10px;color:var(--text2)}
-
-/* MAIN */
-.main{margin-left:220px;flex:1;min-height:100vh}
-.tab-panel{display:none;padding:28px}
-.tab-panel.on{display:block}
-
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.page-title{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:-.01em}
-.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
-
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
-.card:hover{border-color:var(--border2)}
-
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.stat-card.blue::before{background:var(--blue)}
-.stat-card.gold::before{background:var(--gold)}
-.stat-card.green::before{background:var(--green)}
-.stat-card.purple::before{background:var(--purple)}
-.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:8px}
-.stat-val{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;line-height:1}
-.stat-val.blue{color:var(--blue)}.stat-val.gold{color:var(--gold)}.stat-val.green{color:var(--green)}.stat-val.purple{color:var(--purple)}
-.stat-sub{font-size:11px;color:var(--text3);margin-top:6px}
-
-/* TIMER WIDGET on dashboard */
-.timer-widget{
-  background:var(--bg2);border:1px solid rgba(99,179,237,.25);
-  border-radius:12px;padding:20px;margin-bottom:16px;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap
-}
-.tw-big{font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:var(--blue);letter-spacing:.04em;line-height:1}
-.tw-info{flex:1}
-.tw-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:4px}
-.tw-session{font-size:13px;color:var(--text2);margin-top:4px}
-.tw-btns{display:flex;gap:8px;flex-wrap:wrap}
-
-.task-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 14px;border:1px solid var(--border);
-  border-radius:8px;margin-bottom:6px;
-  transition:all .2s;cursor:pointer;background:var(--bg3)
-}
-.task-item:hover{border-color:var(--border2)}
-.task-item.done{opacity:.45}
-.task-check{
-  width:20px;height:20px;border-radius:6px;
-  border:1.5px solid var(--text3);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .2s;font-size:11px
-}
-.task-item.done .task-check{background:var(--green);border-color:var(--green)}
-.task-text{flex:1;font-size:13px}
-.task-item.done .task-text{text-decoration:line-through;color:var(--text2)}
-.task-dur{font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);background:var(--bg2);padding:3px 8px;border-radius:4px}
-.task-xp{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);padding:3px 8px;border-radius:4px;background:rgba(246,201,14,.08)}
-
-.log-row{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
-.inp{
-  flex:1;min-width:120px;
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;padding:10px 14px;
-  color:var(--text);font-size:13px;
-  font-family:'Space Grotesk',sans-serif;
-  outline:none;transition:border-color .2s
-}
-.inp:focus{border-color:var(--blue)}
-.inp::placeholder{color:var(--text3)}
-
+/* ---- buttons ----------------------------------------------------------- */
 .btn{
-  padding:10px 16px;border-radius:8px;
-  border:1px solid var(--border);
-  background:var(--bg3);color:var(--text);
-  font-size:13px;font-family:'Space Grotesk',sans-serif;
-  cursor:pointer;transition:all .15s;white-space:nowrap
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  height:42px; padding:0 22px; border:0; border-radius:var(--r-full);
+  background:var(--sc-high); color:var(--on-surface);
+  font-family:var(--font-body); font-size:.875rem; font-weight:500; letter-spacing:.01em;
+  cursor:pointer; text-decoration:none; white-space:nowrap;
+  transition:background var(--d-short) var(--m-standard),
+             border-radius var(--d-med) var(--m-spring),
+             box-shadow var(--d-short) var(--m-standard),
+             opacity var(--d-short) var(--m-standard);
 }
-.btn:hover{border-color:var(--border2);background:var(--bg2)}
-.btn-primary{background:rgba(99,179,237,.1);border-color:rgba(99,179,237,.3);color:var(--blue)}
-.btn-primary:hover{background:rgba(99,179,237,.2)}
-.btn-gold{background:rgba(246,201,14,.1);border-color:rgba(246,201,14,.3);color:var(--gold)}
-.btn-gold:hover{background:rgba(246,201,14,.18)}
-.btn-green{background:rgba(104,211,145,.1);border-color:rgba(104,211,145,.3);color:var(--green)}
-.btn-red{background:rgba(252,129,129,.08);border-color:rgba(252,129,129,.2);color:var(--red)}
-
-.prog-row{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:10px;margin-bottom:10px}
-.prog-label{font-size:12px;color:var(--text2)}
-.prog-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px;transition:width .6s ease}
-.prog-pct{font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);text-align:right}
-
-.phase-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.phase-btn{
-  padding:6px 14px;border-radius:20px;
-  border:1px solid var(--border);font-size:12px;
-  cursor:pointer;background:var(--bg2);color:var(--text2);
-  font-family:'Space Grotesk',sans-serif;transition:all .15s
+.btn::after{               /* state layer */
+  content:''; position:absolute; inset:0; background:currentColor;
+  opacity:0; transition:opacity var(--d-short) var(--m-standard);
 }
-.phase-btn.on{background:rgba(99,179,237,.1);border-color:rgba(99,179,237,.3);color:var(--blue)}
+.btn:hover::after{ opacity:.08; }
+.btn:active::after{ opacity:.12; }
+.btn:active{ border-radius:var(--r-s); }
+.btn:disabled{ opacity:.38; cursor:not-allowed; }
+.btn:disabled::after{ opacity:0; }
+.btn > *{ position:relative; }
+.btn svg{ width:18px; height:18px; flex:none; position:relative; }
 
-.week-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;background:var(--bg2)}
-.week-head{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background .15s}
-.week-head:hover{background:var(--bg3)}
-.wk-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);min-width:62px}
-.wk-title{flex:1;font-size:13px;font-weight:500}
-.wk-badge{font-size:10px;padding:3px 9px;border-radius:10px;font-family:'Space Mono',monospace}
-.wk-badge.done{background:rgba(104,211,145,.1);color:var(--green);border:1px solid rgba(104,211,145,.2)}
-.wk-badge.cur{background:rgba(99,179,237,.1);color:var(--blue);border:1px solid rgba(99,179,237,.2)}
-.wk-badge.upcoming{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
-.wk-chev{font-size:13px;color:var(--text3);transition:transform .2s}
-.wk-chev.open{transform:rotate(180deg)}
-.week-body{display:none;padding:14px 16px;border-top:1px solid var(--border)}
-.week-body.open{display:block}
-.topic-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);padding:4px 0}
-.topic-dot{width:4px;height:4px;border-radius:50%;background:var(--text3);flex-shrink:0}
-.week-tip{margin-top:10px;padding:10px 12px;border-left:2px solid var(--blue-dim);background:rgba(99,179,237,.04);border-radius:0 6px 6px 0;font-size:12px;color:var(--text2)}
+.btn-filled{  background:var(--primary); color:var(--on-primary); font-weight:600; }
+.btn-tonal{   background:var(--primary-container); color:var(--on-primary-container); }
+.btn-tonal-2{ background:var(--secondary-container); color:var(--on-secondary-container); }
+.btn-outlined{ background:transparent; color:var(--primary); box-shadow:inset 0 0 0 1px var(--outline-var); }
+.btn-outlined:hover{ box-shadow:inset 0 0 0 1px var(--primary); }
+.btn-text{ background:transparent; color:var(--primary); padding:0 14px; }
+.btn-elevated{ background:var(--sc-low); color:var(--primary); box-shadow:var(--e1); }
+.btn-elevated:hover{ box-shadow:var(--e2); }
+.btn-error{ background:var(--error-container); color:var(--on-error-container); }
+.btn-success{ background:var(--success-container); color:var(--on-success-container); }
 
-.streak-map{display:flex;flex-wrap:wrap;gap:3px;margin:14px 0}
-.s-cell{width:13px;height:13px;border-radius:2px;background:var(--bg3);cursor:pointer;transition:transform .1s;flex-shrink:0;position:relative}
-.s-cell:hover{transform:scale(1.4)}
-.s-cell.h1{background:#1a3a2a}.s-cell.h2{background:#1D6338}.s-cell.h3{background:#22A156}.s-cell.h4{background:var(--green)}
-.s-cell.today-marker{box-shadow:0 0 0 1.5px var(--blue)}
-.s-cell.missed{background:rgba(252,129,129,.15)}
-.streak-legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
-.sl{width:11px;height:11px;border-radius:2px}
+.btn-xs{ height:32px; padding:0 14px; font-size:.78rem; }
+.btn-xs svg{ width:15px; height:15px; }
+.btn-s{ height:36px; padding:0 18px; font-size:.82rem; }
+.btn-l{ height:54px; padding:0 30px; font-size:1rem; }
+.btn-l svg{ width:21px; height:21px; }
+.btn-block{ width:100%; }
 
-.journal-entries{max-height:300px;overflow-y:auto;margin-bottom:12px}
-.j-entry{border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:6px;background:var(--bg3)}
-.j-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:6px}
-.j-text{font-size:13px;color:var(--text2);line-height:1.5}
-.j-area{
-  width:100%;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;padding:12px;color:var(--text);
-  font-size:13px;font-family:'Space Grotesk',sans-serif;
-  resize:vertical;min-height:90px;outline:none;
-  transition:border-color .2s;display:block;margin-bottom:8px
+/* icon button */
+.icon-btn{
+  position:relative; overflow:hidden; flex:none;
+  display:inline-grid; place-items:center;
+  width:42px; height:42px; border:0; border-radius:var(--r-full);
+  background:transparent; color:var(--on-surface-var); cursor:pointer;
+  transition:background var(--d-short) var(--m-standard), color var(--d-short) var(--m-standard);
 }
-.j-area:focus{border-color:var(--blue)}
+.icon-btn::after{ content:''; position:absolute; inset:0; background:currentColor; opacity:0; transition:opacity var(--d-short); }
+.icon-btn:hover::after{ opacity:.1; }
+.icon-btn:hover{ color:var(--on-surface); }
+.icon-btn svg{ width:20px; height:20px; position:relative; }
+.icon-btn-filled{ background:var(--sc-high); color:var(--on-surface); }
+.icon-btn-tonal{ background:var(--primary-container); color:var(--on-primary-container); }
+.icon-btn-s{ width:34px; height:34px; }
+.icon-btn-s svg{ width:17px; height:17px; }
 
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.ach-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;transition:all .2s;position:relative;overflow:hidden}
-.ach-card.unlocked{border-color:rgba(246,201,14,.3)}
-.ach-card.unlocked::before{content:'';position:absolute;inset:0;background:rgba(246,201,14,.03)}
-.ach-card.locked{opacity:.35;filter:grayscale(1)}
-.ach-icon{font-size:26px;margin-bottom:7px}
-.ach-name{font-size:12px;font-weight:500;margin-bottom:3px}
-.ach-desc{font-size:11px;color:var(--text2);line-height:1.4}
-.ach-at{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);margin-top:5px}
-
-.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:16px}
-.res-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s}
-.res-card:hover{border-color:var(--border2);transform:translateY(-1px)}
-.res-tag{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--bg3);color:var(--text3);border:1px solid var(--border);display:inline-block;margin-right:4px;margin-bottom:6px}
-.res-tag.free{color:var(--green);border-color:rgba(104,211,145,.2);background:rgba(104,211,145,.06)}
-.res-tag.book{color:var(--gold);border-color:rgba(246,201,14,.2);background:rgba(246,201,14,.06)}
-.res-title{font-size:13px;font-weight:500;margin-bottom:4px}
-.res-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.res-link{font-size:12px;color:var(--blue);text-decoration:none}
-.res-link:hover{text-decoration:underline}
-.res-sec{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
-
-.timeline{position:relative;padding-left:20px}
-.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border)}
-.tl-item{position:relative;padding:0 0 16px 20px}
-.tl-item::before{content:'';position:absolute;left:-4px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--text3);border:1.5px solid var(--bg)}
-.tl-item.done::before{background:var(--green)}
-.tl-item.cur::before{background:var(--blue);box-shadow:0 0 0 3px rgba(99,179,237,.2)}
-.tl-date{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:2px}
-.tl-text{font-size:13px}.tl-note{font-size:11px;color:var(--text2);margin-top:2px}
-
-.phase-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;margin-bottom:20px;gap:2px}
-.pb-seg{flex:1;border-radius:2px}
-
-.toast{
-  position:fixed;bottom:24px;right:24px;
-  background:var(--bg2);border:1px solid var(--border2);
-  border-radius:10px;padding:14px 18px;
-  font-size:13px;color:var(--text);z-index:1000;
-  transform:translateY(80px);opacity:0;
-  transition:all .35s cubic-bezier(.16,1,.3,1);
-  max-width:300px;pointer-events:none
+/* FAB */
+.fab{
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; gap:11px;
+  height:58px; padding:0 22px; border:0;
+  border-radius:var(--r-l);
+  background:var(--primary-container); color:var(--on-primary-container);
+  font-family:var(--font-display); font-size:.95rem; font-weight:600;
+  cursor:pointer; box-shadow:var(--e3);
+  transition:border-radius var(--d-med) var(--m-spring),
+             transform var(--d-med) var(--m-spring),
+             box-shadow var(--d-short) var(--m-standard);
 }
-.toast.show{transform:translateY(0);opacity:1}
-.toast-title{font-weight:500;margin-bottom:3px}
-.toast-sub{font-size:12px;color:var(--text2)}
+.fab::after{ content:''; position:absolute; inset:0; background:currentColor; opacity:0; transition:opacity var(--d-short); }
+.fab:hover::after{ opacity:.09; }
+.fab:hover{ transform:translateY(-2px); box-shadow:var(--e4); }
+.fab:active{ border-radius:var(--r-s); }
+.fab svg{ width:23px; height:23px; flex:none; position:relative; }
+.fab span{ position:relative; }
+.fab-round{ width:58px; padding:0; justify-content:center; }
 
-.levelup-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.85);
-  z-index:500;display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .3s
+/* ---- cards ------------------------------------------------------------- */
+.card{
+  background:var(--sc-low);
+  border-radius:var(--r-xl);
+  padding:26px;
 }
-.levelup-overlay.show{opacity:1;pointer-events:all}
-.levelup-box{
-  text-align:center;padding:48px;background:var(--bg2);
-  border:1px solid rgba(246,201,14,.4);border-radius:20px;max-width:380px
-}
-.lu-word{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;opacity:.7}
-.lu-rank{font-family:'Space Mono',monospace;font-size:72px;font-weight:700;line-height:1;margin-bottom:14px}
-.lu-name{font-size:18px;font-weight:500;margin-bottom:8px}
-.lu-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+.card-low{ background:color-mix(in srgb, var(--sc-low) 82%, transparent); backdrop-filter:blur(12px); }
+.card-high{ background:var(--sc-high); }
+.card-primary{ background:var(--primary-container); color:var(--on-primary-container); }
+.card-secondary{ background:var(--secondary-container); color:var(--on-secondary-container); }
+.card-tertiary{ background:var(--tertiary-container); color:var(--on-tertiary-container); }
+.card-outlined{ background:transparent; box-shadow:inset 0 0 0 1px var(--outline-var); }
+.card-tight{ padding:20px; }
+.card-flush{ padding:0; overflow:hidden; }
 
-.missed-alert{
-  background:rgba(252,129,129,.06);border:1px solid rgba(252,129,129,.2);
-  border-radius:10px;padding:12px 16px;margin-bottom:16px;
-  font-size:13px;color:var(--red);display:none
-}
-.missed-alert.show{display:block}
+.card-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:20px; }
+.card-head > svg{ width:20px; height:20px; flex:none; opacity:.6; }
+.card-head .overline{ color:var(--outline); }
 
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
-
-.tooltip{
-  position:absolute;bottom:calc(100% + 6px);left:50%;
-  transform:translateX(-50%);
-  background:var(--bg2);border:1px solid var(--border2);
-  border-radius:6px;padding:5px 9px;
-  font-size:11px;color:var(--text);white-space:nowrap;
-  z-index:100;pointer-events:none;opacity:0;transition:opacity .15s
+/* ---- chips ------------------------------------------------------------- */
+.chip{
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; gap:7px;
+  height:34px; padding:0 15px; border:0; border-radius:var(--r-s);
+  background:var(--sc-high); color:var(--on-surface-var);
+  font-size:.8rem; font-weight:500; cursor:default; white-space:nowrap;
+  transition:background var(--d-short) var(--m-standard), color var(--d-short) var(--m-standard);
 }
-.s-cell:hover .tooltip{opacity:1}
+.chip svg{ width:16px; height:16px; flex:none; }
+button.chip{ cursor:pointer; }
+button.chip:hover{ background:var(--sc-highest); color:var(--on-surface); }
+.chip-on{ background:var(--primary-container); color:var(--on-primary-container); }
+button.chip-on:hover{ background:var(--primary-container); }
+.chip-outlined{ background:transparent; box-shadow:inset 0 0 0 1px var(--outline-var); }
+.chip-xs{ height:27px; padding:0 11px; font-size:.72rem; }
+.chip-pri{ background:var(--primary-container); color:var(--on-primary-container); }
+.chip-ok{ background:var(--success-container); color:var(--on-success-container); }
+.chip-err{ background:var(--error-container); color:var(--on-error-container); }
+
+/* ---- segmented button (M3) --------------------------------------------- */
+.segmented{ display:inline-flex; border-radius:var(--r-full); box-shadow:inset 0 0 0 1px var(--outline-var); overflow:hidden; }
+.segmented button{
+  position:relative; display:inline-flex; align-items:center; gap:6px;
+  height:40px; padding:0 18px; border:0; background:transparent;
+  color:var(--on-surface-var); font-size:.82rem; font-weight:500; cursor:pointer;
+  transition:background var(--d-short) var(--m-standard), color var(--d-short) var(--m-standard);
+}
+.segmented button + button{ box-shadow:inset 1px 0 0 var(--outline-var); }
+.segmented button:hover{ background:color-mix(in srgb, var(--on-surface) 8%, transparent); }
+.segmented button.on{ background:var(--secondary-container); color:var(--on-secondary-container); }
+.segmented button svg{ width:16px; height:16px; }
+
+/* ---- inputs ------------------------------------------------------------ */
+.field{ position:relative; }
+.field input, .field textarea, .field select, .input{
+  width:100%; height:54px; padding:20px 16px 6px;
+  background:var(--sc); color:var(--on-surface);
+  border:0; border-bottom:1px solid var(--outline);
+  border-radius:var(--r-xs) var(--r-xs) 0 0;
+  font-size:.95rem;
+  transition:background var(--d-short) var(--m-standard), border-color var(--d-short) var(--m-standard);
+}
+.field textarea{ height:auto; min-height:120px; padding:22px 16px 12px; resize:vertical; line-height:1.65; }
+.field input:hover, .field textarea:hover{ background:var(--sc-high); }
+.field input:focus, .field textarea:focus, .field select:focus{
+  outline:none; background:var(--sc-high);
+  border-bottom:2px solid var(--primary); padding-bottom:5px;
+}
+.field > label{
+  position:absolute; left:16px; top:8px;
+  font-size:.7rem; font-weight:500; letter-spacing:.03em;
+  color:var(--outline); pointer-events:none;
+  transition:color var(--d-short) var(--m-standard);
+}
+.field:focus-within > label{ color:var(--primary); }
+.field input[type=number]{ font-family:var(--font-mono); }
+.field .suffix{ position:absolute; right:16px; bottom:8px; font-size:.8rem; color:var(--outline); pointer-events:none; }
+
+/* plain input (search / select pills) */
+.input-pill{
+  height:40px; padding:0 16px; border-radius:var(--r-full);
+  background:var(--sc-high); color:var(--on-surface);
+  border:0; font-size:.83rem;
+}
+.input-pill:focus{ outline:2px solid var(--primary); outline-offset:0; }
+select.input-pill{ padding-right:34px; appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--outline) 50%),linear-gradient(135deg,var(--outline) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 18px, calc(100% - 13px) 18px;
+  background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
+
+/* ---- linear progress (M3 expressive: gap + stop dot) ------------------- */
+.bar{
+  position:relative; height:8px; border-radius:var(--r-full);
+  background:var(--sc-highest); overflow:visible;
+}
+.bar > i{
+  display:block; height:100%; width:0%; border-radius:var(--r-full);
+  background:var(--primary);
+  transition:width var(--d-long) var(--m-decel);
+}
+.bar::after{                    /* stop indicator */
+  content:''; position:absolute; right:2px; top:50%; transform:translateY(-50%);
+  width:4px; height:4px; border-radius:50%; background:var(--primary); opacity:.55;
+}
+.bar-s{ height:5px; }
+.bar-s::after{ width:3px; height:3px; }
+.bar-l{ height:12px; }
+.bar-l::after{ width:5px; height:5px; }
+
+/* ---- list rows --------------------------------------------------------- */
+.row-list{ display:flex; flex-direction:column; }
+.row-item{
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; border-radius:var(--r-m);
+  transition:background var(--d-short) var(--m-standard);
+}
+.row-item + .row-item{ margin-top:2px; }
+
+/* ---- dialog ------------------------------------------------------------ */
+.scrim{
+  position:fixed; inset:0; z-index:300; display:grid; place-items:center; padding:20px;
+  background:var(--scrim); backdrop-filter:blur(4px);
+  opacity:0; visibility:hidden; transition:opacity var(--d-med) var(--m-standard), visibility var(--d-med);
+}
+.scrim.show{ opacity:1; visibility:visible; }
+.dialog{
+  width:100%; max-width:400px;
+  background:var(--sc-high); color:var(--on-surface);
+  border-radius:var(--r-xxl); padding:28px;
+  box-shadow:var(--e4);
+  transform:translateY(20px) scale(.94); opacity:0;
+  transition:transform var(--d-med) var(--m-spring), opacity var(--d-short) var(--m-standard);
+}
+.scrim.show .dialog{ transform:none; opacity:1; }
+.dialog-icon{
+  width:46px; height:46px; margin:0 auto 16px; border-radius:var(--r-m);
+  display:grid; place-items:center;
+  background:var(--primary-container); color:var(--on-primary-container);
+}
+.dialog-icon svg{ width:24px; height:24px; }
+.dialog h3{ text-align:center; margin-bottom:8px; }
+.dialog .dialog-sub{ text-align:center; color:var(--on-surface-var); font-size:.86rem; margin-bottom:22px; }
+.dialog-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:24px; }
+
+/* ---- snackbar ---------------------------------------------------------- */
+.snackbar{
+  position:fixed; left:50%; bottom:26px; z-index:400;
+  transform:translate(-50%,140%);
+  display:flex; align-items:center; gap:14px;
+  min-width:280px; max-width:min(560px,calc(100vw - 32px));
+  padding:14px 20px; border-radius:var(--r-m);
+  background:var(--sc-highest); color:var(--on-surface);
+  box-shadow:var(--e4);
+  pointer-events:none;   /* status only — must never swallow taps */
+  opacity:0; visibility:hidden;
+  transition:transform var(--d-med) var(--m-spring),
+             opacity var(--d-med) var(--m-standard), visibility var(--d-med);
+}
+.snackbar.show{ transform:translate(-50%,0); opacity:1; visibility:visible; }
+.snack-icon{
+  width:32px; height:32px; flex:none; border-radius:var(--r-s);
+  display:grid; place-items:center;
+  background:var(--primary-container); color:var(--on-primary-container);
+}
+.snack-icon svg{ width:17px; height:17px; }
+.snack-title{ font-family:var(--font-display); font-size:.9rem; font-weight:600; }
+.snack-sub{ font-size:.8rem; color:var(--on-surface-var); }
+@media (max-width:700px){ .snackbar{ bottom:96px; } }
+
+/* ---- switch (M3) ------------------------------------------------------- */
+.switch{ position:relative; display:inline-block; width:48px; height:28px; flex:none; }
+.switch input{ position:absolute; opacity:0; width:0; height:0; }
+.switch .track{
+  position:absolute; inset:0; border-radius:var(--r-full); cursor:pointer;
+  background:var(--sc-highest); box-shadow:inset 0 0 0 2px var(--outline-var);
+  transition:background var(--d-med) var(--m-standard), box-shadow var(--d-med) var(--m-standard);
+}
+.switch .track::before{
+  content:''; position:absolute; left:6px; top:50%; width:14px; height:14px;
+  border-radius:50%; background:var(--outline); transform:translateY(-50%);
+  transition:all var(--d-med) var(--m-spring);
+}
+.switch input:checked + .track{ background:var(--primary); box-shadow:none; }
+.switch input:checked + .track::before{ left:26px; width:20px; height:20px; background:var(--on-primary); }
+
+/* ---- layout helpers ---------------------------------------------------- */
+.stack{ display:flex; flex-direction:column; gap:16px; }
+.stack-l{ display:flex; flex-direction:column; gap:24px; }
+.row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.spread{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.grow{ flex:1; min-width:0; }
+.sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* entrance */
+.rv{ opacity:0; transform:translateY(18px); transition:opacity var(--d-long) var(--m-decel), transform var(--d-long) var(--m-decel); }
+.rv.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){ .rv{ opacity:1; transform:none; } }
+
+/* ============================================================================
+   Study app shell — navigation rail + persistent timer dock
+   ========================================================================== */
+
+.app{ display:flex; min-height:100vh; }
+
+/* ---------- navigation rail (desktop) ----------------------------------- */
+.rail{
+  width:var(--rail-w); flex:none;
+  position:sticky; top:0; height:100vh;
+  display:flex; flex-direction:column; gap:6px;
+  padding:22px 14px 20px;
+}
+.rail-brand{
+  display:flex; align-items:center; gap:12px;
+  padding:6px 10px 20px; text-decoration:none;
+}
+.rail-mark{
+  width:42px; height:42px; flex:none; border-radius:var(--r-m);
+  display:grid; place-items:center;
+  background:var(--primary-container); color:var(--on-primary-container);
+}
+.rail-mark svg{ width:23px; height:23px; }
+.rail-name{ font-family:var(--font-display); font-size:1.02rem; font-weight:600; line-height:1.2; }
+.rail-sub{ font-size:.7rem; color:var(--outline); letter-spacing:.02em; }
+
+.nav{ display:flex; flex-direction:column; gap:4px; }
+.nav-item{
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; gap:14px;
+  height:52px; padding:0 18px; border:0;
+  border-radius:var(--r-full);
+  background:transparent; color:var(--on-surface-var);
+  font-family:var(--font-body); font-size:.9rem; font-weight:500;
+  cursor:pointer; text-align:left; width:100%;
+  transition:background var(--d-med) var(--m-standard), color var(--d-med) var(--m-standard);
+}
+.nav-item::after{ content:''; position:absolute; inset:0; background:currentColor; opacity:0; transition:opacity var(--d-short); }
+.nav-item:hover::after{ opacity:.08; }
+.nav-item svg{ width:22px; height:22px; flex:none; position:relative; }
+.nav-item span{ position:relative; }
+.nav-item.on{
+  background:var(--secondary-container); color:var(--on-secondary-container);
+  font-weight:600;
+}
+.nav-item.on svg{ color:var(--primary); }
+.nav-badge{
+  position:relative; margin-left:auto;
+  font-family:var(--font-mono); font-size:.7rem; color:var(--outline);
+}
+
+.rail-foot{ margin-top:auto; display:flex; flex-direction:column; gap:4px; padding-top:16px; }
+.rail-link{
+  display:flex; align-items:center; gap:12px;
+  height:42px; padding:0 18px; border-radius:var(--r-full);
+  color:var(--outline); text-decoration:none; font-size:.82rem;
+  transition:background var(--d-short) var(--m-standard), color var(--d-short) var(--m-standard);
+}
+.rail-link:hover{ background:var(--sc-low); color:var(--on-surface-var); }
+.rail-link svg{ width:18px; height:18px; }
+
+/* ---------- bottom navigation (mobile) ---------------------------------- */
+.bottom-nav{ display:none; }
+@media (max-width:900px){
+  .app{ flex-direction:column; }
+  .rail{
+    position:static; width:auto; height:auto; flex-direction:row; align-items:center;
+    padding:14px 16px 6px; gap:12px;
+  }
+  .rail-brand{ padding:0; flex:1; }
+  .rail .nav, .rail-foot{ display:none; }
+
+  .bottom-nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:90;
+    display:flex; justify-content:space-around; gap:2px;
+    padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+    background:color-mix(in srgb, var(--sc) 92%, transparent);
+    backdrop-filter:blur(22px) saturate(180%);
+    box-shadow:0 -1px 0 var(--outline-var);
+  }
+  .bn-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    border:0; background:transparent; color:var(--on-surface-var);
+    font-size:.66rem; font-weight:500; cursor:pointer; padding:0;
+  }
+  .bn-ind{
+    width:56px; height:30px; border-radius:var(--r-full);
+    display:grid; place-items:center;
+    transition:background var(--d-med) var(--m-spring);
+  }
+  .bn-item svg{ width:21px; height:21px; }
+  .bn-item.on .bn-ind{ background:var(--secondary-container); }
+  .bn-item.on{ color:var(--on-surface); font-weight:600; }
+  .bn-item.on svg{ color:var(--primary); }
+  .content{ padding-bottom:110px!important; }
+}
+
+/* ---------- content ----------------------------------------------------- */
+.content{
+  flex:1; min-width:0;
+  padding:26px clamp(16px,3vw,40px) 130px;
+  max-width:1240px; margin:0 auto; width:100%;
+}
+
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin-bottom:26px; flex-wrap:wrap;
+}
+.topbar-title h1{ font-size:clamp(1.7rem,3.4vw,2.3rem); letter-spacing:-.025em; }
+.topbar-title p{ color:var(--on-surface-var); font-size:.88rem; margin-top:5px; }
+
+.screen{ display:none; }
+.screen.on{ display:block; animation:screen-in var(--d-long) var(--m-decel); }
+@keyframes screen-in{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+
+/* ---------- day stepper -------------------------------------------------- */
+.day-strip{
+  display:flex; align-items:center; gap:12px;
+  padding:8px 8px 8px 20px; border-radius:var(--r-full);
+  background:var(--sc-low);
+}
+.day-strip .d-num{ font-family:var(--font-display); font-size:1.15rem; font-weight:600; }
+.day-strip .d-of{ font-size:.78rem; color:var(--outline); }
+
+/* ---------- hero timer (Home) ------------------------------------------- */
+.timer-hero{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:28px;
+  background:linear-gradient(118deg,
+      color-mix(in srgb, var(--primary-container) 100%, transparent) 0%,
+      color-mix(in srgb, var(--primary-container) 58%, var(--surface-dim)) 100%);
+  color:var(--on-primary-container);
+  border-radius:var(--r-xxl); padding:26px 30px;
+}
+.timer-hero .t-read{
+  font-family:var(--font-mono); font-size:clamp(2.4rem,5.5vw,3.4rem);
+  font-weight:600; letter-spacing:-.05em; line-height:1; font-variant-numeric:tabular-nums;
+}
+.timer-hero .t-meta{ font-size:.84rem; opacity:.82; margin-top:8px; }
+.timer-hero .t-label{ font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; opacity:.7; }
+.timer-hero .t-today{ font-family:var(--font-display); font-size:1.5rem; font-weight:600; margin-top:2px; }
+.timer-hero .t-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.timer-hero .btn-filled{ background:var(--primary); color:var(--on-primary); }
+.timer-hero .btn-outlined{ color:inherit; box-shadow:inset 0 0 0 1px color-mix(in srgb, currentColor 32%, transparent); }
+.timer-hero .btn-outlined:hover{ box-shadow:inset 0 0 0 1px currentColor; }
+.timer-hero.running .t-read{ animation:tpulse 2s var(--m-standard) infinite; }
+@keyframes tpulse{ 0%,100%{ opacity:1; } 50%{ opacity:.72; } }
+@media (max-width:1000px){
+  .timer-hero{ grid-template-columns:1fr; gap:20px; padding:26px; }
+  .timer-hero .t-actions{ width:100%; }
+  .timer-hero .t-actions .btn{ flex:1 1 auto; }
+}
+@media (max-width:600px){
+  .timer-hero{ padding:22px; }
+  .timer-hero .t-actions{
+    display:grid; grid-template-columns:1fr 1fr; gap:9px;
+  }
+  .timer-hero .t-actions .btn{ width:100%; height:48px; padding:0 14px; font-size:.88rem; }
+}
+
+/* ---------- persistent timer dock --------------------------------------- */
+.dock{
+  position:fixed; left:50%; bottom:24px; z-index:95;
+  transform:translate(-50%,150%);
+  display:flex; align-items:center; gap:6px;
+  padding:8px 8px 8px 22px; border-radius:var(--r-full);
+  background:var(--sc-highest); box-shadow:var(--e4);
+  transition:transform var(--d-med) var(--m-spring),
+             opacity var(--d-med) var(--m-standard), visibility var(--d-med);
+  pointer-events:none; opacity:0; visibility:hidden;   /* fully out of the way */
+}
+.dock.show{ transform:translate(-50%,0); pointer-events:auto; opacity:1; visibility:visible; }
+.dock .d-time{
+  font-family:var(--font-mono); font-size:1.1rem; font-weight:600;
+  letter-spacing:-.03em; font-variant-numeric:tabular-nums; margin-right:10px;
+}
+.dock .d-dot{
+  width:7px; height:7px; border-radius:50%; background:var(--primary); margin-right:10px;
+  animation:blink 1.6s var(--m-standard) infinite;
+}
+@keyframes blink{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
+.dock.paused .d-dot{ animation:none; opacity:.35; }
+@media (max-width:900px){ .dock{ bottom:96px; } }
+@media (max-width:520px){ .dock{ left:12px; right:12px; transform:translateY(150%); padding-left:18px; }
+  .dock.show{ transform:translateY(0); } .dock .d-time{ font-size:1rem; }
+  .dock .btn{ padding:0 14px; } }
+
+/* ---------- stat tiles --------------------------------------------------- */
+.tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+@media (max-width:820px){ .tiles{ grid-template-columns:repeat(2,1fr); } }
+.tile{
+  background:var(--sc-low); border-radius:var(--r-l); padding:20px;
+  transition:background var(--d-med) var(--m-standard), transform var(--d-med) var(--m-spring);
+}
+.tile:hover{ background:var(--sc); transform:translateY(-2px); }
+.tile-icon{
+  width:34px; height:34px; border-radius:var(--r-s); margin-bottom:14px;
+  display:grid; place-items:center;
+  background:var(--sc-high); color:var(--on-surface-var);
+}
+.tile-icon svg{ width:18px; height:18px; }
+.tile-val{ font-family:var(--font-display); font-size:1.8rem; font-weight:600; letter-spacing:-.03em; line-height:1; }
+.tile-label{ font-size:.78rem; color:var(--on-surface-var); margin-top:6px; }
+.tile-sub{ font-size:.72rem; color:var(--outline); margin-top:2px; }
+.tile-pri .tile-icon{ background:var(--primary-container); color:var(--on-primary-container); }
+.tile-pri .tile-val{ color:var(--primary); }
+
+/* ---------- today's quest ------------------------------------------------ */
+.quest-grid{ display:grid; grid-template-columns:1.35fr 1fr; gap:16px; align-items:start; }
+@media (max-width:1000px){ .quest-grid{ grid-template-columns:1fr; } }
+
+.topic-banner{
+  display:flex; align-items:center; gap:20px;
+  background:var(--sc-low); border-radius:var(--r-xl);
+  padding:22px 26px; margin-bottom:16px;
+}
+.topic-banner .tb-mark{
+  width:44px; height:44px; flex:none; border-radius:var(--r-m);
+  display:grid; place-items:center;
+  background:var(--tertiary-container); color:var(--on-tertiary-container);
+}
+.topic-banner .tb-mark svg{ width:22px; height:22px; }
+.topic-banner .overline{ color:var(--tertiary); }
+.topic-banner h2{ font-size:1.3rem; margin-top:5px; letter-spacing:-.015em; }
+@media (max-width:600px){ .topic-banner{ padding:20px; gap:15px; } .topic-banner h2{ font-size:1.1rem; } }
+
+.task{
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; gap:15px;
+  padding:15px 18px; border-radius:var(--r-m);
+  background:var(--sc); cursor:pointer;
+  transition:background var(--d-short) var(--m-standard), opacity var(--d-med) var(--m-standard);
+}
+.task + .task{ margin-top:6px; }
+.task:hover{ background:var(--sc-high); }
+.task-box{
+  width:22px; height:22px; flex:none; border-radius:var(--r-xs);
+  display:grid; place-items:center;
+  box-shadow:inset 0 0 0 2px var(--outline); color:var(--on-primary);
+  transition:all var(--d-med) var(--m-spring);
+}
+.task-box svg{ width:15px; height:15px; transform:scale(0); transition:transform var(--d-med) var(--m-spring); }
+.task.done .task-box{ background:var(--primary); box-shadow:none; }
+.task.done .task-box svg{ transform:scale(1); }
+.task.done{ opacity:.5; }
+.task.done .task-text{ text-decoration:line-through; }
+.task-text{ flex:1; font-size:.9rem; }
+.task-meta{ display:flex; align-items:center; gap:8px; }
+.task-dur{ font-family:var(--font-mono); font-size:.72rem; color:var(--outline); }
+
+.mini-list{ display:flex; flex-direction:column; gap:10px; }
+.mini-row{ display:flex; align-items:flex-start; gap:10px; font-size:.85rem; color:var(--on-surface-var); }
+.mini-dot{ width:5px; height:5px; border-radius:50%; background:var(--primary); flex:none; margin-top:9px; }
+
+.tip-card{ background:var(--tertiary-container); color:var(--on-tertiary-container); }
+.tip-card .card-head .overline{ color:inherit; opacity:.7; }
+.tip-card .tip-body{ font-size:.88rem; line-height:1.65; }
+
+/* ---------- plan: phase stepper ----------------------------------------- */
+.stepper{
+  display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:20px;
+  scrollbar-width:thin;
+}
+.step-card{
+  flex:1 1 0; min-width:142px;
+  background:var(--sc-low); border-radius:var(--r-l); padding:18px;
+  transition:background var(--d-med) var(--m-standard);
+}
+.step-card .s-num{
+  width:26px; height:26px; border-radius:var(--r-full); margin-bottom:12px;
+  display:grid; place-items:center;
+  background:var(--sc-highest); color:var(--on-surface-var);
+  font-family:var(--font-mono); font-size:.72rem; font-weight:600;
+}
+.step-card .s-days{ font-family:var(--font-mono); font-size:.68rem; color:var(--outline); letter-spacing:.05em; }
+.step-card .s-name{ font-family:var(--font-display); font-size:.92rem; font-weight:600; margin-top:4px; line-height:1.25; }
+.step-card .s-note{ font-size:.74rem; color:var(--outline); margin-top:5px; line-height:1.45; }
+.step-card.cur{ background:var(--primary-container); color:var(--on-primary-container); }
+.step-card.cur .s-num{ background:var(--primary); color:var(--on-primary); }
+.step-card.cur .s-days, .step-card.cur .s-note{ color:inherit; opacity:.78; }
+.step-card.done .s-num{ background:var(--success-container); color:var(--on-success-container); }
+.step-card.done{ opacity:.62; }
+
+.filter-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+
+.week{
+  background:var(--sc-low); border-radius:var(--r-l);
+  margin-bottom:8px; overflow:hidden;
+  transition:background var(--d-med) var(--m-standard);
+}
+.week:hover{ background:var(--sc); }
+.week.open{ background:var(--sc); }
+.week-head{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 22px; cursor:pointer; user-select:none;
+}
+.week-days{ font-family:var(--font-mono); font-size:.72rem; color:var(--outline); min-width:96px; }
+.week-title{ flex:1; font-family:var(--font-display); font-size:.98rem; font-weight:600; }
+.week-chev{ color:var(--outline); display:grid; place-items:center; transition:transform var(--d-med) var(--m-spring); }
+.week-chev svg{ width:20px; height:20px; }
+.week.open .week-chev{ transform:rotate(180deg); }
+.week-body{ display:none; padding:0 22px 22px; }
+.week.open .week-body{ display:block; animation:screen-in var(--d-med) var(--m-decel); }
+.week-tip{
+  margin-top:16px; padding:16px 18px; border-radius:var(--r-m);
+  background:var(--tertiary-container); color:var(--on-tertiary-container);
+  font-size:.85rem; line-height:1.6;
+  display:flex; gap:12px; align-items:flex-start;
+}
+.week-tip svg{ width:19px; height:19px; flex:none; margin-top:1px; }
+@media (max-width:640px){
+  .week-head{ flex-wrap:wrap; padding:16px 18px; }
+  .week-days{ min-width:0; }
+  .week-title{ flex-basis:100%; order:3; }
+  .week-body{ padding:0 18px 18px; }
+}
+
+/* ---------- flow steps (IPhO reading pattern) --------------------------- */
+.flow{ display:grid; gap:10px; }
+.flow-step{
+  display:flex; gap:16px; align-items:flex-start;
+  background:var(--sc-low); border-radius:var(--r-l); padding:18px 20px;
+}
+.flow-num{
+  width:30px; height:30px; flex:none; border-radius:var(--r-full);
+  display:grid; place-items:center;
+  background:var(--primary-container); color:var(--on-primary-container);
+  font-family:var(--font-mono); font-size:.78rem; font-weight:600;
+}
+.flow-body{ font-size:.86rem; color:var(--on-surface-var); line-height:1.6; }
+.flow-body strong{ color:var(--on-surface); display:block; margin-bottom:3px; font-family:var(--font-display); }
+
+/* ---------- progress screen --------------------------------------------- */
+.rank-hero{
+  display:flex; align-items:center; gap:26px; flex-wrap:wrap;
+  background:var(--sc-low); border-radius:var(--r-xxl); padding:30px 34px;
+}
+.rank-orb{
+  width:88px; height:88px; flex:none; border-radius:var(--r-l);
+  display:grid; place-items:center;
+  background:var(--primary-container); color:var(--on-primary-container);
+  font-family:var(--font-display); font-size:2.4rem; font-weight:600; letter-spacing:-.04em;
+}
+.rank-info{ flex:1; min-width:200px; }
+.rank-name{ font-family:var(--font-display); font-size:1.5rem; font-weight:600; letter-spacing:-.02em; }
+.rank-next{ font-size:.82rem; color:var(--on-surface-var); margin:4px 0 14px; }
+
+.prog-row{ display:grid; grid-template-columns:150px 1fr 48px; align-items:center; gap:16px; }
+.prog-row + .prog-row{ margin-top:14px; }
+.prog-label{ font-size:.86rem; color:var(--on-surface-var); }
+.prog-pct{ font-family:var(--font-mono); font-size:.78rem; color:var(--outline); text-align:right; }
+@media (max-width:560px){
+  .prog-row{ grid-template-columns:1fr auto; grid-template-rows:auto auto; gap:8px 12px; }
+  .prog-label{ grid-area:1/1; }
+  .prog-pct{ grid-area:1/2; }
+  .prog-row .bar{ grid-area:2/1/3/3; }
+}
+
+/* ---------- streak map --------------------------------------------------- */
+.streak-map{ display:grid; grid-template-columns:repeat(30,1fr); gap:4px; }
+@media (max-width:760px){ .streak-map{ grid-template-columns:repeat(18,1fr); } }
+.s-cell{
+  aspect-ratio:1; border-radius:var(--r-xs);
+  background:var(--sc-high);
+  transition:transform var(--d-short) var(--m-spring);
+}
+.s-cell:hover{ transform:scale(1.45); position:relative; z-index:2; }
+.s-cell.missed{ background:var(--error-container); }
+.s-cell.h1{ background:color-mix(in srgb, var(--primary) 26%, var(--sc-high)); }
+.s-cell.h2{ background:color-mix(in srgb, var(--primary) 48%, var(--sc-high)); }
+.s-cell.h3{ background:color-mix(in srgb, var(--primary) 72%, var(--sc-high)); }
+.s-cell.h4{ background:var(--primary); }
+.s-cell.today-marker{ box-shadow:0 0 0 2px var(--on-surface); }
+.legend{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; font-size:.75rem; color:var(--outline); }
+.legend .sw{ width:12px; height:12px; border-radius:var(--r-xs); }
+.legend .gap{ width:8px; }
+
+/* ---------- achievements ------------------------------------------------- */
+.ach-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:10px; }
+.ach{
+  background:var(--sc-low); border-radius:var(--r-l); padding:20px 16px; text-align:center;
+  transition:background var(--d-med) var(--m-standard), transform var(--d-med) var(--m-spring);
+}
+.ach.unlocked{ background:var(--primary-container); color:var(--on-primary-container); }
+.ach.unlocked:hover{ transform:translateY(-3px); }
+.ach.locked{ opacity:.4; }
+.ach-icon{ font-size:1.65rem; line-height:1; margin-bottom:11px; }
+.ach.locked .ach-icon{ filter:grayscale(1); }
+.ach-name{ font-family:var(--font-display); font-size:.88rem; font-weight:600; }
+.ach-desc{ font-size:.73rem; opacity:.72; margin-top:4px; line-height:1.45; }
+.ach-at{ font-family:var(--font-mono); font-size:.66rem; margin-top:9px; opacity:.8; }
+
+/* ---------- journal ------------------------------------------------------ */
+.j-entry{
+  background:var(--sc-low); border-radius:var(--r-l); padding:20px 22px;
+}
+.j-entry + .j-entry{ margin-top:8px; }
+.j-meta{ font-family:var(--font-mono); font-size:.7rem; color:var(--outline); letter-spacing:.06em; margin-bottom:8px; }
+.j-text{ font-size:.89rem; color:var(--on-surface-var); line-height:1.7; white-space:pre-wrap; }
+.empty{
+  text-align:center; padding:52px 20px; color:var(--outline);
+}
+.empty svg{ width:38px; height:38px; margin-bottom:14px; opacity:.5; }
+.empty p{ font-size:.86rem; }
+
+/* ---------- library ------------------------------------------------------ */
+.lib-sec{ margin-top:34px; }
+.lib-sec:first-of-type{ margin-top:0; }
+.lib-sec > h3{ font-size:1.05rem; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+.lib-sec > h3::after{ content:''; flex:1; height:1px; background:var(--outline-var); }
+.res-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(268px,1fr)); gap:12px; }
+.res-card{
+  background:var(--sc-low); border-radius:var(--r-l); padding:20px;
+  display:flex; flex-direction:column; gap:9px;
+  transition:background var(--d-med) var(--m-standard), transform var(--d-med) var(--m-spring);
+}
+.res-card:hover{ background:var(--sc); transform:translateY(-2px); }
+.res-tags{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:2px; }
+.res-title{ font-family:var(--font-display); font-size:.98rem; font-weight:600; letter-spacing:-.01em; }
+.res-desc{ font-size:.81rem; color:var(--on-surface-var); line-height:1.6; flex:1; }
+.res-link{
+  display:inline-flex; align-items:center; gap:7px; align-self:flex-start;
+  height:34px; padding:0 15px; border-radius:var(--r-full);
+  background:var(--primary-container); color:var(--on-primary-container);
+  font-size:.8rem; font-weight:500; text-decoration:none;
+  transition:background var(--d-short) var(--m-standard);
+}
+.res-link:hover{ background:var(--primary); color:var(--on-primary); }
+.res-link svg{ width:15px; height:15px; }
+.res-note{ font-size:.76rem; color:var(--outline); }
+
+/* ---------- viewing an earlier day -------------------------------------- */
+.past-banner{
+  display:flex; align-items:center; gap:12px;
+  background:var(--secondary-container); color:var(--on-secondary-container);
+  border-radius:var(--r-l); padding:14px 18px; margin-bottom:16px;
+  font-size:.86rem; line-height:1.55;
+}
+.past-banner svg{ width:19px; height:19px; flex:none; }
+.past-banner b{ font-weight:600; }
+
+/* schedule marker on a progress bar */
+.bar-mark{
+  position:absolute; top:50%; width:2px; height:14px;
+  transform:translate(-50%,-50%); border-radius:2px;
+  background:var(--on-surface); opacity:.55; pointer-events:none;
+}
+.bar-mark::after{
+  content:''; position:absolute; left:50%; top:-5px; transform:translateX(-50%);
+  border-left:3px solid transparent; border-right:3px solid transparent;
+  border-top:4px solid var(--on-surface); opacity:.8;
+}
+
+.step-card .s-logged{
+  font-family:var(--font-mono); font-size:.68rem; margin-top:9px;
+  padding-top:9px; box-shadow:inset 0 1px 0 color-mix(in srgb, currentColor 18%, transparent);
+  opacity:.75;
+}
+
+.check-row{
+  display:flex; align-items:flex-start; gap:11px; cursor:pointer;
+  margin-top:20px; font-size:.85rem; color:var(--on-surface-var); line-height:1.5;
+}
+.check-row input{ width:18px; height:18px; flex:none; margin-top:1px; accent-color:var(--primary); }
+
 </style>
 </head>
 <body>
+<div class="bg-field" aria-hidden="true"><i></i></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<g id="i-dash" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></g>
+<g id="i-today" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M8 3v3M16 3v3M3.5 9.5h17"/><path d="M9 14l2 2 4-4"/></g>
+<g id="i-map" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3.5 6.2v13.3L9 17.3l6 2.2 5.5-2.2V4L15 6.2 9 4z"/><path d="M9 4v13.3M15 6.2v13.3"/></g>
+<g id="i-flame" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8s4.6 3.6 4.6 8.2a4.6 4.6 0 01-9.2 0c0-1.5.5-2.6 1.1-3.5.3 1.2 1 2 1.9 2.3-.3-2.6.6-5.3 1.6-7z"/><path d="M12 21.2a4.6 4.6 0 004.6-4.6c0-1.7-1-3.2-2.2-4.4"/></g>
+<g id="i-book" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 015.5 3H18a1 1 0 011 1v14a1 1 0 01-1 1H5.5A1.5 1.5 0 004 20.5v-16z"/><path d="M4 17.5A1.5 1.5 0 015.5 16H19"/><path d="M8 7.5h7"/></g>
+<g id="i-trophy" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M7 6H4.5v1A3.5 3.5 0 007.6 10.5M17 6h2.5v1a3.5 3.5 0 01-3.1 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17.5h4l.5 3h-5l.5-3z"/></g>
+<g id="i-library" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h3.5v16H4zM9.5 4H13v16H9.5z"/><path d="M15.4 5.2l3.3-.9 3 12.5-3.3.9z"/></g>
+<g id="i-play" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.8l12 7.2-12 7.2V4.8z"/></g>
+<g id="i-pause" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 4.5v15M15.5 4.5v15"/></g>
+<g id="i-reset" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 108.5-8.5c-2.6 0-4.9 1.2-6.4 3"/><path d="M3.5 3v4.5H8"/></g>
+<g id="i-check" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></g>
+<g id="i-plus" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></g>
+<g id="i-home" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5L12 3.5l8.5 7"/><path d="M5.5 9.5v10h13v-10"/><path d="M9.5 19.5v-6h5v6"/></g>
+<g id="i-arrow-r" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h14M13 6.5l5.5 5.5L13 17.5"/></g>
+<g id="i-chevron" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 9l6.5 6.5L18.5 9"/></g>
+<g id="i-menu" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></g>
+<g id="i-external" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 4.5H19.5V10.5"/><path d="M19.5 4.5L11 13"/><path d="M18 14v4.5a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 014 18.5v-11A1.5 1.5 0 015.5 6H10"/></g>
+<g id="i-orbit" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9.5" ry="4.5" transform="rotate(-28 12 12)"/></g>
+<g id="i-atom" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="4" transform="rotate(-30 12 12)"/></g>
+<g id="i-target" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.1"/></g>
+<g id="i-clock" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.3l3.4 2"/></g>
+<g id="i-search" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L20.5 20.5"/></g>
+<g id="i-flag" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 21V3.5M5.5 4.5h11l-2 3.5 2 3.5h-11"/></g>
+<g id="i-spark" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3z"/><path d="M18.5 16.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></g>
+<g id="i-close" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></g>
+<g id="i-gear" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.6 1.6 0 009 19.4a1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1A1.6 1.6 0 004.6 9a1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></g>
+<g id="i-send" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5L10.5 13.5M20.5 3.5l-6.5 17-3.5-7-7-3.5 17-6.5z"/></g>
+<g id="i-users" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0112.4 0"/><path d="M16.2 5.2a3.4 3.4 0 010 5.6M17.5 14.4A6.2 6.2 0 0121.2 20"/></g>
+<g id="i-bulb" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17.5h6M10 20.5h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0012 3z"/></g>
+<g id="i-doc" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5H7A1.5 1.5 0 005.5 5v14A1.5 1.5 0 007 20.5h10a1.5 1.5 0 001.5-1.5V8L14 3.5z"/><path d="M13.5 3.5V8.5H18.5M8.5 13h7M8.5 16.5h5"/></g>
+<g id="i-chart" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><rect x="7.5" y="12" width="3.2" height="5" rx="1"/><rect x="13.3" y="8" width="3.2" height="9" rx="1"/><path d="M7 8.5l3.5-3.5 3 2.5 4-4"/></g>
+<g id="i-chev-left" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5L8 12l6.5 6.5"/></g>
+<g id="i-chev-right" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5L16 12l-6.5 6.5"/></g>
+<g id="i-pencil" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 00-3-3L5 17v3z"/><path d="M14.5 6.5l3 3"/></g>
+<g id="i-layers" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 4.3-8.5 4.3-8.5-4.3L12 3.5z"/><path d="M3.5 12.2l8.5 4.3 8.5-4.3M3.5 16.4l8.5 4.3 8.5-4.3"/></g>
+</defs>
+</svg>
 
-<div id="particles"></div>
 
-<div class="shell">
-<nav class="sidebar">
-  <div class="sb-logo">
-    <div class="sb-logo-title">IOAA System</div>
-    <div class="sb-logo-sub">450 Day Gold Protocol</div>
-  </div>
+<div class="app">
 
-  <div class="rank-display">
-    <div class="rank-badge" id="sb-rank">E</div>
-    <div class="rank-label">Current Rank</div>
-    <div class="rank-xp-txt" id="sb-xp-txt">0 / 200 XP</div>
-    <div class="xp-bar"><div class="xp-fill" id="sb-xp-bar" style="width:0%"></div></div>
-  </div>
+  <!-- NAVIGATION RAIL -->
+  <nav class="rail" aria-label="Sections">
+    <a class="rail-brand" href="index.html">
+      <span class="rail-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-orbit"/></svg></span>
+      <span>
+        <span class="rail-name">IOAA</span>
+        <span class="rail-sub" id="rail-day">Day 1</span>
+      </span>
+    </a>
 
-  <div class="live-timer">
-    <div class="lt-label">Session time</div>
-    <div class="lt-time" id="lt-time">00:00:00</div>
-    <div class="lt-session" id="lt-session">Today: 0.0h logged</div>
-  </div>
+    <div class="nav">
+      <button class="nav-item on" data-screen="home" onclick="showScreen('home')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dash"/></svg><span>Home</span></button>
+      <button class="nav-item" data-screen="plan" onclick="showScreen('plan')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg><span>Plan</span></button>
+      <button class="nav-item" data-screen="progress" onclick="showScreen('progress')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg><span>Progress</span><span class="nav-badge" id="rail-streak">0d</span></button>
+      <button class="nav-item" data-screen="journal" onclick="showScreen('journal')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-book"/></svg><span>Journal</span></button>
+      <button class="nav-item" data-screen="library" onclick="showScreen('library')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"/></svg><span>Library</span></button>
+    </div>
 
-  <nav class="sb-nav">
-    <div class="sb-item on" onclick="showTab('dash',this)"><span class="sb-icon">⚡</span>Dashboard</div>
-    <div class="sb-item" onclick="showTab('today',this)"><span class="sb-icon">📋</span>Today's Quest</div>
-    <div class="sb-item" onclick="showTab('curr',this)"><span class="sb-icon">🗺</span>Curriculum</div>
-    <div class="sb-item" onclick="showTab('streak',this)"><span class="sb-icon">🔥</span>Streak Map</div>
-    <div class="sb-item" onclick="showTab('journal',this)"><span class="sb-icon">📓</span>Journal</div>
-    <div class="sb-item" onclick="showTab('ach',this)"><span class="sb-icon">🏆</span>Achievements</div>
-    <div class="sb-item" onclick="showTab('res',this)"><span class="sb-icon">📚</span>Resources</div>
+    <div class="rail-foot">
+      <a class="rail-link" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg>Basecamp</a>
+      <a class="rail-link" href="practice.html#ioaa"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-target"/></svg>Practice range</a>
+      <a class="rail-link" href="ipho-study.html"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-atom"/></svg>IPhO system</a>
+    </div>
   </nav>
 
-  <div class="sb-streak">
-    <div style="font-size:20px">🔥</div>
-    <div>
-      <div class="sb-streak-num" id="sb-streak-num">0</div>
-      <div class="sb-streak-label">day streak</div>
+  <!-- CONTENT -->
+  <main class="content">
+
+  <!-- ══════════ HOME ══════════ -->
+  <section class="screen on" id="screen-home">
+    <header class="topbar">
+      <div class="topbar-title">
+        <p class="overline dim"><span id="phase-tag">Phase 1</span> · 450-day gold protocol</p>
+        <h1>Mission control</h1>
+        <p id="home-sub">Foundation</p>
+      </div>
+      <div class="row">
+        <span class="chip chip-err" id="missed-chip" style="display:none"></span>
+        <div class="day-strip">
+          <div>
+            <span class="d-num num" id="day-num">1</span>
+            <span class="d-of">/ 450</span>
+          </div>
+          <button class="icon-btn icon-btn-s" onclick="shiftDay(-1)" aria-label="Previous day"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev-left"/></svg></button>
+          <button class="icon-btn icon-btn-s" id="day-next" onclick="shiftDay(1)" aria-label="Next day"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev-right"/></svg></button>
+          <button class="icon-btn icon-btn-s" onclick="openDialog('dlg-jump')" aria-label="Jump to an earlier day"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg></button>
+          <button class="btn btn-tonal btn-xs" id="day-today" onclick="goToday()" style="display:none">Today</button>
+        </div>
+        <button class="icon-btn" onclick="openDialog('dlg-settings')" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg></button>
+      </div>
+    </header>
+
+    <div class="past-banner" id="past-banner" style="display:none"></div>
+
+    <div class="stack-l">
+
+      <!-- timer -->
+      <div class="timer-hero" id="timer-hero">
+        <div>
+          <p class="t-label">Session clock</p>
+          <div class="t-read num" id="t-read">00:00:00</div>
+          <p class="t-meta" id="t-meta">Start the clock, or log time manually.</p>
+        </div>
+        <div>
+          <p class="t-label">Logged today</p>
+          <div class="t-today num" id="t-today">0m</div>
+        </div>
+        <div class="t-actions">
+          <button class="btn btn-filled btn-l" id="t-toggle" onclick="toggleTimer()"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>Start</span></button>
+          <button class="btn btn-outlined btn-l" id="t-log" onclick="logFromTimer()" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Log it</button>
+          <button class="btn btn-outlined btn-l" onclick="resetTimer()" aria-label="Reset clock"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-reset"/></svg></button>
+          <button class="btn btn-outlined btn-l" onclick="openDialog('dlg-manual')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>Manual</button>
+        </div>
+      </div>
+
+      <!-- today's quest -->
+      <div>
+        <div class="topic-banner">
+          <span class="tb-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"/></svg></span>
+          <div>
+            <p class="overline">This week — <span id="today-week">Week 1</span></p>
+            <h2 id="today-topic">—</h2>
+          </div>
+        </div>
+
+        <div class="quest-grid">
+          <div class="card">
+            <div class="card-head">
+              <p class="overline">Today's tasks</p>
+              <span class="label-m on-var" id="task-count">0 of 5 done</span>
+            </div>
+            <div class="bar bar-s" style="margin-bottom:18px"><i id="task-bar"></i></div>
+            <div id="task-list"></div>
+          </div>
+
+          <div class="stack">
+            <div class="card tip-card">
+              <div class="card-head"><p class="overline" style="opacity:.75">Focus tip</p><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bulb"/></svg></div>
+              <p class="tip-body" id="today-tip"></p>
+            </div>
+            <div class="card">
+              <div class="card-head"><p class="overline">Resources today</p></div>
+              <div class="mini-list" id="today-res"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- glance -->
+      <div class="tiles">
+        <div class="tile tile-pri">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg></div>
+          <div class="tile-val num" id="d-xp">0</div>
+          <div class="tile-label">Total XP</div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg></div>
+          <div class="tile-val num" id="d-hrs">0.0</div>
+          <div class="tile-label">Hours logged</div>
+          <div class="tile-sub">of 1800 target</div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flame"/></svg></div>
+          <div class="tile-val num" id="d-streak">0</div>
+          <div class="tile-label">Day streak</div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></div>
+          <div class="tile-val num" id="d-studied">0</div>
+          <div class="tile-label">Days studied</div>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
+
+  <!-- ══════════ PLAN ══════════ -->
+  <section class="screen" id="screen-plan">
+    <header class="topbar">
+      <div class="topbar-title">
+        <p class="overline dim">450-day curriculum</p>
+        <h1>Plan</h1>
+        <p>AO Guide · Aniket Sule · 28 chapters to IOAA gold</p>
+      </div>
+    </header>
+
+    <div class="stack-l">
+      <div>
+        <p class="overline dim" style="margin-bottom:12px">Phases</p>
+        <div class="stepper" id="stepper"></div>
+      </div>
+
+      <div>
+        <p class="overline dim" style="margin-bottom:12px">Weeks</p>
+        <div class="filter-chips">
+        <button class="chip chip-on" onclick="filterPhase(0,this)">Foundation</button>
+        <button class="chip" onclick="filterPhase(1,this)">Core</button>
+        <button class="chip" onclick="filterPhase(2,this)">Advanced</button>
+        <button class="chip" onclick="filterPhase(3,this)">Peak</button>
+        </div>
+        <div id="week-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PROGRESS ══════════ -->
+  <section class="screen" id="screen-progress">
+    <header class="topbar">
+      <div class="topbar-title">
+        <p class="overline dim">Where you stand</p>
+        <h1>Progress</h1>
+      </div>
+    </header>
+
+    <div class="stack-l">
+      <div class="rank-hero">
+        <div class="rank-orb" id="rank-orb">E</div>
+        <div class="rank-info">
+          <div class="rank-name" id="rank-name">Initiate</div>
+          <p class="rank-next" id="rank-next">200 XP to rank D</p>
+          <div class="bar"><i id="rank-bar"></i></div>
+          <p class="label-m dim num" id="rank-xp" style="margin-top:9px">0 / 200 XP</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <p class="overline">Subject progress</p>
+          <span class="label-m dim" id="prog-summary"></span>
+        </div>
+        <p class="body-s dim" style="margin-bottom:18px">Bars show days you actually studied in each block. The notch marks where the calendar says you should be.</p>
+        <div class="prog-row">
+          <span class="prog-label">Overall journey</span>
+          <div class="bar bar-s"><i id="pb-all"></i><b class="bar-mark" id="mk-all"></b></div>
+          <span class="prog-pct" id="pct-all">0%</span>
+        </div>
+        <div class="prog-row"><span class="prog-label">Positional astro</span><div class="bar bar-s"><i id="pb-pos"></i><b class="bar-mark" id="mk-pos"></b></div><span class="prog-pct" id="pct-pos">0%</span></div>
+        <div class="prog-row"><span class="prog-label">Photometry</span><div class="bar bar-s"><i id="pb-photo"></i><b class="bar-mark" id="mk-photo"></b></div><span class="prog-pct" id="pct-photo">0%</span></div>
+        <div class="prog-row"><span class="prog-label">Celestial mech</span><div class="bar bar-s"><i id="pb-mech"></i><b class="bar-mark" id="mk-mech"></b></div><span class="prog-pct" id="pct-mech">0%</span></div>
+        <div class="prog-row"><span class="prog-label">Stellar astro</span><div class="bar bar-s"><i id="pb-stellar"></i><b class="bar-mark" id="mk-stellar"></b></div><span class="prog-pct" id="pct-stellar">0%</span></div>
+        <div class="prog-row"><span class="prog-label">Galactic + cosmo</span><div class="bar bar-s"><i id="pb-galactic"></i><b class="bar-mark" id="mk-galactic"></b></div><span class="prog-pct" id="pct-galactic">0%</span></div>
+        <div class="prog-row"><span class="prog-label">Past papers</span><div class="bar bar-s"><i id="pb-papers"></i><b class="bar-mark" id="mk-papers"></b></div><span class="prog-pct" id="pct-papers">0%</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <p class="overline">Streak map</p>
+          <div class="legend">
+            <span class="sw" style="background:var(--sc-high)"></span><span>None</span><span class="gap"></span>
+            <span class="sw" style="background:var(--error-container)"></span><span>Missed</span><span class="gap"></span>
+            <span class="sw s-cell h1"></span><span class="sw s-cell h2"></span>
+            <span class="sw s-cell h3"></span><span class="sw s-cell h4"></span><span>4h+</span>
+          </div>
+        </div>
+        <div class="tiles" style="margin-bottom:22px">
+          <div class="tile"><div class="tile-val num" id="st-cur">0</div><div class="tile-label">Current streak</div></div>
+          <div class="tile"><div class="tile-val num" id="st-best">0</div><div class="tile-label">Longest streak</div></div>
+          <div class="tile"><div class="tile-val num" id="st-total">0</div><div class="tile-label">Days logged</div></div>
+          <div class="tile"><div class="tile-val num" id="st-pct">0%</div><div class="tile-label">Completion</div></div>
+        </div>
+        <div class="streak-map" id="streak-map"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <p class="overline">Achievements</p>
+          <span class="chip chip-xs num" id="ach-count">0 / 0</span>
+        </div>
+        <div class="ach-grid" id="ach-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ JOURNAL ══════════ -->
+  <section class="screen" id="screen-journal">
+    <header class="topbar">
+      <div class="topbar-title">
+        <p class="overline dim">Study journal</p>
+        <h1>Journal</h1>
+        <p>What clicked, what's unclear, what's next.</p>
+      </div>
+      <span class="chip" id="j-count">0 entries</span>
+    </header>
+
+    <div class="stack-l">
+      <div class="card">
+        <div class="card-head"><p class="overline">New entry — day <span id="j-day-num">1</span></p></div>
+        <div class="field">
+          <label for="j-input">Tonight's notes</label>
+          <textarea id="j-input" placeholder="What clicked today? What's still unclear? What will you focus on tomorrow?"></textarea>
+        </div>
+        <div class="row" style="margin-top:16px">
+          <button class="btn btn-filled" onclick="addJournal()"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Save entry</button>
+          <button class="btn btn-text" onclick="clearJournalInput()">Clear</button>
+        </div>
+      </div>
+      <div id="journal-entries"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ LIBRARY ══════════ -->
+  <section class="screen" id="screen-library">
+    <header class="topbar">
+      <div class="topbar-title">
+        <p class="overline dim">Resource library</p>
+        <h1>Library</h1>
+        <p>Everything you need to prepare for IOAA</p>
+      </div>
+    </header>
+  <section class="lib-sec">
+    <h3>Primary</h3>
+    <div class="res-grid">
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span><span class="chip chip-xs">Essential</span></div>
+      <h4 class="res-title">AO Guide — Full Theory</h4>
+      <p class="res-desc">28 chapters from coordinates to cosmology. Your primary textbook. Read alongside Aniket Sule.</p>
+      <a class="res-link" href="https://www.aoguide.app/guide" target="_blank" rel="noopener">aoguide.app/guide <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs">Book</span></div>
+      <h4 class="res-title">IOAA Book — Aniket Sule</h4>
+      <p class="res-desc">Official IOAA prep guide. Every solved example and problem. Use chapter-by-chapter with AO Guide.</p>
+      <p class="res-note">From Day 1 alongside AO Guide</p>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">aoxiv — Problem Archive</h4>
+      <p class="res-desc">Searchable past IOAA problems tagged by topic. Use after each chapter to practice.</p>
+      <a class="res-link" href="https://aoxiv.aoguide.app" target="_blank" rel="noopener">aoxiv.aoguide.app <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">IOAA Past Papers</h4>
+      <p class="res-desc">All years from 2007. Theory + data analysis. Start 2012 in Phase 2, latest in Phase 3–4.</p>
+      <a class="res-link" href="https://www.ioaa.net/problems" target="_blank" rel="noopener">ioaa.net/problems <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    </div>
+  </section>
+  <section class="lib-sec">
+    <h3>Math</h3>
+    <div class="res-grid">
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span><span class="chip chip-xs">Watch first</span></div>
+      <h4 class="res-title">3Blue1Brown — Essence of Calculus</h4>
+      <p class="res-desc">Watch before Khan Academy. Best intuition-first calculus introduction ever made.</p>
+      <a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Khan Academy — Calculus 1</h4>
+      <p class="res-desc">Do every exercise. Derivatives, integrals, chain rule must become automatic. Days 1–14.</p>
+      <a class="res-link" href="https://www.khanacademy.org/math/calculus-1" target="_blank" rel="noopener">khanacademy.org <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Paul's Online Math Notes</h4>
+      <p class="res-desc">Best written reference for calculus and ODEs. Use when AO Guide math is unclear.</p>
+      <a class="res-link" href="https://tutorial.math.lamar.edu" target="_blank" rel="noopener">tutorial.math.lamar.edu <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">3Blue1Brown — Linear Algebra</h4>
+      <p class="res-desc">Vectors, dot products, cross products, rotation matrices. Essential for coordinate transforms.</p>
+      <a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    </div>
+  </section>
+  <section class="lib-sec">
+    <h3>Positional & Observation</h3>
+    <div class="res-grid">
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Stellarium</h4>
+      <p class="res-desc">Set your location in the app. 15 min/day from Week 3. Memorize 88 constellations.</p>
+      <a class="res-link" href="https://stellarium.org" target="_blank" rel="noopener">stellarium.org <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs">Book</span></div>
+      <h4 class="res-title">Fundamental Astronomy — Karttunen</h4>
+      <p class="res-desc">Standard university reference. Ch. 1–4 for positional, Ch. 7 for photometry. Supplement to AO Guide.</p>
+      <p class="res-note">Available as PDF online</p>
+    </article>
+    </div>
+  </section>
+  <section class="lib-sec">
+    <h3>Stellar & Celestial Mechanics</h3>
+    <div class="res-grid">
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Feynman Lectures — Mechanics</h4>
+      <p class="res-desc">Feynman's derivation of planetary motion from Newton. The most beautiful orbital mechanics exposition.</p>
+      <a class="res-link" href="https://www.feynmanlectures.caltech.edu" target="_blank" rel="noopener">feynmanlectures.caltech.edu <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs">Book</span></div>
+      <h4 class="res-title">Carroll & Ostlie — Modern Astrophysics</h4>
+      <p class="res-desc">University textbook for stellar astrophysics. Start in Phase 2. Read sections matching AO Guide chapters.</p>
+      <p class="res-note">Library or PDF</p>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">HyperPhysics — Stars</h4>
+      <p class="res-desc">Quick formula reference with brief physical explanations. Best for checking understanding mid-chapter.</p>
+      <a class="res-link" href="http://hyperphysics.phy-astr.gsu.edu/hbase/Starcon.html" target="_blank" rel="noopener">hyperphysics <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    </div>
+  </section>
+  <section class="lib-sec">
+    <h3>Cosmology</h3>
+    <div class="res-grid">
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">PBS Space Time</h4>
+      <p class="res-desc">Best YouTube channel for cosmology and GR intuition. Watch relevant episodes in Phase 3.</p>
+      <a class="res-link" href="https://www.youtube.com/@pbsspacetime" target="_blank" rel="noopener">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Ned Wright's Cosmology Tutorial</h4>
+      <p class="res-desc">Clearest cosmology reference online. Friedmann equation, distances, CMB — all explained precisely.</p>
+      <a class="res-link" href="https://www.astro.ucla.edu/~wright/cosmolog.htm" target="_blank" rel="noopener">astro.ucla.edu <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    <article class="res-card">
+      <div class="res-tags"><span class="chip chip-xs chip-ok">Free</span></div>
+      <h4 class="res-title">Desmos Graphing Calculator</h4>
+      <p class="res-desc">Visualize orbital equations, Planck curves, light curves. Seeing the shape of an equation is worth 10 minutes staring at it.</p>
+      <a class="res-link" href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external"/></svg></a>
+    </article>
+    </div>
+  </section>
+
+  </section>
+
+  </main>
+</div>
+
+<!-- BOTTOM NAVIGATION (mobile) -->
+<nav class="bottom-nav" aria-label="Sections">
+    <button class="bn-item on" data-screen="home" onclick="showScreen('home')"><span class="bn-ind"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dash"/></svg></span><span>Home</span></button>
+    <button class="bn-item" data-screen="plan" onclick="showScreen('plan')"><span class="bn-ind"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg></span><span>Plan</span></button>
+    <button class="bn-item" data-screen="progress" onclick="showScreen('progress')"><span class="bn-ind"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg></span><span>Progress</span></button>
+    <button class="bn-item" data-screen="journal" onclick="showScreen('journal')"><span class="bn-ind"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-book"/></svg></span><span>Journal</span></button>
+    <button class="bn-item" data-screen="library" onclick="showScreen('library')"><span class="bn-ind"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"/></svg></span><span>Library</span></button>
 </nav>
 
-<main class="main">
+<!-- PERSISTENT TIMER DOCK -->
+<div class="dock" id="dock">
+  <span class="d-dot"></span>
+  <span class="d-time num" id="dock-time">00:00:00</span>
+  <button class="icon-btn icon-btn-filled" id="dock-toggle" onclick="toggleTimer()" aria-label="Play or pause"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg></button>
+  <button class="btn btn-filled btn-s" onclick="logFromTimer()"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>Log</button>
+</div>
 
-<!-- DASHBOARD -->
-<div id="tab-dash" class="tab-panel on">
-  <div class="page-header">
-    <div>
-      <div class="page-title" style="color:var(--blue);text-shadow:0 0 20px rgba(99,179,237,.35)">Mission Control</div>
-      <div class="page-sub" id="dash-sub">Day 1 of 450 · Phase 1: Foundation</div>
-    </div>
-    <button class="btn btn-gold" onclick="showTab('today',document.querySelectorAll('.sb-item')[1])">Today's Quest →</button>
-  </div>
-
-  <div id="missed-alert" class="missed-alert"></div>
-
-  <div class="stat-grid">
-    <div class="stat-card blue"><div class="stat-label">Current Day</div><div class="stat-val blue" id="d-day">1</div><div class="stat-sub">of 450 days</div></div>
-    <div class="stat-card gold"><div class="stat-label">Total XP</div><div class="stat-val gold" id="d-xp">0</div><div class="stat-sub">experience points</div></div>
-    <div class="stat-card green"><div class="stat-label">Hours Logged</div><div class="stat-val green" id="d-hrs">0.0</div><div class="stat-sub">of 1800 target</div></div>
-    <div class="stat-card purple"><div class="stat-label">Days Studied</div><div class="stat-val purple" id="d-studied">0</div><div class="stat-sub">sessions logged</div></div>
-  </div>
-
-  <!-- LIVE TIMER WIDGET -->
-  <div class="timer-widget">
-    <div class="tw-big" id="tw-big">00:00:00</div>
-    <div class="tw-info">
-      <div class="tw-label">Live session timer</div>
-      <div style="font-size:18px;font-weight:500;color:var(--text)" id="tw-hrs-live">0.00h this session</div>
-      <div class="tw-session" id="tw-today-total">Total today: 0.0h</div>
-    </div>
-    <div class="tw-btns">
-      <button class="btn btn-primary" id="btn-timer" onclick="toggleTimer()">▶ Start</button>
-      <button class="btn" onclick="resetTimer()">⟳ Reset</button>
-      <button class="btn btn-green" onclick="logFromTimer()">Log session hours</button>
-    </div>
-  </div>
-
-  <div class="phase-bar">
-    <div class="pb-seg" id="ph1-seg"></div>
-    <div class="pb-seg" id="ph2-seg"></div>
-    <div class="pb-seg" id="ph3-seg"></div>
-    <div class="pb-seg" id="ph4-seg"></div>
-  </div>
-
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="card">
-      <div class="section-label" style="margin-bottom:14px">Subject progress</div>
-      <div class="prog-row"><span class="prog-label">Overall journey</span><div class="prog-bar"><div class="prog-fill" id="pb-all" style="width:0%;background:var(--text2)"></div></div><span class="prog-pct" id="pct-all">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Positional Astro</span><div class="prog-bar"><div class="prog-fill" id="pb-pos" style="width:0%;background:var(--cyan)"></div></div><span class="prog-pct" id="pct-pos">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Photometry</span><div class="prog-bar"><div class="prog-fill" id="pb-photo" style="width:0%;background:var(--blue)"></div></div><span class="prog-pct" id="pct-photo">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Celestial Mech</span><div class="prog-bar"><div class="prog-fill" id="pb-mech" style="width:0%;background:var(--gold)"></div></div><span class="prog-pct" id="pct-mech">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Stellar Astro</span><div class="prog-bar"><div class="prog-fill" id="pb-stellar" style="width:0%;background:#F6AD55"></div></div><span class="prog-pct" id="pct-stellar">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Galactic + Cosmo</span><div class="prog-bar"><div class="prog-fill" id="pb-galactic" style="width:0%;background:var(--purple)"></div></div><span class="prog-pct" id="pct-galactic">0%</span></div>
-      <div class="prog-row"><span class="prog-label">Past Papers</span><div class="prog-bar"><div class="prog-fill" id="pb-papers" style="width:0%;background:var(--green)"></div></div><span class="prog-pct" id="pct-papers">0%</span></div>
-    </div>
-
-    <div class="card">
-      <div class="section-label" style="margin-bottom:14px">Phase timeline</div>
-      <div class="timeline">
-        <div class="tl-item" id="tl1"><div class="tl-date">Days 1–90</div><div class="tl-text">Phase 1: Foundation</div><div class="tl-note">Math · Positional · Photometry</div></div>
-        <div class="tl-item" id="tl2"><div class="tl-date">Days 91–240</div><div class="tl-text">Phase 2: Core Astrophysics</div><div class="tl-note">Celestial Mech · Stellar · Binary</div></div>
-        <div class="tl-item" id="tl3"><div class="tl-date">Days 241–360</div><div class="tl-text">Phase 3: Advanced + Data</div><div class="tl-note">Galactic · Cosmo · Papers · DA</div></div>
-        <div class="tl-item" id="tl4"><div class="tl-date">Days 361–450</div><div class="tl-text">Phase 4: Peak Performance</div><div class="tl-note">Mocks · Weak spots · Observation</div></div>
+<!-- DIALOGS -->
+<div class="scrim" id="dlg-manual" onclick="if(event.target===this)closeDialog('dlg-manual')">
+  <form class="dialog" onsubmit="return submitManual(event)">
+    <div class="dialog-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg></div>
+    <h3 class="title-l">Log time manually</h3>
+    <p class="dialog-sub">Adds to whatever is already logged for day <span id="dlg-day">1</span>.</p>
+    <div class="row" style="gap:12px;flex-wrap:nowrap">
+      <div class="field grow">
+        <label for="m-hours">Hours</label>
+        <input id="m-hours" type="number" min="0" max="16" step="1" placeholder="0" inputmode="numeric">
       </div>
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-        <div class="section-label" style="margin-bottom:10px">Manual log (override)</div>
-        <div class="log-row">
-          <input class="inp" type="number" id="log-hrs" placeholder="Hours (e.g. 3.5)" min="0" max="16" step="0.5">
-          <button class="btn btn-primary" onclick="logManual()">Log +XP</button>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn" onclick="shiftDay(-1)" style="font-size:12px">← Prev day</button>
-          <button class="btn" onclick="shiftDay(1)" style="font-size:12px">Next day →</button>
-          <button class="btn btn-red" onclick="resetConfirm()" style="font-size:12px;margin-left:auto">Reset all</button>
-        </div>
+      <div class="field grow">
+        <label for="m-mins">Minutes</label>
+        <input id="m-mins" type="number" min="0" max="59" step="5" placeholder="0" inputmode="numeric">
       </div>
     </div>
-  </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-text" onclick="closeDialog('dlg-manual')">Cancel</button>
+      <button type="submit" class="btn btn-filled">Add to log</button>
+    </div>
+  </form>
 </div>
 
-<!-- TODAY -->
-<div id="tab-today" class="tab-panel">
-  <div class="page-header">
-    <div>
-      <div class="page-title">Today's Quest</div>
-      <div class="page-sub" id="today-sub">Day 1 · Phase 1 · Week 1</div>
+<div class="scrim" id="dlg-jump" onclick="if(event.target===this)closeDialog('dlg-jump')">
+  <form class="dialog" onsubmit="return submitJump(event)">
+    <div class="dialog-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg></div>
+    <h3 class="title-l">Jump to a day</h3>
+    <p class="dialog-sub">Review or backfill an earlier day. You can't jump past today — the current day follows your system clock.</p>
+    <div class="field">
+      <label for="jump-day">Day number</label>
+      <input id="jump-day" type="number" min="1" step="1" placeholder="1" inputmode="numeric">
     </div>
-    <div id="today-xp-badge" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);background:rgba(246,201,14,.08);border:1px solid rgba(246,201,14,.2);padding:6px 12px;border-radius:8px">+80 XP available</div>
-  </div>
-  <div style="margin-bottom:14px">
-    <div class="section-label">This week's topic</div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:500" id="today-topic">Math &amp; Calculus Foundation</div>
-  </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="margin-bottom:12px">Daily tasks</div>
-    <div id="task-list"></div>
-  </div>
-  <div class="grid2">
-    <div class="card">
-      <div class="section-label" style="margin-bottom:10px">Focus tip</div>
-      <div id="today-tip" style="font-size:13px;color:var(--text2);line-height:1.6;border-left:2px solid var(--blue-dim);padding-left:12px"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-text" onclick="closeDialog('dlg-jump')">Cancel</button>
+      <button type="submit" class="btn btn-filled">Go</button>
     </div>
-    <div class="card">
-      <div class="section-label" style="margin-bottom:10px">Resources today</div>
-      <div id="today-res" style="font-size:13px;color:var(--text2);display:flex;flex-direction:column;gap:6px"></div>
-    </div>
-  </div>
+  </form>
 </div>
 
-<!-- CURRICULUM -->
-<div id="tab-curr" class="tab-panel">
-  <div class="page-header">
-    <div><div class="page-title">450-Day Curriculum</div><div class="page-sub">AO Guide · Aniket Sule · 28 chapters → IOAA Gold</div></div>
-  </div>
-  <div class="phase-tabs">
-    <button class="phase-btn on" onclick="filterPhase(0,this)">Phase 1 · Foundation</button>
-    <button class="phase-btn" onclick="filterPhase(1,this)">Phase 2 · Core</button>
-    <button class="phase-btn" onclick="filterPhase(2,this)">Phase 3 · Advanced</button>
-    <button class="phase-btn" onclick="filterPhase(3,this)">Phase 4 · Peak</button>
-  </div>
-  <div id="curr-body"></div>
+<div class="scrim" id="dlg-settings" onclick="if(event.target===this)closeDialog('dlg-settings')">
+  <form class="dialog" onsubmit="return submitSettings(event)">
+    <div class="dialog-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg></div>
+    <h3 class="title-l">Settings</h3>
+    <p class="dialog-sub">Day 1 of your plan. Change this and every logged day, task and journal entry moves with it.</p>
+    <div class="field">
+      <label for="set-start">Start date</label>
+      <input id="set-start" type="date" required>
+    </div>
+
+    <hr class="divider" style="margin:24px 0 18px">
+    <p class="overline dim" style="margin-bottom:6px">Backup</p>
+    <p class="body-s dim" style="margin-bottom:14px">Everything lives in this browser only. Export regularly — clearing site data wipes it.</p>
+    <div class="row" style="gap:8px;flex-wrap:nowrap">
+      <button type="button" class="btn btn-tonal grow" onclick="exportAll()"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-doc"/></svg>Export</button>
+      <button type="button" class="btn btn-tonal grow" onclick="document.getElementById('import-file').click()"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>Import</button>
+      <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importAll(this)">
+    </div>
+
+    <hr class="divider" style="margin:22px 0 16px">
+    <button type="button" class="btn btn-error btn-block" onclick="closeDialog('dlg-settings');openDialog('dlg-reset')"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-reset"/></svg>Reset all progress</button>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-text" onclick="closeDialog('dlg-settings')">Cancel</button>
+      <button type="submit" class="btn btn-filled">Save</button>
+    </div>
+  </form>
 </div>
 
-<!-- STREAK -->
-<div id="tab-streak" class="tab-panel">
-  <div class="page-header">
-    <div><div class="page-title">Streak Map</div><div class="page-sub">450 days · every cell is a day of your life · red = missed</div></div>
-  </div>
-  <div class="stat-grid">
-    <div class="stat-card green"><div class="stat-label">Current streak</div><div class="stat-val green" id="st-cur">0</div><div class="stat-sub">days in a row</div></div>
-    <div class="stat-card gold"><div class="stat-label">Longest streak</div><div class="stat-val gold" id="st-best">0</div><div class="stat-sub">personal best</div></div>
-    <div class="stat-card blue"><div class="stat-label">Days logged</div><div class="stat-val blue" id="st-total">0</div><div class="stat-sub">of 450</div></div>
-    <div class="stat-card purple"><div class="stat-label">Completion</div><div class="stat-val purple" id="st-pct">0%</div><div class="stat-sub">of 450 days</div></div>
-  </div>
-  <div class="card">
-    <div class="streak-legend" style="margin-bottom:10px">
-      <div class="sl" style="background:var(--bg3)"></div><span>Not yet</span>
-      <div class="sl" style="background:rgba(252,129,129,.2)"></div><span>Missed (0h)</span>
-      <div class="sl" style="background:#1a3a2a"></div>
-      <div class="sl" style="background:#1D6338"></div>
-      <div class="sl" style="background:#22A156"></div>
-      <div class="sl" style="background:var(--green)"></div>
-      <span>4h+ grind</span>
-    </div>
-    <div class="streak-map" id="streak-map"></div>
-    <div style="font-size:11px;color:var(--text3);margin-top:6px">Hover a cell to see hours · Past days with no log = 0h (missed)</div>
-  </div>
-</div>
-
-<!-- JOURNAL -->
-<div id="tab-journal" class="tab-panel">
-  <div class="page-header">
-    <div><div class="page-title">Study Journal</div><div class="page-sub">What clicked · what's unclear · what's next</div></div>
-  </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="margin-bottom:10px">New entry — Day <span id="j-day-num">1</span></div>
-    <textarea class="j-area" id="j-input" placeholder="What clicked today? What's still unclear? What will you focus on tomorrow?"></textarea>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-primary" onclick="addJournal()">Save entry</button>
-      <button class="btn" onclick="document.getElementById('j-input').value=''">Clear</button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="section-label" style="margin-bottom:10px">Past entries</div>
-    <div class="journal-entries" id="journal-entries">
-      <div style="font-size:13px;color:var(--text3);padding:20px 0;text-align:center">No entries yet. Write after today's session.</div>
+<div class="scrim" id="dlg-reset" onclick="if(event.target===this)closeDialog('dlg-reset')">
+  <div class="dialog">
+    <div class="dialog-icon" style="background:var(--error-container);color:var(--on-error-container)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-reset"/></svg></div>
+    <h3 class="title-l">Reset all progress?</h3>
+    <p class="dialog-sub">Every logged hour, journal entry, XP point and achievement for IOAA will be erased. This cannot be undone.</p>
+    <label class="check-row">
+      <input type="checkbox" id="reset-keep-start" checked>
+      <span>Keep my start date (day numbering stays the same)</span>
+    </label>
+    <div class="dialog-actions">
+      <button class="btn btn-text" onclick="closeDialog('dlg-reset')">Keep my progress</button>
+      <button class="btn btn-error" onclick="confirmReset()">Reset everything</button>
     </div>
   </div>
 </div>
 
-<!-- ACHIEVEMENTS -->
-<div id="tab-ach" class="tab-panel">
-  <div class="page-header">
-    <div><div class="page-title">Achievements</div><div class="page-sub" id="ach-sub">0 / 18 unlocked</div></div>
-  </div>
-  <div class="ach-grid" id="ach-grid"></div>
-</div>
-
-<!-- RESOURCES -->
-<div id="tab-res" class="tab-panel">
-  <div class="page-header">
-    <div><div class="page-title">Resource Library</div><div class="page-sub">Everything you need to prepare for IOAA</div></div>
-  </div>
-
-  <div class="res-sec">Primary</div>
-  <div class="res-grid">
-    <div class="res-card"><span class="res-tag free">Free</span><span class="res-tag">Essential</span><div class="res-title">AO Guide — Full Theory</div><div class="res-desc">28 chapters from coordinates to cosmology. Your primary textbook. Read alongside Aniket Sule.</div><a class="res-link" href="https://www.aoguide.app/guide" target="_blank">aoguide.app/guide →</a></div>
-    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">IOAA Book — Aniket Sule</div><div class="res-desc">Official IOAA prep guide. Every solved example and problem. Use chapter-by-chapter with AO Guide.</div><div style="font-size:12px;color:var(--text2)">From Day 1 alongside AO Guide</div></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">aoxiv — Problem Archive</div><div class="res-desc">Searchable past IOAA problems tagged by topic. Use after each chapter to practice.</div><a class="res-link" href="https://aoxiv.aoguide.app" target="_blank">aoxiv.aoguide.app →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">IOAA Past Papers</div><div class="res-desc">All years from 2007. Theory + data analysis. Start 2012 in Phase 2, latest in Phase 3–4.</div><a class="res-link" href="https://www.ioaa.net/problems" target="_blank">ioaa.net/problems →</a></div>
-  </div>
-
-  <div class="res-sec">Math</div>
-  <div class="res-grid">
-    <div class="res-card"><span class="res-tag free">Free</span><span class="res-tag">Watch first</span><div class="res-title">3Blue1Brown — Essence of Calculus</div><div class="res-desc">Watch before Khan Academy. Best intuition-first calculus introduction ever made.</div><a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr" target="_blank">YouTube →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Khan Academy — Calculus 1</div><div class="res-desc">Do every exercise. Derivatives, integrals, chain rule must become automatic. Days 1–14.</div><a class="res-link" href="https://www.khanacademy.org/math/calculus-1" target="_blank">khanacademy.org →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Paul's Online Math Notes</div><div class="res-desc">Best written reference for calculus and ODEs. Use when AO Guide math is unclear.</div><a class="res-link" href="https://tutorial.math.lamar.edu" target="_blank">tutorial.math.lamar.edu →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">3Blue1Brown — Linear Algebra</div><div class="res-desc">Vectors, dot products, cross products, rotation matrices. Essential for coordinate transforms.</div><a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank">YouTube →</a></div>
-  </div>
-
-  <div class="res-sec">Positional & Observation</div>
-  <div class="res-grid">
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Stellarium</div><div class="res-desc">Set your location in the app. 15 min/day from Week 3. Memorize 88 constellations.</div><a class="res-link" href="https://stellarium.org" target="_blank">stellarium.org →</a></div>
-    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">Fundamental Astronomy — Karttunen</div><div class="res-desc">Standard university reference. Ch. 1–4 for positional, Ch. 7 for photometry. Supplement to AO Guide.</div><div style="font-size:12px;color:var(--text2)">Available as PDF online</div></div>
-  </div>
-
-  <div class="res-sec">Stellar & Celestial Mechanics</div>
-  <div class="res-grid">
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Feynman Lectures — Mechanics</div><div class="res-desc">Feynman's derivation of planetary motion from Newton. The most beautiful orbital mechanics exposition.</div><a class="res-link" href="https://www.feynmanlectures.caltech.edu" target="_blank">feynmanlectures.caltech.edu →</a></div>
-    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">Carroll & Ostlie — Modern Astrophysics</div><div class="res-desc">University textbook for stellar astrophysics. Start in Phase 2. Read sections matching AO Guide chapters.</div><div style="font-size:12px;color:var(--text2)">Library or PDF</div></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">HyperPhysics — Stars</div><div class="res-desc">Quick formula reference with brief physical explanations. Best for checking understanding mid-chapter.</div><a class="res-link" href="http://hyperphysics.phy-astr.gsu.edu/hbase/Starcon.html" target="_blank">hyperphysics →</a></div>
-  </div>
-
-  <div class="res-sec">Cosmology</div>
-  <div class="res-grid">
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">PBS Space Time</div><div class="res-desc">Best YouTube channel for cosmology and GR intuition. Watch relevant episodes in Phase 3.</div><a class="res-link" href="https://www.youtube.com/@pbsspacetime" target="_blank">YouTube →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Ned Wright's Cosmology Tutorial</div><div class="res-desc">Clearest cosmology reference online. Friedmann equation, distances, CMB — all explained precisely.</div><a class="res-link" href="https://www.astro.ucla.edu/~wright/cosmolog.htm" target="_blank">astro.ucla.edu →</a></div>
-    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Desmos Graphing Calculator</div><div class="res-desc">Visualize orbital equations, Planck curves, light curves. Seeing the shape of an equation is worth 10 minutes staring at it.</div><a class="res-link" href="https://www.desmos.com/calculator" target="_blank">desmos.com →</a></div>
+<div class="scrim" id="lu-scrim" onclick="if(event.target===this)closeDialog('lu-scrim')">
+  <div class="dialog" style="text-align:center">
+    <p class="overline dim">Rank up</p>
+    <div class="rank-orb" id="lu-rank" style="margin:18px auto 14px">D</div>
+    <h3 class="headline" id="lu-name">Observer</h3>
+    <p class="dialog-sub" id="lu-sub" style="margin-bottom:6px">You earned this.</p>
+    <button class="btn btn-filled btn-block" onclick="closeDialog('lu-scrim')" style="margin-top:18px">Continue</button>
   </div>
 </div>
 
-</main>
-</div>
-
-<div class="toast" id="toast"><div class="toast-title" id="toast-title"></div><div class="toast-sub" id="toast-sub"></div></div>
-
-<div class="levelup-overlay" id="lu-overlay" onclick="this.classList.remove('show')">
-  <div class="levelup-box">
-    <div class="lu-word">Rank Up!</div>
-    <div class="lu-rank" id="lu-rank">D</div>
-    <div class="lu-name" id="lu-name">Observer</div>
-    <div class="lu-sub" id="lu-sub">You earned this.</div>
-    <button class="btn btn-gold" onclick="document.getElementById('lu-overlay').classList.remove('show')">Continue the grind</button>
-  </div>
+<!-- SNACKBAR -->
+<div class="snackbar" id="snackbar" role="status" aria-live="polite">
+  <span class="snack-icon" id="snack-icon"></span>
+  <span>
+    <span class="snack-title" id="snack-title"></span><br>
+    <span class="snack-sub" id="snack-sub"></span>
+  </span>
 </div>
 
 <script>
-// ============================================================
-//  CURRICULUM DATA
-// ============================================================
 const CURRICULUM=[
   {w:"Weeks 1–2",days:"1–14",title:"Math & calculus foundation",phase:0,
    topics:["Trigonometry & spherical identities","Vectors, dot & cross products","Derivatives & chain rule","Integrals & substitution","First-order ODEs"],
@@ -738,622 +1634,848 @@ const ACHIEVEMENTS=[
   {id:"rank_s",    icon:"✨",name:"Rank S: IOAA Gold",desc:"Reach 4000 XP",                  cond:s=>s.xp>=4000},
 ];
 
-// ============================================================
-//  STATE
-// ============================================================
-const DEF={day:1,xp:0,streak:0,longestStreak:0,logs:{},checks:{},journal:[],
-           progress:{pos:0,photo:0,mech:0,stellar:0,galactic:0,papers:0},
-           unlockedAch:[],unlockedAchDates:{},startDate:null};
+/* ---------- page configuration ---------- */
+window.CONFIG = {
+  subject: 'IOAA',
+  storageKey: 'ioaa-sys',
+  publishKey: 'olympiad.progress.ioaa',
+  journalName: 'Journal',
+  maxRankLabel: 'MAX RANK',
+  totalDays: 450,
+  curriculum: CURRICULUM,
+  taskTemplates: [
+    { text: "Theory — {A}",                                   dur: "1h 30m", xp: 20 },
+    { text: "Derive from memory — {A}, no peeking",            dur: "45m",    xp: 15 },
+    { text: "Problems — {B}, easy → IOAA level",               dur: "1h",     xp: 25 },
+    { text: "Read/watch — {R}",                                dur: "30m",    xp: 10 },
+    { text: "Observation — Stellarium, 15 min of sky practice", dur: "15m",   xp: 10 },
+    { text: "Journal — what clicked on {W}, what's still murky", dur: "5m",   xp: 10 }
+  ],
+  ranks: RANKS,
+  achievements: ACHIEVEMENTS,
+  phases: [
+    { name: 'Foundation',        from: 1,   to: 90  },
+    { name: 'Core Astrophysics', from: 91,  to: 240 },
+    { name: 'Advanced + Data',   from: 241, to: 360 },
+    { name: 'Peak Performance',  from: 361, to: 450 }
+  ],
+  tracks: [
+    { key: 'pos',      label: 'Positional Astro',  span: 77, offset: 14  },
+    { key: 'photo',    label: 'Photometry',        span: 28, offset: 63  },
+    { key: 'mech',     label: 'Celestial Mech',    span: 70, offset: 91  },
+    { key: 'stellar',  label: 'Stellar Astro',     span: 77, offset: 161 },
+    { key: 'galactic', label: 'Galactic + Cosmo',  span: 63, offset: 238 },
+    { key: 'papers',   label: 'Past Papers',       span: 93, offset: 232 }
+  ]
+};
 
-let S=JSON.parse(JSON.stringify(DEF));
+</script>
+<script>
+/* ============================================================================
+   Study engine — shared by the IOAA and IPhO manuals.
 
-function save(){try{localStorage.setItem("ioaa-sys",JSON.stringify(S));}catch(e){}}
-function load(){
-  try{
-    const raw=localStorage.getItem("ioaa-sys");
-    if(raw) S=Object.assign({},DEF,JSON.parse(raw));
-    if(!S.startDate) S.startDate=todayStr();
-  }catch(e){}
+   Day model: TODAY is always derived from the system clock relative to your
+   start date. It is never stored and never advanced by hand. S.day is only a
+   *view cursor* for reviewing or backfilling earlier days, clamped so it can
+   never point past today.
+   ========================================================================== */
+(function () {
+'use strict';
+
+var C            = window.CONFIG;
+var CURRICULUM   = C.curriculum;
+var TASK_TEMPLATES = C.taskTemplates;
+var RANKS        = C.ranks;
+var ACHIEVEMENTS = C.achievements;
+var PHASES       = C.phases;
+var TRACKS       = C.tracks;
+var TOTAL_DAYS   = C.totalDays || 450;
+
+function icon(id) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-' + id + '"/></svg>'; }
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function $(id) { return document.getElementById(id); }
+function setText(id, v) { var el = $(id); if (el) el.textContent = v; }
+
+/* ---------- state -------------------------------------------------------- */
+var DEF = {
+  day: 1, xp: 0, streak: 0, longestStreak: 0,
+  logs: {}, checks: {}, journal: [], progress: {},
+  unlockedAch: [], unlockedAchDates: {}, startDate: null
+};
+TRACKS.forEach(function (t) { DEF.progress[t.key] = 0; });
+
+var S = JSON.parse(JSON.stringify(DEF));
+
+function save() { try { localStorage.setItem(C.storageKey, JSON.stringify(S)); } catch (e) {} }
+function load() {
+  try {
+    var raw = localStorage.getItem(C.storageKey);
+    if (raw) S = Object.assign({}, JSON.parse(JSON.stringify(DEF)), JSON.parse(raw));
+    if (!S.startDate) S.startDate = todayStr();
+  } catch (e) {}
 }
 
-function totalHrs(s){return Object.values(s.logs).reduce((a,b)=>a+(b.hrs||0),0);}
-function loggedDays(s){return Object.values(s.logs).filter(l=>l.hrs>0).length;}
+function totalHrs(s) { return Object.values(s.logs).reduce(function (a, b) { return a + (b.hrs || 0); }, 0); }
+function loggedDays(s) { return Object.values(s.logs).filter(function (l) { return l.hrs > 0; }).length; }
+window.totalHrs = totalHrs; window.loggedDays = loggedDays;
 
-function todayStr(){
-  const d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+function todayStr() {
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function dateToDay(dateStr) {
+  if (!S.startDate) return 1;
+  return Math.round((new Date(dateStr + 'T00:00:00') - new Date(S.startDate + 'T00:00:00')) / 86400000) + 1;
+}
+function dayToDate(dayNum) {
+  if (!S.startDate) return '';
+  var d = new Date(S.startDate + 'T00:00:00');
+  d.setDate(d.getDate() + dayNum - 1);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
-// Convert a calendar date string to a day number (1-based from startDate)
-function dateToDay(dateStr){
-  if(!S.startDate) return 1;
-  const start=new Date(S.startDate+"T00:00:00");
-  const target=new Date(dateStr+"T00:00:00");
-  const diff=Math.round((target-start)/(1000*60*60*24));
-  return Math.max(1,diff+1);
+/* THE day number, always from the system clock. Never stored. */
+function todayDay() {
+  return Math.max(1, Math.min(TOTAL_DAYS, dateToDay(todayStr())));
+}
+/* true once the calendar has run past the end of the plan */
+function planFinished() { return dateToDay(todayStr()) > TOTAL_DAYS; }
+
+function clampCursor() {
+  S.day = Math.max(1, Math.min(todayDay(), S.day || 1));
 }
 
-function dayToDate(dayNum){
-  if(!S.startDate) return "";
-  const start=new Date(S.startDate+"T00:00:00");
-  start.setDate(start.getDate()+dayNum-1);
-  return start.getFullYear()+"-"+String(start.getMonth()+1).padStart(2,"0")+"-"+String(start.getDate()).padStart(2,"0");
+function fmtHrs(h) {
+  var w = Math.floor(h), m = Math.round((h - w) * 60);
+  if (m === 60) { w += 1; m = 0; }
+  if (w > 0 && m > 0) return w + 'h ' + m + 'm';
+  if (w > 0) return w + 'h';
+  return m + 'm';
 }
 
-// ============================================================
-//  AUTO-ZERO MISSED DAYS
-// ============================================================
-function fillMissedDays(){
-  if(!S.startDate) return;
-  const today=todayStr();
-  const currentDayNum=dateToDay(today);
-  // For every day from 1 to (currentDayNum-1), if no log exists, mark as 0h missed
-  let filled=0;
-  for(let i=1;i<currentDayNum&&i<=450;i++){
-    const key="d"+i;
-    if(!(key in S.logs)){
-      S.logs[key]={hrs:0,date:dayToDate(i),missed:true};
-      filled++;
+/* every past day with no entry is recorded as a miss */
+function fillMissedDays() {
+  if (!S.startDate) return;
+  var current = todayDay(), filled = 0;
+  for (var i = 1; i < current && i <= TOTAL_DAYS; i++) {
+    if (!('d' + i in S.logs)) { S.logs['d' + i] = { hrs: 0, date: dayToDate(i), missed: true }; filled++; }
+  }
+  if (filled) save();
+  clampCursor();
+}
+
+/* ---------- timer -------------------------------------------------------- */
+var running = false, tStart = null, tElapsed = 0, tRAF = null;
+
+function fmtClock(ms) {
+  var s = Math.floor(ms / 1000);
+  return String(Math.floor(s / 3600)).padStart(2, '0') + ':' +
+         String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ':' +
+         String(s % 60).padStart(2, '0');
+}
+function elapsedMs() { return running ? tElapsed + (Date.now() - tStart) : tElapsed; }
+
+function paintTimer() {
+  var ms = elapsedMs(), str = fmtClock(ms), hrs = ms / 3600000;
+  setText('t-read', str);
+  setText('dock-time', str);
+  var todayLogged = S.logs['d' + S.day] ? (S.logs['d' + S.day].hrs || 0) : 0;
+  setText('t-today', fmtHrs(todayLogged + hrs));
+  setText('t-meta', running ? 'Running — log it whenever you stop.'
+                  : ms > 0 ? 'Paused. Resume when you’re back at it.'
+                  : 'Start the clock, or log time manually.');
+
+  var hero = $('timer-hero');
+  if (hero) hero.classList.toggle('running', running);
+
+  var dock = $('dock');
+  if (dock) {
+    dock.classList.toggle('show', ms > 0 && currentScreen !== 'home');
+    dock.classList.toggle('paused', !running);
+  }
+  var btn = $('t-toggle');
+  if (btn) btn.innerHTML = running ? icon('pause') + '<span>Pause</span>' : icon('play') + '<span>' + (ms > 0 ? 'Resume' : 'Start') + '</span>';
+  var dbtn = $('dock-toggle');
+  if (dbtn) dbtn.innerHTML = running ? icon('pause') : icon('play');
+  var logBtn = $('t-log'); if (logBtn) logBtn.disabled = ms < 1000;
+  if (running) tRAF = requestAnimationFrame(paintTimer);
+}
+
+window.toggleTimer = function () {
+  if (running) { tElapsed += Date.now() - tStart; running = false; cancelAnimationFrame(tRAF); }
+  else { tStart = Date.now(); running = true; }
+  paintTimer();
+};
+window.resetTimer = function () {
+  running = false; cancelAnimationFrame(tRAF); tElapsed = 0; tStart = null;
+  paintTimer();
+};
+window.logFromTimer = function () {
+  var hrs = parseFloat((elapsedMs() / 3600000).toFixed(2));
+  if (hrs < 0.01) {
+    snack(elapsedMs() > 0 ? 'Too short to log' : 'Nothing to log',
+          elapsedMs() > 0 ? 'Sessions under a minute aren’t recorded' : 'Start the clock first', 'clock');
+    return;
+  }
+  doLog(hrs, true);
+  window.resetTimer();
+};
+
+/* ---------- logging ------------------------------------------------------ */
+function doLog(hrs, additive) {
+  var key = 'd' + S.day;
+  var prev = (S.logs[key] && S.logs[key].hrs) || 0;
+  var next = additive ? Math.round((prev + hrs) * 100) / 100 : hrs;
+  var added = next - prev;
+  /* stamp the calendar date of the day being logged, not of "now" —
+     otherwise backfilled sessions all collapse onto today */
+  S.logs[key] = { hrs: next, date: dayToDate(S.day), missed: next === 0 };
+
+  var bonus = Math.max(0, Math.round(added * 10));
+  var before = getRank(S.xp);
+  if (added > 0) S.xp += bonus;
+  var after = getRank(S.xp);
+
+  updateProgress(); save(); render(); publish();
+
+  if (after.rank !== before.rank) {
+    var r = $('lu-rank');
+    r.textContent = after.rank; r.style.color = after.color;
+    setText('lu-name', after.name);
+    setText('lu-sub', 'Rank ' + after.rank + ' · ' + after.name);
+    $('lu-scrim').classList.add('show');
+  }
+  snack('Day ' + S.day + ' logged',
+        next === 0 ? 'Recorded as a missed day' : '+' + bonus + ' XP · ' + fmtHrs(next) + ' that day',
+        next === 0 ? 'flame' : 'check');
+}
+
+/* ---------- progress: measures work done, not days elapsed --------------- */
+function loggedDaysBetween(from, to) {
+  var n = 0;
+  for (var i = Math.max(1, from); i <= Math.min(TOTAL_DAYS, to); i++) {
+    var l = S.logs['d' + i];
+    if (l && l.hrs > 0) n++;
+  }
+  return n;
+}
+function updateProgress() {
+  TRACKS.forEach(function (t) {
+    S.progress[t.key] = loggedDaysBetween(t.offset + 1, t.offset + t.span);
+  });
+}
+/* where the calendar says you ought to be, for the schedule marker */
+function schedulePct(offset, span) {
+  return Math.max(0, Math.min(100, (todayDay() - offset) / span * 100));
+}
+
+window.shiftDay = function (delta) {
+  S.day = Math.max(1, Math.min(todayDay(), S.day + delta));
+  render(); publish();
+};
+window.goToday = function () {
+  S.day = todayDay();
+  render(); publish();
+  snack('Back to today', 'Day ' + S.day + ' of ' + TOTAL_DAYS, 'today');
+};
+
+/* ---------- rank --------------------------------------------------------- */
+function getRank(xp) { var r = RANKS[0]; RANKS.forEach(function (k) { if (xp >= k.xp) r = k; }); return r; }
+function getNextRank(xp) { for (var i = 0; i < RANKS.length; i++) if (xp < RANKS[i].xp) return RANKS[i]; return null; }
+function phaseIndex(d) { for (var i = 0; i < PHASES.length; i++) if (d <= PHASES[i].to) return i; return PHASES.length - 1; }
+
+function weekFor(d) {
+  return CURRICULUM.find(function (w) {
+    var r = w.days.split('–').map(Number); return d >= r[0] && d <= r[1];
+  }) || CURRICULUM[0];
+}
+
+/* ---------- daily tasks, generated from the week's own topics ------------ */
+function tasksFor(day) {
+  var wk = weekFor(day);
+  var range = wk.days.split('–').map(Number);
+  var i = Math.max(0, day - range[0]);
+  var topics = wk.topics && wk.topics.length ? wk.topics : [wk.title];
+  var res = wk.res && wk.res.length ? wk.res : ['your main text'];
+
+  var slot = {
+    A: topics[i % topics.length],
+    B: topics[(i + 1) % topics.length],
+    C: topics[(i + 2) % topics.length],
+    R: res[i % res.length],
+    W: wk.title
+  };
+  return TASK_TEMPLATES.map(function (t) {
+    return {
+      text: t.text.replace(/\{([ABCRW])\}/g, function (m, k) { return slot[k]; }),
+      dur: t.dur, xp: t.xp
+    };
+  });
+}
+
+/* ---------- render ------------------------------------------------------- */
+function render() {
+  clampCursor();
+  var today = todayDay();
+  var d = S.day;
+  var hrs = totalHrs(S), rank = getRank(S.xp), next = getNextRank(S.xp);
+  var pi = phaseIndex(today), ph = PHASES[pi];
+  var viewingPast = d < today;
+
+  setText('rail-day', 'Day ' + today);
+  setText('day-num', d);
+  setText('home-sub', ph.name + ' · ' + fmtHrs(hrs) + ' logged all time');
+  setText('phase-tag', planFinished() ? 'Plan complete' : 'Phase ' + (pi + 1));
+
+  /* past-day banner + disable "next" at today */
+  var nextBtn = $('day-next');
+  if (nextBtn) nextBtn.disabled = d >= today;
+  var backBtn = $('day-today');
+  if (backBtn) backBtn.style.display = viewingPast ? '' : 'none';
+  var pastBar = $('past-banner');
+  if (pastBar) {
+    pastBar.style.display = viewingPast ? '' : 'none';
+    if (viewingPast) {
+      pastBar.innerHTML = icon('clock') +
+        '<span>Viewing <b>day ' + d + '</b> (' + dayToDate(d) + ') — anything you log lands on that day. Today is day ' + today + '.</span>';
     }
   }
-  if(filled>0){save();}
-  // Sync S.day to today's day number
-  S.day=Math.min(450,Math.max(S.day,currentDayNum));
-}
 
-// ============================================================
-//  TIMER
-// ============================================================
-let timerRunning=false;
-let timerStart=null;
-let timerElapsed=0; // ms accumulated before last pause
-let timerRAF=null;
-
-function fmtTime(ms){
-  const s=Math.floor(ms/1000);
-  const h=Math.floor(s/3600);
-  const m=Math.floor((s%3600)/60);
-  const sec=s%60;
-  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");
-}
-
-function getCurrentMs(){
-  if(!timerRunning) return timerElapsed;
-  return timerElapsed+(Date.now()-timerStart);
-}
-
-function tickTimer(){
-  const ms=getCurrentMs();
-  const str=fmtTime(ms);
-  const el1=document.getElementById("lt-time");
-  const el2=document.getElementById("tw-big");
-  if(el1) el1.textContent=str;
-  if(el2) el2.textContent=str;
-  const hrs=(ms/3600000);
-  const el3=document.getElementById("tw-hrs-live");
-  if(el3) el3.textContent=hrs.toFixed(2)+"h this session";
-  const todayLogged=S.logs["d"+S.day]?(S.logs["d"+S.day].hrs||0):0;
-  const el4=document.getElementById("tw-today-total");
-  if(el4) el4.textContent="Total today: "+(todayLogged+hrs).toFixed(2)+"h";
-  const el5=document.getElementById("lt-session");
-  if(el5) el5.textContent="Today: "+(todayLogged+hrs).toFixed(1)+"h logged";
-  if(timerRunning) timerRAF=requestAnimationFrame(tickTimer);
-}
-
-function toggleTimer(){
-  if(timerRunning){
-    // Pause
-    timerElapsed+=Date.now()-timerStart;
-    timerRunning=false;
-    cancelAnimationFrame(timerRAF);
-    document.getElementById("btn-timer").textContent="▶ Resume";
-  } else {
-    // Start/Resume
-    timerStart=Date.now();
-    timerRunning=true;
-    document.getElementById("btn-timer").textContent="⏸ Pause";
-    tickTimer();
+  /* rank */
+  var orb = $('rank-orb');
+  if (orb) {
+    orb.textContent = rank.rank;
+    orb.style.background = 'color-mix(in srgb, ' + rank.color + ' 24%, transparent)';
+    orb.style.color = rank.color;
   }
-}
+  setText('rank-name', rank.name);
+  setText('rank-next', next
+    ? (next.xp - S.xp) + ' XP to rank ' + next.rank + ' · ' + next.name
+    : 'Maximum rank reached — ' + C.maxRankLabel);
+  var xpPct = next ? Math.round((S.xp - rank.xp) / (next.xp - rank.xp) * 100) : 100;
+  var xf = $('rank-bar'); if (xf) { xf.style.width = xpPct + '%'; xf.style.background = rank.color; }
+  setText('rank-xp', S.xp + (next ? ' / ' + next.xp + ' XP' : ' XP'));
 
-function resetTimer(){
-  timerRunning=false;
-  cancelAnimationFrame(timerRAF);
-  timerElapsed=0;
-  timerStart=null;
-  document.getElementById("btn-timer").textContent="▶ Start";
-  const els=["lt-time","tw-big"];
-  els.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="00:00:00";});
-  const el3=document.getElementById("tw-hrs-live");
-  if(el3) el3.textContent="0.00h this session";
-}
+  /* tiles */
+  setText('d-day', today);
+  setText('d-xp', S.xp);
+  setText('d-hrs', hrs.toFixed(1));
+  setText('d-studied', loggedDays(S));
 
-function logFromTimer(){
-  const ms=getCurrentMs();
-  const hrs=parseFloat((ms/3600000).toFixed(2));
-  if(hrs<0.01){showToast("Timer is at 0","Start the timer first");return;}
-  doLog(hrs);
-  resetTimer();
-}
-
-// ============================================================
-//  LOGGING
-// ============================================================
-function logManual(){
-  const h=parseFloat(document.getElementById("log-hrs").value);
-  if(!h&&h!==0){showToast("Enter hours","Type a number like 4");return;}
-  if(h<0){showToast("Invalid","Hours can't be negative");return;}
-  doLog(h);
-  document.getElementById("log-hrs").value="";
-}
-
-function doLog(hrs){
-  const key="d"+S.day;
-  const prevHrs=(S.logs[key]&&S.logs[key].hrs)||0;
-  const addedHrs=hrs-prevHrs;
-  S.logs[key]={hrs,date:todayStr(),missed:hrs===0};
-
-  const bonusXP=Math.max(0,Math.round(addedHrs*10));
-  const prevRank=getRank(S.xp);
-  if(addedHrs>0) S.xp+=bonusXP;
-
-  // Advance day if logging today
-  if(S.day===dateToDay(todayStr())){
-    S.day=Math.min(450,S.day); // stay on today
+  var missed = Object.values(S.logs).filter(function (l) { return l.missed; }).length;
+  var ma = $('missed-chip');
+  if (ma) {
+    ma.style.display = missed > 0 ? '' : 'none';
+    ma.innerHTML = icon('flame') + missed + ' missed day' + (missed > 1 ? 's' : '');
   }
 
-  const newRank=getRank(S.xp);
-  if(newRank.rank!==prevRank.rank){
-    document.getElementById("lu-rank").textContent=newRank.rank;
-    document.getElementById("lu-rank").style.color=newRank.color;
-    document.getElementById("lu-name").textContent=newRank.name;
-    document.getElementById("lu-sub").textContent="Rank "+newRank.rank+": "+newRank.name+" — You earned this.";
-    document.getElementById("lu-overlay").classList.add("show");
-  }
+  /* today's quest — for whichever day the cursor is on */
+  var wk = weekFor(d);
+  setText('today-week', wk.w);
+  setText('today-topic', wk.title);
+  setText('today-tip', wk.tip);
+  var resEl = $('today-res');
+  if (resEl) resEl.innerHTML = wk.res.map(function (r) {
+    return '<div class="mini-row"><span class="mini-dot"></span><span>' + esc(r) + '</span></div>';
+  }).join('');
 
-  updateProgress();
-  save();
-  render();
-  showToast("Day "+S.day+" logged!",hrs===0?"0h — missed day recorded":"+"+bonusXP+" XP · "+hrs+"h studied");
-}
-
-function updateProgress(){
-  const d=S.day;
-  const cl=(v,max)=>Math.min(max,Math.max(0,v));
-  S.progress.pos     =cl(d-14, 77);
-  S.progress.photo   =cl(d-63, 28);
-  S.progress.mech    =cl(d-91, 70);
-  S.progress.stellar =cl(d-161,77);
-  S.progress.galactic=cl(d-238,63);
-  S.progress.papers  =cl(d-232,93);
-}
-
-function shiftDay(delta){
-  S.day=Math.max(1,Math.min(450,S.day+delta));
-  render();
-}
-
-// ============================================================
-//  RANK
-// ============================================================
-function getRank(xp){
-  let r=RANKS[0];
-  RANKS.forEach(rk=>{if(xp>=rk.xp)r=rk;});
-  return r;
-}
-function getNextRank(xp){
-  for(const r of RANKS){if(xp<r.xp)return r;}
-  return null;
-}
-
-// ============================================================
-//  RENDER
-// ============================================================
-function render(){
-  const d=S.day;
-  const hrs=totalHrs(S);
-  const rank=getRank(S.xp);
-  const next=getNextRank(S.xp);
-
-  // Sidebar rank
-  const rb=document.getElementById("sb-rank");
-  rb.textContent=rank.rank; rb.style.color=rank.color;
-  document.getElementById("sb-xp-txt").textContent=
-    next?(S.xp+" / "+next.xp+" XP"):(S.xp+" XP — MAX RANK");
-  const xpPct=next?Math.round((S.xp-rank.xp)/(next.xp-rank.xp)*100):100;
-  document.getElementById("sb-xp-bar").style.width=xpPct+"%";
-  document.getElementById("sb-xp-bar").style.background=rank.color;
-  document.getElementById("sb-streak-num").textContent=S.streak;
-
-  // Stats
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set("d-day",d); set("d-xp",S.xp);
-  set("d-hrs",hrs.toFixed(1)); set("d-studied",loggedDays(S));
-
-  const phName=d<=90?"Foundation":d<=240?"Core Astrophysics":d<=360?"Advanced":"Peak Performance";
-  const phNum=d<=90?1:d<=240?2:d<=360?3:4;
-  set("dash-sub","Day "+d+" of 450 · Phase "+phNum+": "+phName);
-
-  // Missed days alert
-  const missedCount=Object.values(S.logs).filter(l=>l.missed).length;
-  const alert=document.getElementById("missed-alert");
-  if(alert){
-    if(missedCount>0){
-      alert.textContent="⚠ "+missedCount+" missed day"+(missedCount>1?"s":"")+" automatically recorded as 0h. They show in red on the Streak Map.";
-      alert.classList.add("show");
-    } else { alert.classList.remove("show"); }
-  }
-
-  // Phase bar
-  [["ph1",1,90],["ph2",91,240],["ph3",241,360],["ph4",361,450]].forEach(([id,a,b])=>{
-    const el=document.getElementById(id+"-seg");
-    if(!el) return;
-    if(d>b) el.style.background="var(--green)";
-    else if(d>=a) el.style.background="var(--blue)";
-    else el.style.background="var(--bg3)";
-  });
-
-  // Timeline
-  [["tl1",1,90],["tl2",91,240],["tl3",241,360],["tl4",361,450]].forEach(([id,a,b])=>{
-    const el=document.getElementById(id);
-    if(el) el.className="tl-item"+(d>b?" done":d>=a?" cur":"");
-  });
-
-  // Progress bars
-  const tgt={pos:77,photo:28,mech:70,stellar:77,galactic:63,papers:93};
-  Object.keys(tgt).forEach(k=>{
-    const pct=Math.min(100,Math.round((S.progress[k]||0)/tgt[k]*100));
-    const pb=document.getElementById("pb-"+k);
-    const pp=document.getElementById("pct-"+k);
-    if(pb) pb.style.width=pct+"%";
-    if(pp) pp.textContent=pct+"%";
-  });
-  const ov=Math.round((d-1)/450*100);
-  const pball=document.getElementById("pb-all");
-  const pctall=document.getElementById("pct-all");
-  if(pball) pball.style.width=ov+"%";
-  if(pctall) pctall.textContent=ov+"%";
-
-  // Today panel
-  const wk=CURRICULUM.find(w=>{const[a,b]=w.days.split("–").map(Number);return d>=a&&d<=b;})||CURRICULUM[0];
-  set("today-sub","Day "+d+" · Phase "+phNum+": "+phName+" · "+wk.w);
-  set("today-topic",wk.title);
-  const tipEl=document.getElementById("today-tip"); if(tipEl) tipEl.textContent=wk.tip;
-  const resEl=document.getElementById("today-res");
-  if(resEl) resEl.innerHTML=wk.res.map(r=>"<div style='display:flex;align-items:center;gap:6px'><span style='color:var(--text3);font-size:12px'>→</span>"+r+"</div>").join("");
-
-  // Tasks
-  const taskList=document.getElementById("task-list");
-  if(taskList){
-    taskList.innerHTML="";
-    TODAY_TASKS.forEach((t,i)=>{
-      const key="d"+d+"t"+i;
-      const done=!!S.checks[key];
-      const div=document.createElement("div");
-      div.className="task-item"+(done?" done":"");
-      div.innerHTML="<div class='task-check'>"+(done?"✓":"")+"</div><span class='task-text'>"+t.text+"</span><span class='task-dur'>"+t.dur+"</span><span class='task-xp'>+"+t.xp+" XP</span>";
-      div.onclick=()=>toggleTask(key,t.xp,div);
-      taskList.appendChild(div);
+  var dayTasks = tasksFor(d);
+  var list = $('task-list');
+  if (list) {
+    list.innerHTML = '';
+    dayTasks.forEach(function (t, i) {
+      var key = 'd' + d + 't' + i;
+      var done = !!S.checks[key];
+      var el = document.createElement('div');
+      el.className = 'task' + (done ? ' done' : '');
+      el.setAttribute('role', 'checkbox');
+      el.setAttribute('aria-checked', done ? 'true' : 'false');
+      el.tabIndex = 0;
+      el.innerHTML = '<span class="task-box">' + icon('check') + '</span>' +
+        '<span class="task-text">' + esc(t.text) + '</span>' +
+        '<span class="task-meta"><span class="task-dur">' + t.dur + '</span>' +
+        '<span class="chip chip-xs chip-pri">+' + t.xp + '</span></span>';
+      var fire = function () { toggleTask(key, t.xp); };
+      el.onclick = fire;
+      el.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fire(); } };
+      list.appendChild(el);
     });
   }
-  const totalAvail=TODAY_TASKS.reduce((a,t)=>a+t.xp,0);
-  set("today-xp-badge","+"+totalAvail+" XP available today");
-  set("j-day-num",d);
+  var doneCount = dayTasks.filter(function (t, i) { return S.checks['d' + d + 't' + i]; }).length;
+  setText('task-count', doneCount + ' of ' + dayTasks.length + ' done');
+  var tb = $('task-bar');
+  if (tb) tb.style.width = Math.round(doneCount / dayTasks.length * 100) + '%';
 
-  // Streak
+  setText('j-day-num', d);
+  setText('dlg-day', d);
+
+  /* subject progress — work done, with a marker for the schedule */
+  TRACKS.forEach(function (t) {
+    var pct = Math.min(100, Math.round((S.progress[t.key] || 0) / t.span * 100));
+    var b = $('pb-' + t.key); if (b) b.style.width = pct + '%';
+    setText('pct-' + t.key, pct + '%');
+    var m = $('mk-' + t.key);
+    if (m) {
+      var sp = schedulePct(t.offset, t.span);
+      m.style.left = sp + '%';
+      m.style.display = sp > 0 && sp < 100 ? '' : 'none';
+      m.title = 'Schedule is ' + Math.round(sp) + '% through this block';
+    }
+  });
+  var ovDone = loggedDays(S);
+  var ov = Math.round(ovDone / TOTAL_DAYS * 100);
+  var pa = $('pb-all'); if (pa) pa.style.width = ov + '%';
+  setText('pct-all', ov + '%');
+  var mAll = $('mk-all');
+  if (mAll) {
+    var sAll = Math.max(0, Math.min(100, (today - 1) / TOTAL_DAYS * 100));
+    mAll.style.left = sAll + '%';
+    mAll.style.display = sAll > 0 && sAll < 100 ? '' : 'none';
+    mAll.title = 'Day ' + today + ' of ' + TOTAL_DAYS + ' elapsed';
+  }
+  setText('prog-summary', ovDone + ' of ' + today + ' days studied so far · ' +
+    (today > 0 ? Math.round(ovDone / today * 100) : 0) + '% turn-up rate');
+
+  renderStepper();
   renderStreakStats();
   renderJournal();
   checkAchievements();
+  if (!running) paintTimer();
 }
 
-function renderStreakMap(){
-  const map=document.getElementById("streak-map");
-  if(!map) return;
-  map.innerHTML="";
-  const todayDayNum=dateToDay(todayStr());
-  for(let i=1;i<=450;i++){
-    const log=S.logs["d"+i];
-    const h=log?(log.hrs||0):0;
-    const isMissed=log&&log.missed&&i<todayDayNum;
-    const isToday=i===S.day;
-    const isFuture=i>todayDayNum;
-    let cls="s-cell";
-    if(isMissed) cls+=" missed";
-    else if(!isFuture&&h>=4) cls+=" h4";
-    else if(!isFuture&&h>=3) cls+=" h3";
-    else if(!isFuture&&h>=2) cls+=" h2";
-    else if(!isFuture&&h>0) cls+=" h1";
-    if(isToday) cls+=" today-marker";
-    const cell=document.createElement("div");
-    cell.className=cls;
-    const dateStr=dayToDate(i);
-    const label=isFuture?"Day "+i+" (future)":isMissed?"Day "+i+" · "+dateStr+" · 0h (missed)":"Day "+i+(h?" · "+h+"h":" · not logged")+(dateStr?" · "+dateStr:"");
-    cell.title=label;
-    map.appendChild(cell);
-  }
+/* ---------- plan --------------------------------------------------------- */
+function renderStepper() {
+  var el = $('stepper'); if (!el) return;
+  var d = todayDay();
+  el.innerHTML = PHASES.map(function (p, i) {
+    var done = d > p.to, cur = d >= p.from && d <= p.to;
+    var logged = loggedDaysBetween(p.from, p.to);
+    var span = p.to - p.from + 1;
+    return '<div class="step-card ' + (done ? 'done' : cur ? 'cur' : '') + '">' +
+      '<div class="s-num">' + (done ? '✓' : (i + 1)) + '</div>' +
+      '<div class="s-days">Days ' + p.from + '–' + p.to + '</div>' +
+      '<div class="s-name">' + esc(p.name) + '</div>' +
+      '<div class="s-note">' + esc(p.note) + '</div>' +
+      '<div class="s-logged">' + logged + '/' + span + ' days studied</div></div>';
+  }).join('');
 }
 
-function renderStreakStats(){
-  recalcStreak();
-  const total=loggedDays(S);
-  const pct=Math.round(total/450*100);
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set("st-cur",S.streak); set("st-best",S.longestStreak);
-  set("st-total",total); set("st-pct",pct+"%");
-  set("sb-streak-num",S.streak);
-}
-
-function recalcStreak(){
-  // Count trailing streak of consecutive days with hrs > 0
-  let trail=0;
-  for(let i=S.day;i>=1;i--){
-    const log=S.logs["d"+i];
-    if(log&&log.hrs>0) trail++;
-    else break;
-  }
-  // Longest
-  let longest=0,run=0;
-  for(let i=1;i<=450;i++){
-    const log=S.logs["d"+i];
-    if(log&&log.hrs>0){run++;longest=Math.max(longest,run);}
-    else run=0;
-  }
-  S.streak=trail;
-  S.longestStreak=Math.max(S.longestStreak||0,longest);
-}
-
-function renderJournal(){
-  const list=document.getElementById("journal-entries");
-  if(!list) return;
-  if(!S.journal||!S.journal.length){
-    list.innerHTML="<div style='font-size:13px;color:var(--text3);padding:20px 0;text-align:center'>No entries yet. Write after today's session.</div>";
-    return;
-  }
-  list.innerHTML=[...S.journal].reverse().slice(0,20).map(j=>
-    "<div class='j-entry'><div class='j-meta'>Day "+j.day+" · "+j.date+"</div><div class='j-text'>"+j.text.replace(/\n/g,"<br>")+"</div></div>"
-  ).join("");
-}
-
-function renderAchievements(){
-  const grid=document.getElementById("ach-grid");
-  if(!grid) return;
-  grid.innerHTML=ACHIEVEMENTS.map(a=>{
-    const unlocked=S.unlockedAch.includes(a.id);
-    const ua=S.unlockedAchDates&&S.unlockedAchDates[a.id];
-    return "<div class='ach-card "+(unlocked?"unlocked":"locked")+"'><div class='ach-icon'>"+a.icon+"</div><div class='ach-name'>"+a.name+"</div><div class='ach-desc'>"+a.desc+"</div>"+(unlocked&&ua?"<div class='ach-at'>Day "+ua+"</div>":"")+"</div>";
-  }).join("");
-  const count=S.unlockedAch.length;
-  const sub=document.getElementById("ach-sub");
-  if(sub) sub.textContent=count+" / "+ACHIEVEMENTS.length+" unlocked";
-}
-
-function checkAchievements(){
-  if(!S.unlockedAchDates) S.unlockedAchDates={};
-  let changed=false;
-  ACHIEVEMENTS.forEach(a=>{
-    if(!S.unlockedAch.includes(a.id)&&a.cond(S)){
-      S.unlockedAch.push(a.id);
-      S.unlockedAchDates[a.id]=S.day;
-      changed=true;
-      showToast("Achievement unlocked!",a.icon+" "+a.name);
-    }
-  });
-  if(changed) save();
-}
-
-function renderCurr(phase){
-  const body=document.getElementById("curr-body");
-  if(!body) return;
-  body.innerHTML="";
-  const todayDayNum=dateToDay(todayStr());
-  CURRICULUM.filter(w=>w.phase===phase).forEach(wk=>{
-    const[a,b]=wk.days.split("–").map(Number);
-    const done=S.day>b;
-    const cur=S.day>=a&&S.day<=b;
-    const bc=done?"done":cur?"cur":"upcoming";
-    const bt=done?"Done":cur?"Current":"Upcoming";
-    const card=document.createElement("div");
-    card.className="week-card";
-    card.innerHTML="<div class='week-head' onclick='toggleWeek(this)'><span class='wk-num'>"+wk.w+"</span><span class='wk-title'>"+wk.title+"</span><span class='wk-badge "+bc+"'>"+bt+"</span><span class='wk-chev'>▼</span></div><div class='week-body'><div style='font-size:11px;color:var(--text3);margin-bottom:10px'>Days "+wk.days+"</div>"+wk.topics.map(t=>"<div class='topic-row'><div class='topic-dot'></div>"+t+"</div>").join("")+"<div class='week-tip'>💡 "+wk.tip+"</div><div style='font-size:11px;color:var(--text3);margin-top:10px;margin-bottom:5px'>Resources</div>"+wk.res.map(r=>"<div style='font-size:12px;color:var(--text2);margin-bottom:3px'>→ "+r+"</div>").join("")+"</div>";
+var currPhase = null;
+function renderWeeks(phase) {
+  currPhase = phase;
+  var body = $('week-list'); if (!body) return;
+  var today = todayDay();
+  body.innerHTML = '';
+  CURRICULUM.filter(function (w) { return w.phase === phase; }).forEach(function (wk) {
+    var r = wk.days.split('–').map(Number);
+    var done = today > r[1], cur = today >= r[0] && today <= r[1];
+    var logged = loggedDaysBetween(r[0], r[1]);
+    var span = r[1] - r[0] + 1;
+    var card = document.createElement('article');
+    card.className = 'week' + (cur ? ' open' : '');
+    card.innerHTML =
+      '<div class="week-head" role="button" tabindex="0" aria-expanded="' + (cur ? 'true' : 'false') + '">' +
+        '<span class="week-days">Days ' + esc(wk.days) + '</span>' +
+        '<span class="week-title">' + esc(wk.title) + '</span>' +
+        '<span class="chip chip-xs">' + logged + '/' + span + '</span>' +
+        '<span class="chip chip-xs ' + (done ? 'chip-ok' : cur ? 'chip-pri' : '') + '">' +
+          (done ? 'Done' : cur ? 'Current' : 'Upcoming') + '</span>' +
+        '<span class="week-chev">' + icon('chevron') + '</span>' +
+      '</div>' +
+      '<div class="week-body">' +
+        '<div class="mini-list">' +
+        wk.topics.map(function (t) {
+          return '<div class="mini-row"><span class="mini-dot"></span><span>' + esc(t) + '</span></div>';
+        }).join('') +
+        '</div>' +
+        '<div class="week-tip">' + icon('bulb') + '<span>' + esc(wk.tip) + '</span></div>' +
+        '<p class="overline dim" style="margin:18px 0 8px">Resources</p>' +
+        '<div class="mini-list">' +
+        wk.res.map(function (x) {
+          return '<div class="mini-row"><span class="mini-dot"></span><span>' + esc(x) + '</span></div>';
+        }).join('') +
+        '</div>' +
+      '</div>';
+    var head = card.querySelector('.week-head');
+    var toggle = function () {
+      var open = card.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    head.addEventListener('click', toggle);
+    head.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
     body.appendChild(card);
   });
 }
 
-// ============================================================
-//  INTERACTIONS
-// ============================================================
-function showTab(id,el){
-  document.querySelectorAll(".tab-panel").forEach(t=>t.classList.remove("on"));
-  document.querySelectorAll(".sb-item").forEach(b=>b.classList.remove("on"));
-  document.getElementById("tab-"+id).classList.add("on");
-  if(el) el.classList.add("on");
-  if(id==="curr") renderCurr(0);
-  if(id==="streak"){renderStreakMap();renderStreakStats();}
-  if(id==="journal") renderJournal();
-  if(id==="ach") renderAchievements();
+window.filterPhase = function (p, btn) {
+  document.querySelectorAll('.filter-chips .chip').forEach(function (b) { b.classList.remove('chip-on'); });
+  btn.classList.add('chip-on');
+  renderWeeks(p);
+};
+
+/* ---------- streak ------------------------------------------------------- */
+function renderStreakMap() {
+  var map = $('streak-map'); if (!map) return;
+  map.innerHTML = '';
+  var today = todayDay();
+  var frag = document.createDocumentFragment();
+  for (var i = 1; i <= TOTAL_DAYS; i++) {
+    var log = S.logs['d' + i];
+    var h = log ? (log.hrs || 0) : 0;
+    var isMissed = log && log.missed && i < today;
+    var isFuture = i > today;
+    var cls = 's-cell';
+    if (isMissed) cls += ' missed';
+    else if (!isFuture && h >= 4) cls += ' h4';
+    else if (!isFuture && h >= 3) cls += ' h3';
+    else if (!isFuture && h >= 2) cls += ' h2';
+    else if (!isFuture && h > 0) cls += ' h1';
+    if (i === today) cls += ' today-marker';
+    var c = document.createElement('div');
+    c.className = cls;
+    var ds = dayToDate(i);
+    c.title = isFuture ? 'Day ' + i + ' — not here yet'
+      : isMissed ? 'Day ' + i + ' · ' + ds + ' · missed'
+      : 'Day ' + i + (h ? ' · ' + fmtHrs(h) : ' · not logged') + (ds ? ' · ' + ds : '');
+    frag.appendChild(c);
+  }
+  map.appendChild(frag);
 }
 
-function filterPhase(p,btn){
-  document.querySelectorAll(".phase-btn").forEach(b=>b.classList.remove("on"));
-  btn.classList.add("on");
-  renderCurr(p);
+function renderStreakStats() {
+  recalcStreak();
+  var total = loggedDays(S);
+  setText('st-cur', S.streak);
+  setText('st-best', S.longestStreak);
+  setText('st-total', total);
+  setText('st-pct', Math.round(total / TOTAL_DAYS * 100) + '%');
+  setText('rail-streak', S.streak + 'd');
 }
 
-function toggleWeek(head){
-  const body=head.nextElementSibling;
-  const chev=head.querySelector(".wk-chev");
-  const open=body.classList.toggle("open");
-  if(chev) chev.classList.toggle("open",open);
+function recalcStreak() {
+  var trail = 0, i, today = todayDay();
+  for (i = today; i >= 1; i--) { var l = S.logs['d' + i]; if (l && l.hrs > 0) trail++; else break; }
+  var longest = 0, run = 0;
+  for (i = 1; i <= TOTAL_DAYS; i++) {
+    var g = S.logs['d' + i];
+    if (g && g.hrs > 0) { run++; longest = Math.max(longest, run); } else run = 0;
+  }
+  S.streak = trail;
+  S.longestStreak = Math.max(S.longestStreak || 0, longest);
 }
 
-function toggleTask(key,xp,el){
-  const wasDone=!!S.checks[key];
-  S.checks[key]=!wasDone;
-  if(!wasDone){S.xp+=xp;showToast("Task complete!","+"+xp+" XP earned");}
-  else S.xp=Math.max(0,S.xp-xp);
-  save(); render();
+/* ---------- journal ------------------------------------------------------ */
+function renderJournal() {
+  var list = $('journal-entries'); if (!list) return;
+  if (!S.journal || !S.journal.length) {
+    list.innerHTML = '<div class="empty">' + icon('book') + '<p>No entries yet. Write one after today’s session.</p></div>';
+    setText('j-count', '0 entries');
+    return;
+  }
+  list.innerHTML = S.journal.slice().reverse().slice(0, 60).map(function (j) {
+    return '<article class="j-entry"><div class="j-meta">Day ' + j.day + ' · ' + esc(j.date) + '</div>' +
+           '<div class="j-text">' + esc(j.text) + '</div></article>';
+  }).join('');
+  setText('j-count', S.journal.length + (S.journal.length === 1 ? ' entry' : ' entries'));
 }
 
-function addJournal(){
-  const text=document.getElementById("j-input").value.trim();
-  if(!text) return;
-  if(!S.journal) S.journal=[];
-  S.journal.push({text,day:S.day,date:new Date().toLocaleDateString()});
-  document.getElementById("j-input").value="";
+window.addJournal = function () {
+  var input = $('j-input');
+  var text = input.value.trim();
+  if (!text) { snack('Nothing to save', 'Write something first', 'book'); return; }
+  if (!S.journal) S.journal = [];
+  S.journal.push({ text: text, day: S.day, date: dayToDate(S.day) });
+  input.value = '';
   save(); renderJournal();
-  showToast("Entry saved","Day "+S.day+" · Journal updated");
+  snack('Entry saved', 'Day ' + S.day + ' · ' + C.journalName, 'check');
+};
+window.clearJournalInput = function () { $('j-input').value = ''; };
+
+/* ---------- achievements ------------------------------------------------- */
+function achSnapshot() { return Object.assign({}, S, { day: todayDay() }); }
+
+function renderAchievements() {
+  var grid = $('ach-grid'); if (!grid) return;
+  grid.innerHTML = ACHIEVEMENTS.map(function (a) {
+    var un = S.unlockedAch.indexOf(a.id) !== -1;
+    var at = S.unlockedAchDates && S.unlockedAchDates[a.id];
+    return '<div class="ach ' + (un ? 'unlocked' : 'locked') + '">' +
+      '<div class="ach-icon">' + a.icon + '</div>' +
+      '<div class="ach-name">' + esc(a.name) + '</div>' +
+      '<div class="ach-desc">' + esc(a.desc) + '</div>' +
+      (un && at ? '<div class="ach-at">Day ' + at + '</div>' : '') + '</div>';
+  }).join('');
+  setText('ach-count', S.unlockedAch.length + ' / ' + ACHIEVEMENTS.length);
 }
 
-function resetConfirm(){
-  if(confirm("Reset ALL progress? This cannot be undone.")){
-    const start=S.startDate;
-    S=JSON.parse(JSON.stringify(DEF));
-    S.startDate=start;
-    save(); render();
-    showToast("Progress reset","Starting from Day 1");
-  }
-}
-
-// ============================================================
-//  TOAST
-// ============================================================
-let toastTimer=null;
-function showToast(title,sub){
-  const t=document.getElementById("toast");
-  document.getElementById("toast-title").textContent=title;
-  document.getElementById("toast-sub").textContent=sub;
-  t.classList.add("show");
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove("show"),3000);
-}
-
-// ============================================================
-//  PARTICLES
-// ============================================================
-function initParticles(){
-  const c=document.getElementById("particles");
-  for(let i=0;i<35;i++){
-    const p=document.createElement("div");
-    p.className="particle";
-    const size=Math.random()*2+1;
-    const colors=["rgba(99,179,237,.4)","rgba(118,228,247,.3)","rgba(246,201,14,.25)","rgba(183,148,244,.3)"];
-    p.style.cssText="width:"+size+"px;height:"+size+"px;left:"+Math.random()*100+"%;background:"+colors[Math.floor(Math.random()*colors.length)]+";animation-duration:"+(9+Math.random()*14)+"s;animation-delay:"+Math.random()*12+"s;";
-    c.appendChild(p);
-  }
-}
-
-// ============================================================
-//  INIT
-// ============================================================
-load();
-fillMissedDays(); // AUTO-ZERO: fills all past unlogged days with 0h
-updateProgress();
-initParticles();
-render();
-
-// Re-check missed days once per minute (in case user leaves app open overnight)
-setInterval(()=>{fillMissedDays();render();},60000);
-</script>
-<script>
-/* ============ Dashboard sync — PUBLISHER (IOAA) ============ */
-(function () {
-  var STORAGE_KEY = 'olympiad.progress.ioaa';
-  var SUBJECT = 'IOAA';
-  var TOPICS = [
-    'Positional Astro', 'Photometry', 'Celestial Mech',
-    'Stellar Astro', 'Galactic + Cosmo', 'Past Papers'
-  ];
-
-  /* Optional: if auto-detect below misses a bar, give it an id in your
-     HTML and map it here, e.g. { 'Photometry': '#bar-photometry' } */
-  var MANUAL_IDS = {};
-
-  function norm(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
-
-  function fillPct(root) {
-    var p = root.querySelector('progress');
-    if (p) { return p.max > 0 ? (p.value / p.max) * 100 : 0; }
-
-    var fill = root.querySelector('[class*="fill"], [role="progressbar"]');
-    if (!fill) return null;
-
-    if (fill.hasAttribute('aria-valuenow')) {
-      var v = parseFloat(fill.getAttribute('aria-valuenow')) || 0;
-      var mx = parseFloat(fill.getAttribute('aria-valuemax')) || 100;
-      return (v / mx) * 100;
+function checkAchievements() {
+  if (!S.unlockedAchDates) S.unlockedAchDates = {};
+  var snap = achSnapshot(), changed = false;
+  ACHIEVEMENTS.forEach(function (a) {
+    if (S.unlockedAch.indexOf(a.id) === -1 && a.cond(snap)) {
+      S.unlockedAch.push(a.id);
+      S.unlockedAchDates[a.id] = snap.day;
+      changed = true;
+      snack('Achievement unlocked', a.icon + '  ' + a.name, 'trophy');
     }
-    var trackW = fill.parentElement.getBoundingClientRect().width;
-    var fillW  = fill.getBoundingClientRect().width;
-    return trackW > 0 ? Math.max(0, Math.min(100, (fillW / trackW) * 100)) : 0;
-  }
+  });
+  if (changed) { save(); renderAchievements(); }
+}
 
-  function containerFor(label) {
-    if (MANUAL_IDS[label]) {
-      var m = document.querySelector(MANUAL_IDS[label]);
-      if (m) return m;
+function toggleTask(key, xp) {
+  var was = !!S.checks[key];
+  S.checks[key] = !was;
+  if (!was) { S.xp += xp; snack('Task complete', '+' + xp + ' XP', 'check'); }
+  else S.xp = Math.max(0, S.xp - xp);
+  save(); render(); publish();
+}
+
+/* ---------- navigation --------------------------------------------------- */
+var currentScreen = 'home';
+window.showScreen = function (id) {
+  currentScreen = id;
+  document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('on'); });
+  $('screen-' + id).classList.add('on');
+  document.querySelectorAll('[data-screen]').forEach(function (b) {
+    b.classList.toggle('on', b.dataset.screen === id);
+  });
+  if (id === 'plan')     renderWeeks(currPhase === null ? phaseIndex(todayDay()) : currPhase);
+  if (id === 'progress') { renderStreakMap(); renderStreakStats(); renderAchievements(); }
+  if (id === 'journal')  renderJournal();
+  paintTimer();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+/* ---------- dialogs ------------------------------------------------------ */
+window.openDialog = function (id) {
+  if (id === 'dlg-settings') $('set-start').value = S.startDate || todayStr();
+  $(id).classList.add('show');
+  var f = $(id).querySelector('input,textarea,button');
+  if (f) setTimeout(function () { f.focus(); }, 90);
+};
+window.closeDialog = function (id) { $(id).classList.remove('show'); };
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') document.querySelectorAll('.scrim.show').forEach(function (s) { s.classList.remove('show'); });
+});
+
+window.submitManual = function (e) {
+  e.preventDefault();
+  var h = parseFloat($('m-hours').value) || 0;
+  var m = parseFloat($('m-mins').value) || 0;
+  var total = Math.round((h + m / 60) * 100) / 100;
+  if (total <= 0) { snack('Nothing to add', 'Enter hours or minutes', 'clock'); return false; }
+  doLog(total, true);
+  $('m-hours').value = ''; $('m-mins').value = '';
+  window.closeDialog('dlg-manual');
+  return false;
+};
+
+window.submitJump = function (e) {
+  e.preventDefault();
+  var today = todayDay();
+  var want = parseInt($('jump-day').value, 10) || S.day;
+  var v = Math.max(1, Math.min(today, want));
+  S.day = v;
+  render(); publish();
+  window.closeDialog('dlg-jump');
+  snack(want > today ? 'Clamped to today' : 'Jumped to day ' + v,
+        want > today ? 'You can review the past, not the future' : PHASES[phaseIndex(v)].name, 'map');
+  return false;
+};
+
+/* ---------- start date --------------------------------------------------- */
+window.submitSettings = function (e) {
+  e.preventDefault();
+  var next = $('set-start').value;
+  if (!next) { snack('Pick a date', 'A start date is required', 'today'); return false; }
+  if (next === S.startDate) { window.closeDialog('dlg-settings'); return false; }
+
+  /* Every day index is (date − start). Moving the start by D days shifts
+     every index by exactly −D, so logs, checks and journal all remap cleanly. */
+  var D = Math.round((new Date(next + 'T00:00:00') - new Date(S.startDate + 'T00:00:00')) / 86400000);
+  var logs = {}, checks = {};
+  Object.keys(S.logs).forEach(function (k) {
+    var oldI = parseInt(k.slice(1), 10);
+    var nI = oldI - D;
+    if (nI >= 1 && nI <= TOTAL_DAYS) {
+      var entry = S.logs[k];
+      entry.date = entry.date || '';
+      logs['d' + nI] = entry;
     }
-    var target = norm(label);
-    var els = document.body.querySelectorAll('*');
-    var matches = [];
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i], text = '';
-      if (el.children.length === 0) {
-        text = norm(el.textContent);
-      } else {
-        for (var j = 0; j < el.childNodes.length; j++) {
-          if (el.childNodes[j].nodeType === 3) text += el.childNodes[j].textContent;
-        }
-        text = norm(text);
+  });
+  Object.keys(S.checks).forEach(function (k) {
+    var m = /^d(\d+)t(\d+)$/.exec(k);
+    if (!m) return;
+    var nI = parseInt(m[1], 10) - D;
+    if (nI >= 1 && nI <= TOTAL_DAYS) checks['d' + nI + 't' + m[2]] = S.checks[k];
+  });
+  (S.journal || []).forEach(function (j) {
+    var nd = j.day - D;
+    j.day = Math.max(1, Math.min(TOTAL_DAYS, nd));
+  });
+
+  S.logs = logs; S.checks = checks; S.startDate = next; S.day = todayDay();
+  /* re-stamp calendar dates against the new start */
+  Object.keys(S.logs).forEach(function (k) {
+    S.logs[k].date = dayToDate(parseInt(k.slice(1), 10));
+  });
+
+  fillMissedDays(); updateProgress(); save(); render(); publish();
+  renderStreakMap(); renderAchievements();
+  window.closeDialog('dlg-settings');
+  snack('Start date updated', 'Today is now day ' + todayDay(), 'today');
+  return false;
+};
+
+/* ---------- backup ------------------------------------------------------- */
+var BACKUP_KEYS = ['ioaa-sys', 'ipho-sys', 'olympiadStreakData',
+  'olympiad.progress.ioaa', 'olympiad.progress.ipho',
+  'practice.stats.v1', 'practice.seen.v1', 'practice.solved.v1',
+  'practice.attempts.v1', 'practice.companion.v1'];
+
+window.exportAll = function () {
+  var out = { format: 'olympiad-training-backup', version: 1, exportedAt: new Date().toISOString(), data: {} };
+  BACKUP_KEYS.forEach(function (k) {
+    var v = localStorage.getItem(k);
+    if (v !== null) out.data[k] = v;
+  });
+  var blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'olympiad-backup-' + todayStr() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  snack('Backup downloaded', Object.keys(out.data).length + ' records saved', 'doc');
+};
+
+window.importAll = function (input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function () {
+    try {
+      var parsed = JSON.parse(reader.result);
+      if (!parsed || parsed.format !== 'olympiad-training-backup' || !parsed.data) {
+        snack('Not a backup file', 'Expected an export from this app', 'close');
+        return;
       }
-      if (text === target) matches.push(el);
+      var n = 0;
+      Object.keys(parsed.data).forEach(function (k) {
+        if (BACKUP_KEYS.indexOf(k) === -1) return;
+        localStorage.setItem(k, parsed.data[k]);
+        n++;
+      });
+      snack('Backup restored', n + ' records · reloading…', 'check');
+      setTimeout(function () { location.reload(); }, 900);
+    } catch (e) {
+      snack('Could not read that file', 'It may be corrupted', 'close');
     }
-    var best = null;
-    matches.forEach(function (mm) { if (!best || best.contains(mm)) best = mm; });
-    if (!best) return null;
+  };
+  reader.readAsText(file);
+  input.value = '';
+};
 
-    var node = best, depth = 0;
-    while (node && depth < 12) {
-      if (fillPct(node) !== null) return node;
-      node = node.parentElement; depth++;
-    }
-    return null;
-  }
+window.confirmReset = function () {
+  var keepStart = $('reset-keep-start') && $('reset-keep-start').checked;
+  var start = S.startDate;
+  S = JSON.parse(JSON.stringify(DEF));
+  S.startDate = keepStart ? start : todayStr();
+  S.day = 1;
+  save(); fillMissedDays(); updateProgress(); render(); publish();
+  renderStreakMap(); renderAchievements();
+  window.closeDialog('dlg-reset');
+  snack('Progress reset', keepStart ? 'Start date kept' : 'Starting fresh from today', 'reset');
+};
 
-  function readPct(label) {
-    var c = containerFor(label);
-    if (!c) return 0;
-    var v = fillPct(c);
-    return v === null ? 0 : Math.round(v * 10) / 10;
-  }
+/* ---------- snackbar ----------------------------------------------------- */
+var snackTimer = null;
+function snack(title, sub, ic) {
+  var el = $('snackbar');
+  $('snack-icon').innerHTML = icon(ic || 'check');
+  setText('snack-title', title);
+  setText('snack-sub', sub || '');
+  el.classList.add('show');
+  if (snackTimer) clearTimeout(snackTimer);
+  snackTimer = setTimeout(function () { el.classList.remove('show'); }, 3400);
+}
+window.snack = snack;
 
-  function publish() {
-    var payload = {
-      subject: SUBJECT,
-      overall: readPct('Overall journey'),
-      topics: TOPICS.map(function (t) { return { name: t, pct: readPct(t) }; }),
+/* ---------- publish to the home dashboard -------------------------------- */
+function publish() {
+  try {
+    localStorage.setItem(C.publishKey, JSON.stringify({
+      subject: C.subject,
+      overall: Math.round(loggedDays(S) / TOTAL_DAYS * 1000) / 10,
+      elapsed: Math.round((todayDay() - 1) / TOTAL_DAYS * 1000) / 10,
+      topics: TRACKS.map(function (t) {
+        return {
+          name: t.label,
+          pct: Math.round(Math.min(100, (S.progress[t.key] || 0) / t.span * 100) * 10) / 10,
+          schedulePct: Math.round(schedulePct(t.offset, t.span) * 10) / 10
+        };
+      }),
+      logs: S.logs,
+      hours: Math.round(totalHrs(S) * 10) / 10,
+      streak: S.streak,
+      day: todayDay(),
+      daysStudied: loggedDays(S),
+      rank: getRank(S.xp).rank,
+      rankName: getRank(S.xp).name,
+      xp: S.xp,
       updatedAt: new Date().toISOString()
-    };
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
-  }
+    }));
+  } catch (e) {}
+}
 
-  var timer = null;
-  function schedulePublish() { clearTimeout(timer); timer = setTimeout(publish, 250); }
+/* ---------- keyboard ----------------------------------------------------- */
+document.addEventListener('keydown', function (e) {
+  if (e.target.matches('input, textarea, select')) return;
+  if (document.querySelector('.scrim.show')) return;
+  if (e.code === 'Space') { e.preventDefault(); window.toggleTimer(); }
+});
 
-  function init() {
-    publish();
-    new MutationObserver(schedulePublish).observe(document.body, {
-      subtree: true, childList: true,
-      attributes: true, attributeFilter: ['style', 'class', 'value']
-    });
-    window.addEventListener('pagehide', publish);
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'hidden') publish();
-    });
-  }
+/* ---------- init --------------------------------------------------------- */
+load();
+fillMissedDays();
+S.day = todayDay();          /* always open on today */
+updateProgress();
+render();
+renderWeeks(phaseIndex(todayDay()));
+publish();
+paintTimer();
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+$('jump-day').max = todayDay();
+
+/* the clock can roll past midnight while the tab is open */
+setInterval(function () {
+  var before = todayDay();
+  fillMissedDays();
+  if (todayDay() !== before) S.day = todayDay();
+  $('jump-day').max = todayDay();
+  render(); publish();
+}, 60000);
+
+window.addEventListener('pagehide', publish);
+document.addEventListener('visibilitychange', function () {
+  if (document.hidden) publish();
+  else { fillMissedDays(); render(); publish(); }
+});
+
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .06 });
+  document.querySelectorAll('.content .card, .content .tile, .content .timer-hero, .content .rank-hero, .content .topic-banner')
+    .forEach(function (el, i) { el.classList.add('rv'); el.style.transitionDelay = (i % 6) * 50 + 'ms'; io.observe(el); });
 })();
+
+})();
+
 </script>
 </body>
 </html>
