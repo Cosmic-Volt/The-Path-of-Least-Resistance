@@ -91,7 +91,8 @@ Add screenshots or GIFs of your platform here.
 
 ### 🧩 Practice
 
-<img width="1335" height="583" alt="image" src="https://github.com/user-attachments/assets/95f9760c-372d-402a-a9dc-a025ce8be6c1" />
+<img width="1651" height="957" alt="image" src="https://github.com/user-attachments/assets/8f7f9b6d-b7db-40ce-9145-b3deceb5fd34" />
+" />
 
 
 
