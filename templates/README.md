@@ -1,4 +1,3 @@
-
 ## 🏆 Olympiad Training Platform
 Your all-in-one companion for Olympiad preparation.
 
@@ -144,7 +143,7 @@ Clone the repository:
 
 git clone (https://github.com/Cosmic-Volt/The-Path-of-Least-Resistance.git)
 
-cd The-Path-of-Lease-Resistance
+cd The-Path-of-Least-Resistance
 
 ## 🗺️ Roadmap
 IOAA resources
@@ -162,10 +161,17 @@ Additional AI-powered study features
 
 # 👥THE PATH OF LEAST RESISTANCE
 
-Member	  Contribution
-Bihan	    AI- Implementation and formulation
-Basistha  Domain setup
-Sweekar	  Frontend(Home-Page)
+Member	   |  Contribution
+
+         
+Bihan      |  AI- Implementation and formulation
+
+         
+Basistha   |  Domain setup
+         
+         
+Sweekar	   |  Frontend(Home-Page)
+
 
 ## 🌟 Why We Built This
 
