@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IOAA GOLD — 450 Day System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    
+:root {
+  --bg: #080C10;
+  --bg2: #0D1117;
+  --bg3: #141C24;
+  --border: rgba(99,179,237,0.12);
+  --border2: rgba(99,179,237,0.25);
+  --blue: #63B3ED;
+  --blue-dim: #2D6A9F;
+  --cyan: #76E4F7;
+  --gold: #F6C90E;
+  --green: #68D391;
+  --red: #FC8181;
+  --purple: #B794F4;
+  --text: #E2E8F0;
+  --text2: #718096;
+  --text3: #4A5568;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:.8}
+  90%{opacity:.2}
+  100%{transform:translateY(-5vh) scale(1);opacity:0}
+}
+
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  overflow-y:auto;z-index:10
+}
+.sb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--border);text-align:center}
+.sb-logo-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.sb-logo-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+.rank-display{margin:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.rank-badge{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.rank-label{font-size:10px;letter-spacing:.15em;color:var(--text2);text-transform:uppercase}
+.rank-xp-txt{font-size:11px;color:var(--text2);margin-top:8px}
+.xp-bar{height:4px;background:var(--bg);border-radius:2px;margin-top:6px;overflow:hidden}
+.xp-fill{height:100%;border-radius:2px;transition:width .6s ease}
+
+/* LIVE TIMER in sidebar */
+.live-timer{
+  margin:0 14px 8px;
+  background:rgba(99,179,237,.05);
+  border:1px solid rgba(99,179,237,.2);
+  border-radius:10px;
+  padding:10px 12px;
+  text-align:center
+}
+.lt-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:4px}
+.lt-time{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--blue);letter-spacing:.05em}
+.lt-session{font-size:10px;color:var(--text2);margin-top:3px}
+
+.sb-nav{padding:8px;flex:1}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;
+  font-size:13px;color:var(--text2);cursor:pointer;
+  transition:all .15s;margin-bottom:2px;
+  border:1px solid transparent;text-decoration:none
+}
+.sb-item:hover{color:var(--text);background:var(--bg3);border-color:var(--border)}
+.sb-item.on{color:var(--blue);background:rgba(99,179,237,.08);border-color:rgba(99,179,237,.2)}
+.sb-icon{font-size:15px;width:20px;text-align:center}
+
+.sb-streak{
+  margin:4px 14px 14px;
+  background:rgba(246,201,14,.06);
+  border:1px solid rgba(246,201,14,.2);
+  border-radius:10px;padding:10px 12px;
+  display:flex;align-items:center;gap:10px
+}
+.sb-streak-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--gold);line-height:1}
+.sb-streak-label{font-size:10px;color:var(--text2)}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;min-height:100vh}
+.tab-panel{display:none;padding:28px}
+.tab-panel.on{display:block}
+
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:-.01em}
+.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card.blue::before{background:var(--blue)}
+.stat-card.gold::before{background:var(--gold)}
+.stat-card.green::before{background:var(--green)}
+.stat-card.purple::before{background:var(--purple)}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:8px}
+.stat-val{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;line-height:1}
+.stat-val.blue{color:var(--blue)}.stat-val.gold{color:var(--gold)}.stat-val.green{color:var(--green)}.stat-val.purple{color:var(--purple)}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* TIMER WIDGET on dashboard */
+.timer-widget{
+  background:var(--bg2);border:1px solid rgba(99,179,237,.25);
+  border-radius:12px;padding:20px;margin-bottom:16px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap
+}
+.tw-big{font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:var(--blue);letter-spacing:.04em;line-height:1}
+.tw-info{flex:1}
+.tw-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:4px}
+.tw-session{font-size:13px;color:var(--text2);margin-top:4px}
+.tw-btns{display:flex;gap:8px;flex-wrap:wrap}
+
+.task-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border:1px solid var(--border);
+  border-radius:8px;margin-bottom:6px;
+  transition:all .2s;cursor:pointer;background:var(--bg3)
+}
+.task-item:hover{border-color:var(--border2)}
+.task-item.done{opacity:.45}
+.task-check{
+  width:20px;height:20px;border-radius:6px;
+  border:1.5px solid var(--text3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;font-size:11px
+}
+.task-item.done .task-check{background:var(--green);border-color:var(--green)}
+.task-text{flex:1;font-size:13px}
+.task-item.done .task-text{text-decoration:line-through;color:var(--text2)}
+.task-dur{font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);background:var(--bg2);padding:3px 8px;border-radius:4px}
+.task-xp{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);padding:3px 8px;border-radius:4px;background:rgba(246,201,14,.08)}
+
+.log-row{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.inp{
+  flex:1;min-width:120px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;
+  color:var(--text);font-size:13px;
+  font-family:'Space Grotesk',sans-serif;
+  outline:none;transition:border-color .2s
+}
+.inp:focus{border-color:var(--blue)}
+.inp::placeholder{color:var(--text3)}
+
+.btn{
+  padding:10px 16px;border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--bg3);color:var(--text);
+  font-size:13px;font-family:'Space Grotesk',sans-serif;
+  cursor:pointer;transition:all .15s;white-space:nowrap
+}
+.btn:hover{border-color:var(--border2);background:var(--bg2)}
+.btn-primary{background:rgba(99,179,237,.1);border-color:rgba(99,179,237,.3);color:var(--blue)}
+.btn-primary:hover{background:rgba(99,179,237,.2)}
+.btn-gold{background:rgba(246,201,14,.1);border-color:rgba(246,201,14,.3);color:var(--gold)}
+.btn-gold:hover{background:rgba(246,201,14,.18)}
+.btn-green{background:rgba(104,211,145,.1);border-color:rgba(104,211,145,.3);color:var(--green)}
+.btn-red{background:rgba(252,129,129,.08);border-color:rgba(252,129,129,.2);color:var(--red)}
+
+.prog-row{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:10px;margin-bottom:10px}
+.prog-label{font-size:12px;color:var(--text2)}
+.prog-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.prog-pct{font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);text-align:right}
+
+.phase-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.phase-btn{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--border);font-size:12px;
+  cursor:pointer;background:var(--bg2);color:var(--text2);
+  font-family:'Space Grotesk',sans-serif;transition:all .15s
+}
+.phase-btn.on{background:rgba(99,179,237,.1);border-color:rgba(99,179,237,.3);color:var(--blue)}
+
+.week-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;background:var(--bg2)}
+.week-head{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background .15s}
+.week-head:hover{background:var(--bg3)}
+.wk-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);min-width:62px}
+.wk-title{flex:1;font-size:13px;font-weight:500}
+.wk-badge{font-size:10px;padding:3px 9px;border-radius:10px;font-family:'Space Mono',monospace}
+.wk-badge.done{background:rgba(104,211,145,.1);color:var(--green);border:1px solid rgba(104,211,145,.2)}
+.wk-badge.cur{background:rgba(99,179,237,.1);color:var(--blue);border:1px solid rgba(99,179,237,.2)}
+.wk-badge.upcoming{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.wk-chev{font-size:13px;color:var(--text3);transition:transform .2s}
+.wk-chev.open{transform:rotate(180deg)}
+.week-body{display:none;padding:14px 16px;border-top:1px solid var(--border)}
+.week-body.open{display:block}
+.topic-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);padding:4px 0}
+.topic-dot{width:4px;height:4px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.week-tip{margin-top:10px;padding:10px 12px;border-left:2px solid var(--blue-dim);background:rgba(99,179,237,.04);border-radius:0 6px 6px 0;font-size:12px;color:var(--text2)}
+
+.streak-map{display:flex;flex-wrap:wrap;gap:3px;margin:14px 0}
+.s-cell{width:13px;height:13px;border-radius:2px;background:var(--bg3);cursor:pointer;transition:transform .1s;flex-shrink:0;position:relative}
+.s-cell:hover{transform:scale(1.4)}
+.s-cell.h1{background:#1a3a2a}.s-cell.h2{background:#1D6338}.s-cell.h3{background:#22A156}.s-cell.h4{background:var(--green)}
+.s-cell.today-marker{box-shadow:0 0 0 1.5px var(--blue)}
+.s-cell.missed{background:rgba(252,129,129,.15)}
+.streak-legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.sl{width:11px;height:11px;border-radius:2px}
+
+.journal-entries{max-height:300px;overflow-y:auto;margin-bottom:12px}
+.j-entry{border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:6px;background:var(--bg3)}
+.j-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:6px}
+.j-text{font-size:13px;color:var(--text2);line-height:1.5}
+.j-area{
+  width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:12px;color:var(--text);
+  font-size:13px;font-family:'Space Grotesk',sans-serif;
+  resize:vertical;min-height:90px;outline:none;
+  transition:border-color .2s;display:block;margin-bottom:8px
+}
+.j-area:focus{border-color:var(--blue)}
+
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.ach-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;transition:all .2s;position:relative;overflow:hidden}
+.ach-card.unlocked{border-color:rgba(246,201,14,.3)}
+.ach-card.unlocked::before{content:'';position:absolute;inset:0;background:rgba(246,201,14,.03)}
+.ach-card.locked{opacity:.35;filter:grayscale(1)}
+.ach-icon{font-size:26px;margin-bottom:7px}
+.ach-name{font-size:12px;font-weight:500;margin-bottom:3px}
+.ach-desc{font-size:11px;color:var(--text2);line-height:1.4}
+.ach-at{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);margin-top:5px}
+
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:16px}
+.res-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s}
+.res-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.res-tag{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--bg3);color:var(--text3);border:1px solid var(--border);display:inline-block;margin-right:4px;margin-bottom:6px}
+.res-tag.free{color:var(--green);border-color:rgba(104,211,145,.2);background:rgba(104,211,145,.06)}
+.res-tag.book{color:var(--gold);border-color:rgba(246,201,14,.2);background:rgba(246,201,14,.06)}
+.res-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.res-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.res-link{font-size:12px;color:var(--blue);text-decoration:none}
+.res-link:hover{text-decoration:underline}
+.res-sec{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border)}
+.tl-item{position:relative;padding:0 0 16px 20px}
+.tl-item::before{content:'';position:absolute;left:-4px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--text3);border:1.5px solid var(--bg)}
+.tl-item.done::before{background:var(--green)}
+.tl-item.cur::before{background:var(--blue);box-shadow:0 0 0 3px rgba(99,179,237,.2)}
+.tl-date{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:2px}
+.tl-text{font-size:13px}.tl-note{font-size:11px;color:var(--text2);margin-top:2px}
+
+.phase-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;margin-bottom:20px;gap:2px}
+.pb-seg{flex:1;border-radius:2px}
+
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:10px;padding:14px 18px;
+  font-size:13px;color:var(--text);z-index:1000;
+  transform:translateY(80px);opacity:0;
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+  max-width:300px;pointer-events:none
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-title{font-weight:500;margin-bottom:3px}
+.toast-sub{font-size:12px;color:var(--text2)}
+
+.levelup-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);
+  z-index:500;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s
+}
+.levelup-overlay.show{opacity:1;pointer-events:all}
+.levelup-box{
+  text-align:center;padding:48px;background:var(--bg2);
+  border:1px solid rgba(246,201,14,.4);border-radius:20px;max-width:380px
+}
+.lu-word{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;opacity:.7}
+.lu-rank{font-family:'Space Mono',monospace;font-size:72px;font-weight:700;line-height:1;margin-bottom:14px}
+.lu-name{font-size:18px;font-weight:500;margin-bottom:8px}
+.lu-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+
+.missed-alert{
+  background:rgba(252,129,129,.06);border:1px solid rgba(252,129,129,.2);
+  border-radius:10px;padding:12px 16px;margin-bottom:16px;
+  font-size:13px;color:var(--red);display:none
+}
+.missed-alert.show{display:block}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+
+.tooltip{
+  position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:6px;padding:5px 9px;
+  font-size:11px;color:var(--text);white-space:nowrap;
+  z-index:100;pointer-events:none;opacity:0;transition:opacity .15s
+}
+.s-cell:hover .tooltip{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<div class="shell">
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-title">IOAA System</div>
+    <div class="sb-logo-sub">450 Day Gold Protocol</div>
+  </div>
+
+  <div class="rank-display">
+    <div class="rank-badge" id="sb-rank">E</div>
+    <div class="rank-label">Current Rank</div>
+    <div class="rank-xp-txt" id="sb-xp-txt">0 / 200 XP</div>
+    <div class="xp-bar"><div class="xp-fill" id="sb-xp-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="live-timer">
+    <div class="lt-label">Session time</div>
+    <div class="lt-time" id="lt-time">00:00:00</div>
+    <div class="lt-session" id="lt-session">Today: 0.0h logged</div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-item on" onclick="showTab('dash',this)"><span class="sb-icon">⚡</span>Dashboard</div>
+    <div class="sb-item" onclick="showTab('today',this)"><span class="sb-icon">📋</span>Today's Quest</div>
+    <div class="sb-item" onclick="showTab('curr',this)"><span class="sb-icon">🗺</span>Curriculum</div>
+    <div class="sb-item" onclick="showTab('streak',this)"><span class="sb-icon">🔥</span>Streak Map</div>
+    <div class="sb-item" onclick="showTab('journal',this)"><span class="sb-icon">📓</span>Journal</div>
+    <div class="sb-item" onclick="showTab('ach',this)"><span class="sb-icon">🏆</span>Achievements</div>
+    <div class="sb-item" onclick="showTab('res',this)"><span class="sb-icon">📚</span>Resources</div>
+  </nav>
+
+  <div class="sb-streak">
+    <div style="font-size:20px">🔥</div>
+    <div>
+      <div class="sb-streak-num" id="sb-streak-num">0</div>
+      <div class="sb-streak-label">day streak</div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="tab-dash" class="tab-panel on">
+  <div class="page-header">
+    <div>
+      <div class="page-title" style="color:var(--blue);text-shadow:0 0 20px rgba(99,179,237,.35)">Mission Control</div>
+      <div class="page-sub" id="dash-sub">Day 1 of 450 · Phase 1: Foundation</div>
+    </div>
+    <button class="btn btn-gold" onclick="showTab('today',document.querySelectorAll('.sb-item')[1])">Today's Quest →</button>
+  </div>
+
+  <div id="missed-alert" class="missed-alert"></div>
+
+  <div class="stat-grid">
+    <div class="stat-card blue"><div class="stat-label">Current Day</div><div class="stat-val blue" id="d-day">1</div><div class="stat-sub">of 450 days</div></div>
+    <div class="stat-card gold"><div class="stat-label">Total XP</div><div class="stat-val gold" id="d-xp">0</div><div class="stat-sub">experience points</div></div>
+    <div class="stat-card green"><div class="stat-label">Hours Logged</div><div class="stat-val green" id="d-hrs">0.0</div><div class="stat-sub">of 1800 target</div></div>
+    <div class="stat-card purple"><div class="stat-label">Days Studied</div><div class="stat-val purple" id="d-studied">0</div><div class="stat-sub">sessions logged</div></div>
+  </div>
+
+  <!-- LIVE TIMER WIDGET -->
+  <div class="timer-widget">
+    <div class="tw-big" id="tw-big">00:00:00</div>
+    <div class="tw-info">
+      <div class="tw-label">Live session timer</div>
+      <div style="font-size:18px;font-weight:500;color:var(--text)" id="tw-hrs-live">0.00h this session</div>
+      <div class="tw-session" id="tw-today-total">Total today: 0.0h</div>
+    </div>
+    <div class="tw-btns">
+      <button class="btn btn-primary" id="btn-timer" onclick="toggleTimer()">▶ Start</button>
+      <button class="btn" onclick="resetTimer()">⟳ Reset</button>
+      <button class="btn btn-green" onclick="logFromTimer()">Log session hours</button>
+    </div>
+  </div>
+
+  <div class="phase-bar">
+    <div class="pb-seg" id="ph1-seg"></div>
+    <div class="pb-seg" id="ph2-seg"></div>
+    <div class="pb-seg" id="ph3-seg"></div>
+    <div class="pb-seg" id="ph4-seg"></div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Subject progress</div>
+      <div class="prog-row"><span class="prog-label">Overall journey</span><div class="prog-bar"><div class="prog-fill" id="pb-all" style="width:0%;background:var(--text2)"></div></div><span class="prog-pct" id="pct-all">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Positional Astro</span><div class="prog-bar"><div class="prog-fill" id="pb-pos" style="width:0%;background:var(--cyan)"></div></div><span class="prog-pct" id="pct-pos">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Photometry</span><div class="prog-bar"><div class="prog-fill" id="pb-photo" style="width:0%;background:var(--blue)"></div></div><span class="prog-pct" id="pct-photo">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Celestial Mech</span><div class="prog-bar"><div class="prog-fill" id="pb-mech" style="width:0%;background:var(--gold)"></div></div><span class="prog-pct" id="pct-mech">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Stellar Astro</span><div class="prog-bar"><div class="prog-fill" id="pb-stellar" style="width:0%;background:#F6AD55"></div></div><span class="prog-pct" id="pct-stellar">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Galactic + Cosmo</span><div class="prog-bar"><div class="prog-fill" id="pb-galactic" style="width:0%;background:var(--purple)"></div></div><span class="prog-pct" id="pct-galactic">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Past Papers</span><div class="prog-bar"><div class="prog-fill" id="pb-papers" style="width:0%;background:var(--green)"></div></div><span class="prog-pct" id="pct-papers">0%</span></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Phase timeline</div>
+      <div class="timeline">
+        <div class="tl-item" id="tl1"><div class="tl-date">Days 1–90</div><div class="tl-text">Phase 1: Foundation</div><div class="tl-note">Math · Positional · Photometry</div></div>
+        <div class="tl-item" id="tl2"><div class="tl-date">Days 91–240</div><div class="tl-text">Phase 2: Core Astrophysics</div><div class="tl-note">Celestial Mech · Stellar · Binary</div></div>
+        <div class="tl-item" id="tl3"><div class="tl-date">Days 241–360</div><div class="tl-text">Phase 3: Advanced + Data</div><div class="tl-note">Galactic · Cosmo · Papers · DA</div></div>
+        <div class="tl-item" id="tl4"><div class="tl-date">Days 361–450</div><div class="tl-text">Phase 4: Peak Performance</div><div class="tl-note">Mocks · Weak spots · Observation</div></div>
+      </div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <div class="section-label" style="margin-bottom:10px">Manual log (override)</div>
+        <div class="log-row">
+          <input class="inp" type="number" id="log-hrs" placeholder="Hours (e.g. 3.5)" min="0" max="16" step="0.5">
+          <button class="btn btn-primary" onclick="logManual()">Log +XP</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" onclick="shiftDay(-1)" style="font-size:12px">← Prev day</button>
+          <button class="btn" onclick="shiftDay(1)" style="font-size:12px">Next day →</button>
+          <button class="btn btn-red" onclick="resetConfirm()" style="font-size:12px;margin-left:auto">Reset all</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TODAY -->
+<div id="tab-today" class="tab-panel">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Today's Quest</div>
+      <div class="page-sub" id="today-sub">Day 1 · Phase 1 · Week 1</div>
+    </div>
+    <div id="today-xp-badge" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);background:rgba(246,201,14,.08);border:1px solid rgba(246,201,14,.2);padding:6px 12px;border-radius:8px">+80 XP available</div>
+  </div>
+  <div style="margin-bottom:14px">
+    <div class="section-label">This week's topic</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:500" id="today-topic">Math &amp; Calculus Foundation</div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="margin-bottom:12px">Daily tasks</div>
+    <div id="task-list"></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:10px">Focus tip</div>
+      <div id="today-tip" style="font-size:13px;color:var(--text2);line-height:1.6;border-left:2px solid var(--blue-dim);padding-left:12px"></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:10px">Resources today</div>
+      <div id="today-res" style="font-size:13px;color:var(--text2);display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CURRICULUM -->
+<div id="tab-curr" class="tab-panel">
+  <div class="page-header">
+    <div><div class="page-title">450-Day Curriculum</div><div class="page-sub">AO Guide · Aniket Sule · 28 chapters → IOAA Gold</div></div>
+  </div>
+  <div class="phase-tabs">
+    <button class="phase-btn on" onclick="filterPhase(0,this)">Phase 1 · Foundation</button>
+    <button class="phase-btn" onclick="filterPhase(1,this)">Phase 2 · Core</button>
+    <button class="phase-btn" onclick="filterPhase(2,this)">Phase 3 · Advanced</button>
+    <button class="phase-btn" onclick="filterPhase(3,this)">Phase 4 · Peak</button>
+  </div>
+  <div id="curr-body"></div>
+</div>
+
+<!-- STREAK -->
+<div id="tab-streak" class="tab-panel">
+  <div class="page-header">
+    <div><div class="page-title">Streak Map</div><div class="page-sub">450 days · every cell is a day of your life · red = missed</div></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card green"><div class="stat-label">Current streak</div><div class="stat-val green" id="st-cur">0</div><div class="stat-sub">days in a row</div></div>
+    <div class="stat-card gold"><div class="stat-label">Longest streak</div><div class="stat-val gold" id="st-best">0</div><div class="stat-sub">personal best</div></div>
+    <div class="stat-card blue"><div class="stat-label">Days logged</div><div class="stat-val blue" id="st-total">0</div><div class="stat-sub">of 450</div></div>
+    <div class="stat-card purple"><div class="stat-label">Completion</div><div class="stat-val purple" id="st-pct">0%</div><div class="stat-sub">of 450 days</div></div>
+  </div>
+  <div class="card">
+    <div class="streak-legend" style="margin-bottom:10px">
+      <div class="sl" style="background:var(--bg3)"></div><span>Not yet</span>
+      <div class="sl" style="background:rgba(252,129,129,.2)"></div><span>Missed (0h)</span>
+      <div class="sl" style="background:#1a3a2a"></div>
+      <div class="sl" style="background:#1D6338"></div>
+      <div class="sl" style="background:#22A156"></div>
+      <div class="sl" style="background:var(--green)"></div>
+      <span>4h+ grind</span>
+    </div>
+    <div class="streak-map" id="streak-map"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px">Hover a cell to see hours · Past days with no log = 0h (missed)</div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+<div id="tab-journal" class="tab-panel">
+  <div class="page-header">
+    <div><div class="page-title">Study Journal</div><div class="page-sub">What clicked · what's unclear · what's next</div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="margin-bottom:10px">New entry — Day <span id="j-day-num">1</span></div>
+    <textarea class="j-area" id="j-input" placeholder="What clicked today? What's still unclear? What will you focus on tomorrow?"></textarea>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="addJournal()">Save entry</button>
+      <button class="btn" onclick="document.getElementById('j-input').value=''">Clear</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-label" style="margin-bottom:10px">Past entries</div>
+    <div class="journal-entries" id="journal-entries">
+      <div style="font-size:13px;color:var(--text3);padding:20px 0;text-align:center">No entries yet. Write after today's session.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="tab-ach" class="tab-panel">
+  <div class="page-header">
+    <div><div class="page-title">Achievements</div><div class="page-sub" id="ach-sub">0 / 18 unlocked</div></div>
+  </div>
+  <div class="ach-grid" id="ach-grid"></div>
+</div>
+
+<!-- RESOURCES -->
+<div id="tab-res" class="tab-panel">
+  <div class="page-header">
+    <div><div class="page-title">Resource Library</div><div class="page-sub">Everything you need to prepare for IOAA</div></div>
+  </div>
+
+  <div class="res-sec">Primary</div>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag free">Free</span><span class="res-tag">Essential</span><div class="res-title">AO Guide — Full Theory</div><div class="res-desc">28 chapters from coordinates to cosmology. Your primary textbook. Read alongside Aniket Sule.</div><a class="res-link" href="https://www.aoguide.app/guide" target="_blank">aoguide.app/guide →</a></div>
+    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">IOAA Book — Aniket Sule</div><div class="res-desc">Official IOAA prep guide. Every solved example and problem. Use chapter-by-chapter with AO Guide.</div><div style="font-size:12px;color:var(--text2)">From Day 1 alongside AO Guide</div></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">aoxiv — Problem Archive</div><div class="res-desc">Searchable past IOAA problems tagged by topic. Use after each chapter to practice.</div><a class="res-link" href="https://aoxiv.aoguide.app" target="_blank">aoxiv.aoguide.app →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">IOAA Past Papers</div><div class="res-desc">All years from 2007. Theory + data analysis. Start 2012 in Phase 2, latest in Phase 3–4.</div><a class="res-link" href="https://www.ioaa.net/problems" target="_blank">ioaa.net/problems →</a></div>
+  </div>
+
+  <div class="res-sec">Math</div>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag free">Free</span><span class="res-tag">Watch first</span><div class="res-title">3Blue1Brown — Essence of Calculus</div><div class="res-desc">Watch before Khan Academy. Best intuition-first calculus introduction ever made.</div><a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr" target="_blank">YouTube →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Khan Academy — Calculus 1</div><div class="res-desc">Do every exercise. Derivatives, integrals, chain rule must become automatic. Days 1–14.</div><a class="res-link" href="https://www.khanacademy.org/math/calculus-1" target="_blank">khanacademy.org →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Paul's Online Math Notes</div><div class="res-desc">Best written reference for calculus and ODEs. Use when AO Guide math is unclear.</div><a class="res-link" href="https://tutorial.math.lamar.edu" target="_blank">tutorial.math.lamar.edu →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">3Blue1Brown — Linear Algebra</div><div class="res-desc">Vectors, dot products, cross products, rotation matrices. Essential for coordinate transforms.</div><a class="res-link" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank">YouTube →</a></div>
+  </div>
+
+  <div class="res-sec">Positional & Observation</div>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Stellarium</div><div class="res-desc">Set your location in the app. 15 min/day from Week 3. Memorize 88 constellations.</div><a class="res-link" href="https://stellarium.org" target="_blank">stellarium.org →</a></div>
+    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">Fundamental Astronomy — Karttunen</div><div class="res-desc">Standard university reference. Ch. 1–4 for positional, Ch. 7 for photometry. Supplement to AO Guide.</div><div style="font-size:12px;color:var(--text2)">Available as PDF online</div></div>
+  </div>
+
+  <div class="res-sec">Stellar & Celestial Mechanics</div>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Feynman Lectures — Mechanics</div><div class="res-desc">Feynman's derivation of planetary motion from Newton. The most beautiful orbital mechanics exposition.</div><a class="res-link" href="https://www.feynmanlectures.caltech.edu" target="_blank">feynmanlectures.caltech.edu →</a></div>
+    <div class="res-card"><span class="res-tag book">Book</span><div class="res-title">Carroll & Ostlie — Modern Astrophysics</div><div class="res-desc">University textbook for stellar astrophysics. Start in Phase 2. Read sections matching AO Guide chapters.</div><div style="font-size:12px;color:var(--text2)">Library or PDF</div></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">HyperPhysics — Stars</div><div class="res-desc">Quick formula reference with brief physical explanations. Best for checking understanding mid-chapter.</div><a class="res-link" href="http://hyperphysics.phy-astr.gsu.edu/hbase/Starcon.html" target="_blank">hyperphysics →</a></div>
+  </div>
+
+  <div class="res-sec">Cosmology</div>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">PBS Space Time</div><div class="res-desc">Best YouTube channel for cosmology and GR intuition. Watch relevant episodes in Phase 3.</div><a class="res-link" href="https://www.youtube.com/@pbsspacetime" target="_blank">YouTube →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Ned Wright's Cosmology Tutorial</div><div class="res-desc">Clearest cosmology reference online. Friedmann equation, distances, CMB — all explained precisely.</div><a class="res-link" href="https://www.astro.ucla.edu/~wright/cosmolog.htm" target="_blank">astro.ucla.edu →</a></div>
+    <div class="res-card"><span class="res-tag free">Free</span><div class="res-title">Desmos Graphing Calculator</div><div class="res-desc">Visualize orbital equations, Planck curves, light curves. Seeing the shape of an equation is worth 10 minutes staring at it.</div><a class="res-link" href="https://www.desmos.com/calculator" target="_blank">desmos.com →</a></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"><div class="toast-title" id="toast-title"></div><div class="toast-sub" id="toast-sub"></div></div>
+
+<div class="levelup-overlay" id="lu-overlay" onclick="this.classList.remove('show')">
+  <div class="levelup-box">
+    <div class="lu-word">Rank Up!</div>
+    <div class="lu-rank" id="lu-rank">D</div>
+    <div class="lu-name" id="lu-name">Observer</div>
+    <div class="lu-sub" id="lu-sub">You earned this.</div>
+    <button class="btn btn-gold" onclick="document.getElementById('lu-overlay').classList.remove('show')">Continue the grind</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  CURRICULUM DATA
+// ============================================================
+const CURRICULUM=[
+  {w:"Weeks 1–2",days:"1–14",title:"Math & calculus foundation",phase:0,
+   topics:["Trigonometry & spherical identities","Vectors, dot & cross products","Derivatives & chain rule","Integrals & substitution","First-order ODEs"],
+   tip:"Don't rush. Every stellar physics formula needs calculus. A week here saves 3 weeks of confusion later.",
+   res:["3Blue1Brown — Essence of Calculus","Khan Academy Calculus 1","Paul's Online Math Notes"]},
+  {w:"Week 3",days:"15–21",title:"The celestial sphere",phase:0,
+   topics:["Great circles & spherical triangles","Spherical excess formula","Zenith, nadir, celestial poles","Celestial equator geometry"],
+   tip:"Draw everything. Spherical geometry lives in spatial intuition, not on the page.",
+   res:["AO Guide: Positional — Sphere"]},
+  {w:"Weeks 4–5",days:"22–35",title:"Coordinate systems",phase:0,
+   topics:["Horizon & Equatorial coords (Alt-Az, RA/Dec)","Ecliptic & Galactic coords","Rotation matrix transforms","Rising/setting/transit conditions","Circumpolar star conditions"],
+   tip:"Most-tested IOAA topic. Master coordinate transforms cold. Do 20+ problems minimum.",
+   res:["AO Guide: Coordinate Systems","Aniket Sule Ch.2"]},
+  {w:"Weeks 6–7",days:"36–49",title:"Timekeeping",phase:0,
+   topics:["Solar vs sidereal time","Julian dates & calendars","LST, GST, UT conversions","Precession & nutation"],
+   tip:"Derive the LST–RA relationship yourself from scratch. If you can't, you don't know it.",
+   res:["AO Guide: Time","Aniket Sule Ch.3"]},
+  {w:"Weeks 8–9",days:"50–63",title:"Perturbations & SSO basics",phase:0,
+   topics:["Atmospheric refraction","Annual & diurnal parallax","Aberration of light","Solar & lunar motion","Eclipse geometry — umbra/penumbra"],
+   tip:"Aberration of light: draw the velocity vector diagram. The geometry is everything.",
+   res:["AO Guide: Perturbations & SSO"]},
+  {w:"Weeks 10–11",days:"64–77",title:"Radiometry & magnitude systems",phase:0,
+   topics:["Flux, luminosity, solid angle","Pogson magnitude formula","Distance modulus m−M=5log(d/10pc)","Color index B−V","Extinction & reddening E(B−V)"],
+   tip:"The distance modulus appears in almost every IOAA problem. Derive it until it feels obvious.",
+   res:["AO Guide: Radiometry","Aniket Sule Ch.5"]},
+  {w:"Weeks 12–13",days:"78–91",title:"Blackbody radiation & telescopes",phase:0,
+   topics:["Planck function — derive from scratch","Wien's displacement law derivation","Stefan-Boltzmann law","Telescope focal length, f-ratio, plate scale","Resolving power — Rayleigh criterion"],
+   tip:"Derive Wien's law by differentiating Planck and setting to zero. This exact step appears in IOAA.",
+   res:["AO Guide: Radiation & Telescopes","Aniket Sule Ch.6"]},
+  {w:"Weeks 14–15",days:"92–105",title:"Kepler's laws from first principles",phase:1,
+   topics:["Conservation of energy & angular momentum","Kepler 1st: central force → conic sections","Kepler 2nd: equal areas from L conservation","Kepler 3rd: T²∝a³ derivation"],
+   tip:"Never memorize. Derive K3 until it takes under 2 minutes. That is mastery.",
+   res:["AO Guide: Kepler's Laws","Feynman Lectures"]},
+  {w:"Weeks 16–18",days:"106–126",title:"Bound orbits & orbital energy",phase:1,
+   topics:["Vis-viva: v²=GM(2/r−1/a)","Elliptical orbit geometry","Perihelion & aphelion velocities","Escape velocity derivation","Tidal forces & Roche limit"],
+   tip:"Vis-viva is to orbital mechanics what F=ma is to dynamics. Derive it every time.",
+   res:["AO Guide: Bound Orbits","Aniket Sule Ch.7"]},
+  {w:"Weeks 19–20",days:"127–140",title:"Unbound orbits & orbital elements",phase:1,
+   topics:["Hyperbolic & parabolic orbits","6 orbital elements: a, e, i, Ω, ω, M","True vs eccentric vs mean anomaly","Kepler's equation M=E−e sinE"],
+   tip:"Kepler's equation has no closed form. Practice iterative solving — IOAA asks for this.",
+   res:["AO Guide: Unbound Orbits"]},
+  {w:"Weeks 21–23",days:"141–161",title:"Three-body & orbital maneuvers",phase:1,
+   topics:["Lagrange points L1–L5","Hill sphere derivation","Hohmann transfer orbit","Gravity assist — frame-switching argument","GR basics: Schwarzschild radius, gravitational redshift"],
+   tip:"Gravity assist confuses people. Master the frame-switching energy argument completely.",
+   res:["AO Guide: Three-Body & Maneuvers"]},
+  {w:"Weeks 24–26",days:"162–182",title:"Stellar structure & classification",phase:1,
+   topics:["Hydrostatic equilibrium derivation","Radiative vs convective transport","pp chain & CNO cycle","OBAFGKM spectral classification","HR diagram: physical meaning of each region"],
+   tip:"The HR diagram is a map of stellar physics, not just a plot. Know why every region exists.",
+   res:["AO Guide: Stellar Structure","Carroll & Ostlie Ch.10"]},
+  {w:"Weeks 27–29",days:"183–203",title:"Binary star systems",phase:1,
+   topics:["Visual, spectroscopic & eclipsing binaries","Radial velocity curve analysis","Eclipsing light curve analysis","Mass & radius determination","Mass transfer & Roche lobes"],
+   tip:"Eclipsing binary light curve analysis is a guaranteed IOAA data problem. Master this cold.",
+   res:["AO Guide: Binary Systems","Aniket Sule Ch.9"]},
+  {w:"Weeks 30–34",days:"204–238",title:"Stellar evolution",phase:1,
+   topics:["Pre-MS: Hayashi track, KH timescale","Main sequence lifetime t~M/L","Post-MS low mass: RGB, He-flash, AGB","Post-MS high mass: supergiants, iron core","WD (Chandrasekhar 1.4M☉), NS, BH","Type Ia vs core-collapse supernovae","First IOAA past papers (2012–2015)"],
+   tip:"Chandrasekhar 1.4M☉ — know the quantum pressure order-of-magnitude derivation.",
+   res:["AO Guide: Stellar Evolution","Carroll & Ostlie Ch.13"]},
+  {w:"Weeks 35–37",days:"239–259",title:"Solar system & practical sky",phase:2,
+   topics:["Planetary atmospheres: scale height, escape","Tides & tidal locking","Asteroids, comets, meteors","All 88 constellation memorization sprint","Top 50 bright stars: RA/Dec, spectral type"],
+   tip:"Start Stellarium daily. 15 min identification of the night sky. Every single day.",
+   res:["AO Guide: SSO & Practical","Stellarium"]},
+  {w:"Weeks 38–40",days:"260–280",title:"Galaxies & galactic astrophysics",phase:2,
+   topics:["Hubble morphological sequence","Milky Way: disk, bulge, halo, spiral arms","Galactic rotation — Oort constants A & B","Flat rotation curve → dark matter","Distance ladder: parallax → Cepheids → SN Ia","AGN: Seyfert, quasars, blazars, unified model"],
+   tip:"v=√(GM/r) predicts declining v but we observe flat. Know the dark matter argument quantitatively.",
+   res:["AO Guide: Galactic Astrophysics"]},
+  {w:"Weeks 41–43",days:"281–301",title:"Cosmology",phase:2,
+   topics:["Hubble's law: v=H₀d","FRW metric & scale factor a(t)","Friedmann equations — derive from Newtonian","Ω, flat/open/closed universes","BBN, recombination, CMB timeline","Dark energy & ΛCDM model"],
+   tip:"Derive Friedmann from Newtonian gravity applied to a uniform sphere. The GR term is just a constant.",
+   res:["AO Guide: Cosmology","Ned Wright's Tutorial"]},
+  {w:"Weeks 44–46",days:"302–322",title:"Advanced topics",phase:2,
+   topics:["Gravitational waves: chirp mass, quadrupole","Eddington luminosity: L_Edd≈1.3×10³¹(M/M☉)W","Stellar oscillations & helioseismology","ISM: HII regions, Strömgren sphere","IOAA 2019–2024 hardest problems"],
+   tip:"Eddington luminosity: set radiation pressure = gravity. It appears in 1 of every 3 hard IOAA problems.",
+   res:["AO Guide: Advanced Topics"]},
+  {w:"Weeks 47–51",days:"323–357",title:"Data analysis intensive",phase:2,
+   topics:["Least squares & log-log plot fitting","Error propagation from partial derivatives","Photometric period finding","Spectroscopic RV extraction","IOAA data papers 2012–2022 (timed)","Chi-squared test & statistics","Calculator speed drills"],
+   tip:"Data analysis = 25% of your final score. Most students neglect it. Don't.",
+   res:["IOAA Official Past Papers"]},
+  {w:"Weeks 52–55",days:"358–385",title:"Mock exam cycle 1",phase:3,
+   topics:["IOAA 2022 full mock: theory + data, strict time","Deep solution review: every wrong → root cause","Weak spot targeting from results","IOAA 2023 & 2021 full mocks","Observation: constellation & Messier drills"],
+   tip:"Track mock scores in a table. Trend matters. Consistency above 70% theory = gold territory.",
+   res:["ioaa.net/problems"]},
+  {w:"Weeks 56–59",days:"386–413",title:"Mock cycle 2 & final gaps",phase:3,
+   topics:["IOAA 2020, 2019, 2018 mocks","Top 5 weak chapters: re-derive, fresh problems","Hard problem marathon — no time limit","88 constellations blind on blank map <10 min","Binary full review: light curve + RV combined"],
+   tip:"By now distinguish truly understood vs memorized. Ruthlessly attack the memorized ones.",
+   res:["aoxiv.aoguide.app"]},
+  {w:"Weeks 60–64",days:"414–450",title:"Peak performance & sharpening",phase:3,
+   topics:["IOAA 2017, 2016, 2015 full mocks","Formula audit: derive every key formula <5 min","Observation final sprint: all Messier blind","Data analysis sprint: 3 papers back to back","Days 442–444: sleep 8h, walk, do NOT study","Day 450: read Day 1 notes. Remember why you started."],
+   tip:"The last week is not for learning. It's for remembering you already know. Trust your 450 days.",
+   res:["Everything you've built"]},
+];
+
+const TODAY_TASKS=[
+  {text:"Theory — AO Guide + Aniket Sule (today's chapter)",dur:"2h",xp:20},
+  {text:"Derivations — reproduce every formula from memory, no peeking",dur:"45m",xp:15},
+  {text:"Practice problems — easy → medium → IOAA style",dur:"1h",xp:25},
+  {text:"Observation — Stellarium, 15 min constellation practice",dur:"15m",xp:10},
+  {text:"Journal — what clicked, what's unclear, what's next",dur:"5m",xp:10},
+];
+
+const RANKS=[
+  {rank:"E",name:"Initiate",       xp:0,    color:"#718096"},
+  {rank:"D",name:"Observer",       xp:200,  color:"#68D391"},
+  {rank:"C",name:"Analyst",        xp:600,  color:"#63B3ED"},
+  {rank:"B",name:"Theorist",       xp:1200, color:"#B794F4"},
+  {rank:"A",name:"Astrophysicist", xp:2400, color:"#F6AD55"},
+  {rank:"S",name:"IOAA Gold",      xp:4000, color:"#F6C90E"},
+];
+
+const ACHIEVEMENTS=[
+  {id:"first_day", icon:"🌅",name:"Day One",         desc:"Log your first session",          cond:s=>totalHrs(s)>0},
+  {id:"week_one",  icon:"📅",name:"First Week",       desc:"Study 7 days",                    cond:s=>loggedDays(s)>=7},
+  {id:"month_one", icon:"🗓",name:"One Month",        desc:"Reach Day 30",                    cond:s=>s.day>30},
+  {id:"streak_7",  icon:"🔥",name:"On Fire",          desc:"7-day streak",                    cond:s=>s.streak>=7},
+  {id:"streak_30", icon:"⚡",name:"Unstoppable",      desc:"30-day streak",                   cond:s=>s.streak>=30},
+  {id:"streak_90", icon:"💥",name:"Inferno",          desc:"90-day streak",                   cond:s=>s.streak>=90},
+  {id:"hrs_100",   icon:"⏱",name:"100 Hours",        desc:"Log 100 total hours",             cond:s=>totalHrs(s)>=100},
+  {id:"hrs_500",   icon:"🕐",name:"500 Hours",        desc:"Log 500 total hours",             cond:s=>totalHrs(s)>=500},
+  {id:"hrs_1000",  icon:"🕰",name:"1000 Hours",       desc:"Half the journey",               cond:s=>totalHrs(s)>=1000},
+  {id:"phase1",    icon:"🌌",name:"Foundation Built", desc:"Complete Phase 1 (Day 90)",       cond:s=>s.day>90},
+  {id:"phase2",    icon:"⭐",name:"Core Mastered",    desc:"Complete Phase 2 (Day 240)",      cond:s=>s.day>240},
+  {id:"phase3",    icon:"🌟",name:"Advanced Complete",desc:"Complete Phase 3 (Day 360)",      cond:s=>s.day>360},
+  {id:"phase4",    icon:"🏆",name:"IOAA Gold",        desc:"Complete all 450 days",           cond:s=>s.day>=450},
+  {id:"rank_d",    icon:"🟢",name:"Rank D",           desc:"Reach 200 XP",                   cond:s=>s.xp>=200},
+  {id:"rank_c",    icon:"🔵",name:"Rank C",           desc:"Reach 600 XP",                   cond:s=>s.xp>=600},
+  {id:"rank_b",    icon:"🟣",name:"Rank B",           desc:"Reach 1200 XP",                  cond:s=>s.xp>=1200},
+  {id:"rank_a",    icon:"🟠",name:"Rank A",           desc:"Reach 2400 XP",                  cond:s=>s.xp>=2400},
+  {id:"rank_s",    icon:"✨",name:"Rank S: IOAA Gold",desc:"Reach 4000 XP",                  cond:s=>s.xp>=4000},
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+const DEF={day:1,xp:0,streak:0,longestStreak:0,logs:{},checks:{},journal:[],
+           progress:{pos:0,photo:0,mech:0,stellar:0,galactic:0,papers:0},
+           unlockedAch:[],unlockedAchDates:{},startDate:null};
+
+let S=JSON.parse(JSON.stringify(DEF));
+
+function save(){try{localStorage.setItem("ioaa-sys",JSON.stringify(S));}catch(e){}}
+function load(){
+  try{
+    const raw=localStorage.getItem("ioaa-sys");
+    if(raw) S=Object.assign({},DEF,JSON.parse(raw));
+    if(!S.startDate) S.startDate=todayStr();
+  }catch(e){}
+}
+
+function totalHrs(s){return Object.values(s.logs).reduce((a,b)=>a+(b.hrs||0),0);}
+function loggedDays(s){return Object.values(s.logs).filter(l=>l.hrs>0).length;}
+
+function todayStr(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+// Convert a calendar date string to a day number (1-based from startDate)
+function dateToDay(dateStr){
+  if(!S.startDate) return 1;
+  const start=new Date(S.startDate+"T00:00:00");
+  const target=new Date(dateStr+"T00:00:00");
+  const diff=Math.round((target-start)/(1000*60*60*24));
+  return Math.max(1,diff+1);
+}
+
+function dayToDate(dayNum){
+  if(!S.startDate) return "";
+  const start=new Date(S.startDate+"T00:00:00");
+  start.setDate(start.getDate()+dayNum-1);
+  return start.getFullYear()+"-"+String(start.getMonth()+1).padStart(2,"0")+"-"+String(start.getDate()).padStart(2,"0");
+}
+
+// ============================================================
+//  AUTO-ZERO MISSED DAYS
+// ============================================================
+function fillMissedDays(){
+  if(!S.startDate) return;
+  const today=todayStr();
+  const currentDayNum=dateToDay(today);
+  // For every day from 1 to (currentDayNum-1), if no log exists, mark as 0h missed
+  let filled=0;
+  for(let i=1;i<currentDayNum&&i<=450;i++){
+    const key="d"+i;
+    if(!(key in S.logs)){
+      S.logs[key]={hrs:0,date:dayToDate(i),missed:true};
+      filled++;
+    }
+  }
+  if(filled>0){save();}
+  // Sync S.day to today's day number
+  S.day=Math.min(450,Math.max(S.day,currentDayNum));
+}
+
+// ============================================================
+//  TIMER
+// ============================================================
+let timerRunning=false;
+let timerStart=null;
+let timerElapsed=0; // ms accumulated before last pause
+let timerRAF=null;
+
+function fmtTime(ms){
+  const s=Math.floor(ms/1000);
+  const h=Math.floor(s/3600);
+  const m=Math.floor((s%3600)/60);
+  const sec=s%60;
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+}
+
+function getCurrentMs(){
+  if(!timerRunning) return timerElapsed;
+  return timerElapsed+(Date.now()-timerStart);
+}
+
+function tickTimer(){
+  const ms=getCurrentMs();
+  const str=fmtTime(ms);
+  const el1=document.getElementById("lt-time");
+  const el2=document.getElementById("tw-big");
+  if(el1) el1.textContent=str;
+  if(el2) el2.textContent=str;
+  const hrs=(ms/3600000);
+  const el3=document.getElementById("tw-hrs-live");
+  if(el3) el3.textContent=hrs.toFixed(2)+"h this session";
+  const todayLogged=S.logs["d"+S.day]?(S.logs["d"+S.day].hrs||0):0;
+  const el4=document.getElementById("tw-today-total");
+  if(el4) el4.textContent="Total today: "+(todayLogged+hrs).toFixed(2)+"h";
+  const el5=document.getElementById("lt-session");
+  if(el5) el5.textContent="Today: "+(todayLogged+hrs).toFixed(1)+"h logged";
+  if(timerRunning) timerRAF=requestAnimationFrame(tickTimer);
+}
+
+function toggleTimer(){
+  if(timerRunning){
+    // Pause
+    timerElapsed+=Date.now()-timerStart;
+    timerRunning=false;
+    cancelAnimationFrame(timerRAF);
+    document.getElementById("btn-timer").textContent="▶ Resume";
+  } else {
+    // Start/Resume
+    timerStart=Date.now();
+    timerRunning=true;
+    document.getElementById("btn-timer").textContent="⏸ Pause";
+    tickTimer();
+  }
+}
+
+function resetTimer(){
+  timerRunning=false;
+  cancelAnimationFrame(timerRAF);
+  timerElapsed=0;
+  timerStart=null;
+  document.getElementById("btn-timer").textContent="▶ Start";
+  const els=["lt-time","tw-big"];
+  els.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="00:00:00";});
+  const el3=document.getElementById("tw-hrs-live");
+  if(el3) el3.textContent="0.00h this session";
+}
+
+function logFromTimer(){
+  const ms=getCurrentMs();
+  const hrs=parseFloat((ms/3600000).toFixed(2));
+  if(hrs<0.01){showToast("Timer is at 0","Start the timer first");return;}
+  doLog(hrs);
+  resetTimer();
+}
+
+// ============================================================
+//  LOGGING
+// ============================================================
+function logManual(){
+  const h=parseFloat(document.getElementById("log-hrs").value);
+  if(!h&&h!==0){showToast("Enter hours","Type a number like 4");return;}
+  if(h<0){showToast("Invalid","Hours can't be negative");return;}
+  doLog(h);
+  document.getElementById("log-hrs").value="";
+}
+
+function doLog(hrs){
+  const key="d"+S.day;
+  const prevHrs=(S.logs[key]&&S.logs[key].hrs)||0;
+  const addedHrs=hrs-prevHrs;
+  S.logs[key]={hrs,date:todayStr(),missed:hrs===0};
+
+  const bonusXP=Math.max(0,Math.round(addedHrs*10));
+  const prevRank=getRank(S.xp);
+  if(addedHrs>0) S.xp+=bonusXP;
+
+  // Advance day if logging today
+  if(S.day===dateToDay(todayStr())){
+    S.day=Math.min(450,S.day); // stay on today
+  }
+
+  const newRank=getRank(S.xp);
+  if(newRank.rank!==prevRank.rank){
+    document.getElementById("lu-rank").textContent=newRank.rank;
+    document.getElementById("lu-rank").style.color=newRank.color;
+    document.getElementById("lu-name").textContent=newRank.name;
+    document.getElementById("lu-sub").textContent="Rank "+newRank.rank+": "+newRank.name+" — You earned this.";
+    document.getElementById("lu-overlay").classList.add("show");
+  }
+
+  updateProgress();
+  save();
+  render();
+  showToast("Day "+S.day+" logged!",hrs===0?"0h — missed day recorded":"+"+bonusXP+" XP · "+hrs+"h studied");
+}
+
+function updateProgress(){
+  const d=S.day;
+  const cl=(v,max)=>Math.min(max,Math.max(0,v));
+  S.progress.pos     =cl(d-14, 77);
+  S.progress.photo   =cl(d-63, 28);
+  S.progress.mech    =cl(d-91, 70);
+  S.progress.stellar =cl(d-161,77);
+  S.progress.galactic=cl(d-238,63);
+  S.progress.papers  =cl(d-232,93);
+}
+
+function shiftDay(delta){
+  S.day=Math.max(1,Math.min(450,S.day+delta));
+  render();
+}
+
+// ============================================================
+//  RANK
+// ============================================================
+function getRank(xp){
+  let r=RANKS[0];
+  RANKS.forEach(rk=>{if(xp>=rk.xp)r=rk;});
+  return r;
+}
+function getNextRank(xp){
+  for(const r of RANKS){if(xp<r.xp)return r;}
+  return null;
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function render(){
+  const d=S.day;
+  const hrs=totalHrs(S);
+  const rank=getRank(S.xp);
+  const next=getNextRank(S.xp);
+
+  // Sidebar rank
+  const rb=document.getElementById("sb-rank");
+  rb.textContent=rank.rank; rb.style.color=rank.color;
+  document.getElementById("sb-xp-txt").textContent=
+    next?(S.xp+" / "+next.xp+" XP"):(S.xp+" XP — MAX RANK");
+  const xpPct=next?Math.round((S.xp-rank.xp)/(next.xp-rank.xp)*100):100;
+  document.getElementById("sb-xp-bar").style.width=xpPct+"%";
+  document.getElementById("sb-xp-bar").style.background=rank.color;
+  document.getElementById("sb-streak-num").textContent=S.streak;
+
+  // Stats
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set("d-day",d); set("d-xp",S.xp);
+  set("d-hrs",hrs.toFixed(1)); set("d-studied",loggedDays(S));
+
+  const phName=d<=90?"Foundation":d<=240?"Core Astrophysics":d<=360?"Advanced":"Peak Performance";
+  const phNum=d<=90?1:d<=240?2:d<=360?3:4;
+  set("dash-sub","Day "+d+" of 450 · Phase "+phNum+": "+phName);
+
+  // Missed days alert
+  const missedCount=Object.values(S.logs).filter(l=>l.missed).length;
+  const alert=document.getElementById("missed-alert");
+  if(alert){
+    if(missedCount>0){
+      alert.textContent="⚠ "+missedCount+" missed day"+(missedCount>1?"s":"")+" automatically recorded as 0h. They show in red on the Streak Map.";
+      alert.classList.add("show");
+    } else { alert.classList.remove("show"); }
+  }
+
+  // Phase bar
+  [["ph1",1,90],["ph2",91,240],["ph3",241,360],["ph4",361,450]].forEach(([id,a,b])=>{
+    const el=document.getElementById(id+"-seg");
+    if(!el) return;
+    if(d>b) el.style.background="var(--green)";
+    else if(d>=a) el.style.background="var(--blue)";
+    else el.style.background="var(--bg3)";
+  });
+
+  // Timeline
+  [["tl1",1,90],["tl2",91,240],["tl3",241,360],["tl4",361,450]].forEach(([id,a,b])=>{
+    const el=document.getElementById(id);
+    if(el) el.className="tl-item"+(d>b?" done":d>=a?" cur":"");
+  });
+
+  // Progress bars
+  const tgt={pos:77,photo:28,mech:70,stellar:77,galactic:63,papers:93};
+  Object.keys(tgt).forEach(k=>{
+    const pct=Math.min(100,Math.round((S.progress[k]||0)/tgt[k]*100));
+    const pb=document.getElementById("pb-"+k);
+    const pp=document.getElementById("pct-"+k);
+    if(pb) pb.style.width=pct+"%";
+    if(pp) pp.textContent=pct+"%";
+  });
+  const ov=Math.round((d-1)/450*100);
+  const pball=document.getElementById("pb-all");
+  const pctall=document.getElementById("pct-all");
+  if(pball) pball.style.width=ov+"%";
+  if(pctall) pctall.textContent=ov+"%";
+
+  // Today panel
+  const wk=CURRICULUM.find(w=>{const[a,b]=w.days.split("–").map(Number);return d>=a&&d<=b;})||CURRICULUM[0];
+  set("today-sub","Day "+d+" · Phase "+phNum+": "+phName+" · "+wk.w);
+  set("today-topic",wk.title);
+  const tipEl=document.getElementById("today-tip"); if(tipEl) tipEl.textContent=wk.tip;
+  const resEl=document.getElementById("today-res");
+  if(resEl) resEl.innerHTML=wk.res.map(r=>"<div style='display:flex;align-items:center;gap:6px'><span style='color:var(--text3);font-size:12px'>→</span>"+r+"</div>").join("");
+
+  // Tasks
+  const taskList=document.getElementById("task-list");
+  if(taskList){
+    taskList.innerHTML="";
+    TODAY_TASKS.forEach((t,i)=>{
+      const key="d"+d+"t"+i;
+      const done=!!S.checks[key];
+      const div=document.createElement("div");
+      div.className="task-item"+(done?" done":"");
+      div.innerHTML="<div class='task-check'>"+(done?"✓":"")+"</div><span class='task-text'>"+t.text+"</span><span class='task-dur'>"+t.dur+"</span><span class='task-xp'>+"+t.xp+" XP</span>";
+      div.onclick=()=>toggleTask(key,t.xp,div);
+      taskList.appendChild(div);
+    });
+  }
+  const totalAvail=TODAY_TASKS.reduce((a,t)=>a+t.xp,0);
+  set("today-xp-badge","+"+totalAvail+" XP available today");
+  set("j-day-num",d);
+
+  // Streak
+  renderStreakStats();
+  renderJournal();
+  checkAchievements();
+}
+
+function renderStreakMap(){
+  const map=document.getElementById("streak-map");
+  if(!map) return;
+  map.innerHTML="";
+  const todayDayNum=dateToDay(todayStr());
+  for(let i=1;i<=450;i++){
+    const log=S.logs["d"+i];
+    const h=log?(log.hrs||0):0;
+    const isMissed=log&&log.missed&&i<todayDayNum;
+    const isToday=i===S.day;
+    const isFuture=i>todayDayNum;
+    let cls="s-cell";
+    if(isMissed) cls+=" missed";
+    else if(!isFuture&&h>=4) cls+=" h4";
+    else if(!isFuture&&h>=3) cls+=" h3";
+    else if(!isFuture&&h>=2) cls+=" h2";
+    else if(!isFuture&&h>0) cls+=" h1";
+    if(isToday) cls+=" today-marker";
+    const cell=document.createElement("div");
+    cell.className=cls;
+    const dateStr=dayToDate(i);
+    const label=isFuture?"Day "+i+" (future)":isMissed?"Day "+i+" · "+dateStr+" · 0h (missed)":"Day "+i+(h?" · "+h+"h":" · not logged")+(dateStr?" · "+dateStr:"");
+    cell.title=label;
+    map.appendChild(cell);
+  }
+}
+
+function renderStreakStats(){
+  recalcStreak();
+  const total=loggedDays(S);
+  const pct=Math.round(total/450*100);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set("st-cur",S.streak); set("st-best",S.longestStreak);
+  set("st-total",total); set("st-pct",pct+"%");
+  set("sb-streak-num",S.streak);
+}
+
+function recalcStreak(){
+  // Count trailing streak of consecutive days with hrs > 0
+  let trail=0;
+  for(let i=S.day;i>=1;i--){
+    const log=S.logs["d"+i];
+    if(log&&log.hrs>0) trail++;
+    else break;
+  }
+  // Longest
+  let longest=0,run=0;
+  for(let i=1;i<=450;i++){
+    const log=S.logs["d"+i];
+    if(log&&log.hrs>0){run++;longest=Math.max(longest,run);}
+    else run=0;
+  }
+  S.streak=trail;
+  S.longestStreak=Math.max(S.longestStreak||0,longest);
+}
+
+function renderJournal(){
+  const list=document.getElementById("journal-entries");
+  if(!list) return;
+  if(!S.journal||!S.journal.length){
+    list.innerHTML="<div style='font-size:13px;color:var(--text3);padding:20px 0;text-align:center'>No entries yet. Write after today's session.</div>";
+    return;
+  }
+  list.innerHTML=[...S.journal].reverse().slice(0,20).map(j=>
+    "<div class='j-entry'><div class='j-meta'>Day "+j.day+" · "+j.date+"</div><div class='j-text'>"+j.text.replace(/\n/g,"<br>")+"</div></div>"
+  ).join("");
+}
+
+function renderAchievements(){
+  const grid=document.getElementById("ach-grid");
+  if(!grid) return;
+  grid.innerHTML=ACHIEVEMENTS.map(a=>{
+    const unlocked=S.unlockedAch.includes(a.id);
+    const ua=S.unlockedAchDates&&S.unlockedAchDates[a.id];
+    return "<div class='ach-card "+(unlocked?"unlocked":"locked")+"'><div class='ach-icon'>"+a.icon+"</div><div class='ach-name'>"+a.name+"</div><div class='ach-desc'>"+a.desc+"</div>"+(unlocked&&ua?"<div class='ach-at'>Day "+ua+"</div>":"")+"</div>";
+  }).join("");
+  const count=S.unlockedAch.length;
+  const sub=document.getElementById("ach-sub");
+  if(sub) sub.textContent=count+" / "+ACHIEVEMENTS.length+" unlocked";
+}
+
+function checkAchievements(){
+  if(!S.unlockedAchDates) S.unlockedAchDates={};
+  let changed=false;
+  ACHIEVEMENTS.forEach(a=>{
+    if(!S.unlockedAch.includes(a.id)&&a.cond(S)){
+      S.unlockedAch.push(a.id);
+      S.unlockedAchDates[a.id]=S.day;
+      changed=true;
+      showToast("Achievement unlocked!",a.icon+" "+a.name);
+    }
+  });
+  if(changed) save();
+}
+
+function renderCurr(phase){
+  const body=document.getElementById("curr-body");
+  if(!body) return;
+  body.innerHTML="";
+  const todayDayNum=dateToDay(todayStr());
+  CURRICULUM.filter(w=>w.phase===phase).forEach(wk=>{
+    const[a,b]=wk.days.split("–").map(Number);
+    const done=S.day>b;
+    const cur=S.day>=a&&S.day<=b;
+    const bc=done?"done":cur?"cur":"upcoming";
+    const bt=done?"Done":cur?"Current":"Upcoming";
+    const card=document.createElement("div");
+    card.className="week-card";
+    card.innerHTML="<div class='week-head' onclick='toggleWeek(this)'><span class='wk-num'>"+wk.w+"</span><span class='wk-title'>"+wk.title+"</span><span class='wk-badge "+bc+"'>"+bt+"</span><span class='wk-chev'>▼</span></div><div class='week-body'><div style='font-size:11px;color:var(--text3);margin-bottom:10px'>Days "+wk.days+"</div>"+wk.topics.map(t=>"<div class='topic-row'><div class='topic-dot'></div>"+t+"</div>").join("")+"<div class='week-tip'>💡 "+wk.tip+"</div><div style='font-size:11px;color:var(--text3);margin-top:10px;margin-bottom:5px'>Resources</div>"+wk.res.map(r=>"<div style='font-size:12px;color:var(--text2);margin-bottom:3px'>→ "+r+"</div>").join("")+"</div>";
+    body.appendChild(card);
+  });
+}
+
+// ============================================================
+//  INTERACTIONS
+// ============================================================
+function showTab(id,el){
+  document.querySelectorAll(".tab-panel").forEach(t=>t.classList.remove("on"));
+  document.querySelectorAll(".sb-item").forEach(b=>b.classList.remove("on"));
+  document.getElementById("tab-"+id).classList.add("on");
+  if(el) el.classList.add("on");
+  if(id==="curr") renderCurr(0);
+  if(id==="streak"){renderStreakMap();renderStreakStats();}
+  if(id==="journal") renderJournal();
+  if(id==="ach") renderAchievements();
+}
+
+function filterPhase(p,btn){
+  document.querySelectorAll(".phase-btn").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on");
+  renderCurr(p);
+}
+
+function toggleWeek(head){
+  const body=head.nextElementSibling;
+  const chev=head.querySelector(".wk-chev");
+  const open=body.classList.toggle("open");
+  if(chev) chev.classList.toggle("open",open);
+}
+
+function toggleTask(key,xp,el){
+  const wasDone=!!S.checks[key];
+  S.checks[key]=!wasDone;
+  if(!wasDone){S.xp+=xp;showToast("Task complete!","+"+xp+" XP earned");}
+  else S.xp=Math.max(0,S.xp-xp);
+  save(); render();
+}
+
+function addJournal(){
+  const text=document.getElementById("j-input").value.trim();
+  if(!text) return;
+  if(!S.journal) S.journal=[];
+  S.journal.push({text,day:S.day,date:new Date().toLocaleDateString()});
+  document.getElementById("j-input").value="";
+  save(); renderJournal();
+  showToast("Entry saved","Day "+S.day+" · Journal updated");
+}
+
+function resetConfirm(){
+  if(confirm("Reset ALL progress? This cannot be undone.")){
+    const start=S.startDate;
+    S=JSON.parse(JSON.stringify(DEF));
+    S.startDate=start;
+    save(); render();
+    showToast("Progress reset","Starting from Day 1");
+  }
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+let toastTimer=null;
+function showToast(title,sub){
+  const t=document.getElementById("toast");
+  document.getElementById("toast-title").textContent=title;
+  document.getElementById("toast-sub").textContent=sub;
+  t.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),3000);
+}
+
+// ============================================================
+//  PARTICLES
+// ============================================================
+function initParticles(){
+  const c=document.getElementById("particles");
+  for(let i=0;i<35;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    const size=Math.random()*2+1;
+    const colors=["rgba(99,179,237,.4)","rgba(118,228,247,.3)","rgba(246,201,14,.25)","rgba(183,148,244,.3)"];
+    p.style.cssText="width:"+size+"px;height:"+size+"px;left:"+Math.random()*100+"%;background:"+colors[Math.floor(Math.random()*colors.length)]+";animation-duration:"+(9+Math.random()*14)+"s;animation-delay:"+Math.random()*12+"s;";
+    c.appendChild(p);
+  }
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+load();
+fillMissedDays(); // AUTO-ZERO: fills all past unlogged days with 0h
+updateProgress();
+initParticles();
+render();
+
+// Re-check missed days once per minute (in case user leaves app open overnight)
+setInterval(()=>{fillMissedDays();render();},60000);
+</script>
+<script>
+/* ============ Dashboard sync — PUBLISHER (IOAA) ============ */
+(function () {
+  var STORAGE_KEY = 'olympiad.progress.ioaa';
+  var SUBJECT = 'IOAA';
+  var TOPICS = [
+    'Positional Astro', 'Photometry', 'Celestial Mech',
+    'Stellar Astro', 'Galactic + Cosmo', 'Past Papers'
+  ];
+
+  /* Optional: if auto-detect below misses a bar, give it an id in your
+     HTML and map it here, e.g. { 'Photometry': '#bar-photometry' } */
+  var MANUAL_IDS = {};
+
+  function norm(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+
+  function fillPct(root) {
+    var p = root.querySelector('progress');
+    if (p) { return p.max > 0 ? (p.value / p.max) * 100 : 0; }
+
+    var fill = root.querySelector('[class*="fill"], [role="progressbar"]');
+    if (!fill) return null;
+
+    if (fill.hasAttribute('aria-valuenow')) {
+      var v = parseFloat(fill.getAttribute('aria-valuenow')) || 0;
+      var mx = parseFloat(fill.getAttribute('aria-valuemax')) || 100;
+      return (v / mx) * 100;
+    }
+    var trackW = fill.parentElement.getBoundingClientRect().width;
+    var fillW  = fill.getBoundingClientRect().width;
+    return trackW > 0 ? Math.max(0, Math.min(100, (fillW / trackW) * 100)) : 0;
+  }
+
+  function containerFor(label) {
+    if (MANUAL_IDS[label]) {
+      var m = document.querySelector(MANUAL_IDS[label]);
+      if (m) return m;
+    }
+    var target = norm(label);
+    var els = document.body.querySelectorAll('*');
+    var matches = [];
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i], text = '';
+      if (el.children.length === 0) {
+        text = norm(el.textContent);
+      } else {
+        for (var j = 0; j < el.childNodes.length; j++) {
+          if (el.childNodes[j].nodeType === 3) text += el.childNodes[j].textContent;
+        }
+        text = norm(text);
+      }
+      if (text === target) matches.push(el);
+    }
+    var best = null;
+    matches.forEach(function (mm) { if (!best || best.contains(mm)) best = mm; });
+    if (!best) return null;
+
+    var node = best, depth = 0;
+    while (node && depth < 12) {
+      if (fillPct(node) !== null) return node;
+      node = node.parentElement; depth++;
+    }
+    return null;
+  }
+
+  function readPct(label) {
+    var c = containerFor(label);
+    if (!c) return 0;
+    var v = fillPct(c);
+    return v === null ? 0 : Math.round(v * 10) / 10;
+  }
+
+  function publish() {
+    var payload = {
+      subject: SUBJECT,
+      overall: readPct('Overall journey'),
+      topics: TOPICS.map(function (t) { return { name: t, pct: readPct(t) }; }),
+      updatedAt: new Date().toISOString()
+    };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
+  }
+
+  var timer = null;
+  function schedulePublish() { clearTimeout(timer); timer = setTimeout(publish, 250); }
+
+  function init() {
+    publish();
+    new MutationObserver(schedulePublish).observe(document.body, {
+      subtree: true, childList: true,
+      attributes: true, attributeFilter: ['style', 'class', 'value']
+    });
+    window.addEventListener('pagehide', publish);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') publish();
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
