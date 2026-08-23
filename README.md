@@ -106,7 +106,7 @@ Add screenshots or GIFs of your platform here.
 
 ### 🔥 Streak Map
 
-<img width="857" height="431" alt="image" src="https://github.com/user-attachments/assets/21da98eb-6555-4ee2-8f4f-c43bf2008e18" />
+<img width="1892" height="960" alt="image" src="https://github.com/user-attachments/assets/1465983c-3c49-477d-a923-9b92d7d74880" />
 
 
 
