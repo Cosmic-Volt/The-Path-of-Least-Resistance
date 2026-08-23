@@ -1,4 +1,4 @@
-##🏆 Olympiad Training Platform
+## 🏆 Olympiad Training Platform
 Your all-in-one companion for Olympiad preparation.
 
 Prepare smarter for IOAA & IPhO with curated study resources, AI-powered practice, progress tracking, streaks, rankings, and an interactive study companion — all in one place.
@@ -75,23 +75,22 @@ Add screenshots or GIFs of your platform here.
 
 🏠 Dashboard
 
-
+<img width="1348" height="580" alt="image" src="https://github.com/user-attachments/assets/96f8b47e-2d43-49a3-9a14-c2f14293c79c" />
 
 
 🧩 Practice
 
+<img width="1335" height="583" alt="image" src="https://github.com/user-attachments/assets/95f9760c-372d-402a-a9dc-a025ce8be6c1" />
 
-
-
+ 
 📈 Progress Tracking
 
-
+<img width="963" height="496" alt="image" src="https://github.com/user-attachments/assets/8a2e1515-99e0-4b00-b078-b029e470a5da" />
 
 
 🔥 Streak Map
 
-
-
+<img width="857" height="431" alt="image" src="https://github.com/user-attachments/assets/21da98eb-6555-4ee2-8f4f-c43bf2008e18" />
 
 
 ## 🏗️ How It Works
@@ -125,7 +124,9 @@ The platform connects learning resources, practice, AI, and progress tracking in
 ## 🚀 Getting Started
 
 Clone the repository:
+
 git clone (https://github.com/Cosmic-Volt/The-Path-of-Least-Resistance.git)
+
 cd The-Path-of-Lease-Resistance
 
 ## 🗺️ Roadmap
