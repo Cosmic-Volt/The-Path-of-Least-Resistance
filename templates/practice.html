@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Practice Range — IOAA · IPhO</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <style>
+  .katex{font-size:1.02em}
+  .msg .katex-display{margin:.4em 0}
   :root{
     --bg:#070b16; --panel:rgba(255,255,255,.04); --line:rgba(255,255,255,.12);
     --gold:#f5b942; --gold-soft:#ffd97a; --teal:#7fd1c8; --red:#e0604f; --violet:#b48cf2;
@@ -570,6 +573,92 @@ let compCfg  = store.get('practice.companion.v1', { enabled:true });
 let attemptHistory = store.get('practice.attempts.v1', {});
 
 /* ================================================================
+   MATH RENDERING — KaTeX, applied to any element that may contain
+   LaTeX (Vega's chat bubbles, problem statements, hints, solutions)
+================================================================ */
+function loadScript(src){
+  return new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error('failed to load '+src));
+    document.head.appendChild(s);
+  });
+}
+let katexReadyPromise = null;
+function ensureKatex(){
+  if(!katexReadyPromise){
+    katexReadyPromise = loadScript('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js')
+      .then(()=> loadScript('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js'))
+      .then(()=> true)
+      .catch(err=>{ console.warn('KaTeX failed to load — falling back to plain text', err); return false; });
+  }
+  return katexReadyPromise;
+}
+ensureKatex(); // kick off the download immediately on page load, don't wait for the first message
+
+/* If KaTeX genuinely can't load (CDN blocked, offline, etc.) this turns
+   common LaTeX into readable unicode instead of leaving raw backslash-soup. */
+function latexToPlain(src){
+  let s = src;
+  const greek = {alpha:'α',beta:'β',gamma:'γ',delta:'δ',Delta:'Δ',epsilon:'ε',theta:'θ',Theta:'Θ',
+    lambda:'λ',mu:'μ',pi:'π',rho:'ρ',sigma:'σ',Sigma:'Σ',tau:'τ',phi:'φ',Phi:'Φ',omega:'ω',Omega:'Ω'};
+  Object.keys(greek).forEach(k=>{ s = s.replace(new RegExp('\\\\'+k+'(?![a-zA-Z])','g'), greek[k]); });
+  s = s.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
+  s = s.replace(/\\sqrt\{([^{}]*)\}/g, '√($1)');
+  s = s.replace(/\\left|\\right/g, '');
+  s = s.replace(/\\times/g,'×').replace(/\\cdot/g,'·').replace(/\\pm/g,'±')
+       .replace(/\\approx/g,'≈').replace(/\\le/g,'≤').replace(/\\ge/g,'≥').replace(/\\neq/g,'≠')
+       .replace(/\\infty/g,'∞').replace(/\\propto/g,'∝').replace(/\\partial/g,'∂').replace(/\\;|\\,/g,' ');
+  const supMap = {0:'⁰',1:'¹',2:'²',3:'³',4:'⁴',5:'⁵',6:'⁶',7:'⁷',8:'⁸',9:'⁹','-':'⁻'};
+  s = s.replace(/\^\{?(-?[0-9]+)\}?/g, (m,d)=> d.split('').map(c=>supMap[c]||c).join(''));
+  const subMap = {0:'₀',1:'₁',2:'₂',3:'₃',4:'₄',5:'₅',6:'₆',7:'₇',8:'₈',9:'₉'};
+  s = s.replace(/_\{?(-?[0-9]+)\}?/g, (m,d)=> d.split('').map(c=>subMap[c]||c).join(''));
+  s = s.replace(/[{}]/g,'').replace(/\\/g,'');
+  return s;
+}
+function plainizeMath(html){
+  return html
+    .replace(/\$\$([\s\S]+?)\$\$/g, (m,g)=>latexToPlain(g))
+    .replace(/\\\[([\s\S]+?)\\\]/g, (m,g)=>latexToPlain(g))
+    .replace(/\\\(([\s\S]+?)\\\)/g, (m,g)=>latexToPlain(g))
+    .replace(/\$([^$\n]+?)\$/g, (m,g)=>latexToPlain(g));
+}
+
+/* Call this after inserting any element that might contain LaTeX.
+   Waits for KaTeX (up to 5s) rather than giving up after a few quick
+   polls — if it never loads, degrades gracefully to readable unicode. */
+async function renderMathIn(el){
+  const ok = await Promise.race([
+    ensureKatex(),
+    new Promise(resolve=>setTimeout(()=>resolve(false), 5000))
+  ]);
+  if(ok && typeof renderMathInElement !== 'undefined'){
+    try{
+      renderMathInElement(el, {
+        delimiters: [
+          { left:'$$', right:'$$', display:true },
+          { left:'\\[', right:'\\]', display:true },
+          { left:'$', right:'$', display:false },
+          { left:'\\(', right:'\\)', display:false }
+        ],
+        throwOnError:false
+      });
+      return;
+    }catch(e){ /* malformed LaTeX — fall through to plain-text fallback */ }
+  }
+  el.innerHTML = plainizeMath(el.innerHTML);
+}
+
+/* Escape plain text before it's used as HTML, so we can safely mix
+   user/model text with KaTeX-rendered markup without XSS risk */
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ================================================================
    VEGA — THE FELLOW STUDENT
 ================================================================ */
 const vegaEl = {
@@ -586,8 +675,11 @@ let vegaHistory = [];
 function addMsg(text, who){
   const div = document.createElement('div');
   div.className = 'msg from-' + (who==='you' ? 'you' : 'vega');
-  div.textContent = text;
+  // Escape first (so nothing is interpreted as HTML), THEN let KaTeX
+  // find $...$ / \(...\) delimiters inside the escaped text and render them.
+  div.innerHTML = escapeHtml(text);
   vegaEl.chat.appendChild(div);
+  renderMathIn(div);
   while (vegaEl.chat.children.length > 14) vegaEl.chat.removeChild(vegaEl.chat.firstChild);
   vegaEl.chat.scrollTop = vegaEl.chat.scrollHeight;
   vegaHistory.push({ who, text });
@@ -661,7 +753,9 @@ Rules you must always follow:
 5. If the user seems to be missing a concept entirely (not just stuck on execution), briefly teach just that one missing piece in a sentence or two, then hand control back.
 6. If the user sounds frustrated or ready to quit, be encouraging but concrete — suggest the smallest next physics step, not generic cheerleading.
 7. Never carry out the user's algebra/calculus/derivation line-by-line for them — describe the method and let them execute it.
-8. Do not mention that you are an AI model, a language model, or "Gemini" — you are Vega, a study partner.`;
+8. Do not mention that you are an AI model, a language model, or "Gemini" — you are Vega, a study partner.
+9. Formatting: write ALL math using LaTeX. Inline math goes between \\( and \\) — e.g. \\(v^2 = u^2 - 2gh\\). Standalone/display equations go between \\[ and \\] on their own line. Never write bare unicode math (√, ², ×, θ, etc.) or ASCII approximations like sqrt(x) or v^2 outside of LaTeX delimiters — always wrap them properly so they render. Keep the surrounding chat text as plain conversational prose; only the equations themselves are LaTeX.
+10. Talk like a real study partner mid-conversation, not a script: react to specifics the student actually wrote (their numbers, their wrong turn, their phrasing), vary your sentence openers and length turn to turn, and don't repeat a phrase you've already used earlier in this chat. If you don't have anything new to add, ask a short, specific question instead of restating advice.`;
 
 function stripHtml(html){
   const tmp = document.createElement('div');
@@ -853,14 +947,21 @@ const AMBIENT = [
   'Quick check-in: are we setting up equations yet, or still staring? 😄 (I ask myself that too.)',
   'Remember: partial work, written clearly, is real progress. Bank it as you go.'
 ];
+async function ambientLine(){
+  if(vegaApiCfg.key){
+    const res = await callGemini('(no message — this is a spontaneous check-in you initiate yourself, unprompted, while the student is quietly working. Say ONE short, natural, in-the-moment thing a real study partner would say right now — react to the specific problem/parts in context, don\'t greet, don\'t recap your rules. One or two sentences max.)');
+    if(res && res.text) return res.text;
+  }
+  return AMBIENT[Math.floor(Math.random()*AMBIENT.length)].replace('{n}', String(state.focus+1));
+}
 let ambientTimer=null;
 function vegaScheduleAmbient(){
   clearTimeout(ambientTimer);
   if(!state.running || !compCfg.enabled) return;
-  ambientTimer = setTimeout(()=>{
+  ambientTimer = setTimeout(async ()=>{
     if(state.running && compCfg.enabled){
-      const msg = AMBIENT[Math.floor(Math.random()*AMBIENT.length)].replace('{n}', String(state.focus+1));
-      vegaPop(msg, true);
+      const msg = await ambientLine();
+      if(state.running && compCfg.enabled) vegaPop(msg, true);
     }
     vegaScheduleAmbient();
   }, (3 + Math.random()*5)*60000);
@@ -1116,6 +1217,7 @@ function renderQuestions(){
     sec.appendChild(ol);
     holder.appendChild(sec);
   });
+  renderMathIn(holder);
 }
 document.getElementById('qList').addEventListener('click', e=>{
   const b = e.target.closest('.hintbtn'); if(!b) return;
@@ -1135,6 +1237,7 @@ function giveHint(qi, viaChat){
   const div = document.createElement('div');
   div.className='hint'; div.innerHTML='<b>'+label+'</b><br>'+h;
   document.getElementById('hintLog').appendChild(div);
+  renderMathIn(div);
   return viaChat ? `Okay, here’s what I’d whisper to myself on Q${qi+1}: ${h}` : null;
 }
 
@@ -1239,6 +1342,7 @@ function buildReview(){
       + '</div>';
     box.appendChild(div);
   });
+  renderMathIn(box);
 }
 document.getElementById('reviewBody').addEventListener('click', e=>{
   const b = e.target.closest('button[data-q]'); if(!b) return;
